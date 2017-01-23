@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<title>OpenWISP Project - What is OpenWISP?</title>
+		<title>OpenWISP: OpenWRT Controller, public wifi, RADIUS, mesh networks</title>
 		<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
 		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 		<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
@@ -79,7 +79,7 @@
 										<li><a class="active" href="whatis.html">What is</a></li>
 										<li><a href="architectures.html">Architectures</a></li>
 										<li><a href="history.html">History</a></li>
-										<li><a href="thecode.html">The code</a></li>
+										<li><a href="thecode.html">Source code</a></li>
 										<li><a href="about.html">About us</a></li>
 									</ul>
 								</nav>
@@ -120,12 +120,77 @@
 								<h3>What is OpenWISP?</h3>
 								<div class="p3">
 									<h5 class="prev-indent-bot">OpenWISP is a software platform that can be used to implement a complete Wi-Fi service.</h5>
-									<p class="img-indent-bot">The OpenWISP software suite includes five main applications, derived from tools used in the Provinciawifi project that are currently powering the following Wi-Fi public and free connectivity projects.
-									</p>
-									<p>
-										For support forum, wiki and issue tracking system and to download openWISP software visit our <a href="https://github.com/openwisp" target="_blank">project management web interface</a>.
+									<p class="img-indent-bot">The OpenWISP software suite includes five main applications, derived from tools used to offer public wifi service in Italy and other European countries.
 									</p>
 								</div>
+<h3>OpenWISP2</h3>
+<div class="p3">
+
+<p><a href="https://github.com/openwisp/ansible-openwisp2"><strong>OpenWISP2</strong></a> is a set of software modules
+that aims to replace some of the previous generation projects of OpenWISP, which we now refer to as OpenWISP1.<br />
+<br />
+The OpenWISP1 modules that are being replaced are:</p>
+
+<ul class="disc">
+<li>OpenWISP Manager</li>
+<li>OpenWISP Geographic Monitoring</li>
+<li>OpenWISP Firmware</li>
+</ul>
+
+<p>The goal of this new development is to overcome the high limitations of these softwares, that were
+designed and developed between 2008 and 2011 to solve specific problems, but are hardly reusable in 
+different contexts, more details about the reasons that brought us to this point can be found in
+following blog post: <a href="http://nemesisdesign.net/blog/coding/netjsonconfig-convert-netjson-to-openwrt-uci/">netjsonconfig: convert NetJSON to OpenWRT UCI</a>.
+<br /><br />
+How do the new modules map to the older ones? In the following passages we try to explain this point.</p>
+
+<h3>OpenWISP2 Controller</h3>
+
+<p>
+<a href="https://github.com/openwisp/ansible-openwisp2">OpenWISP2 Controller</a> is a
+<strong>configuration manager</strong> and <strong>controller</strong> for
+<a href="https://openwrt.org/">OpenWRT</a> and <a href="https://lede-project.org/">LEDE</a> devices.<br />
+<br />
+It is replacing <em>OpenWISP Manager</em> and in a second phase new monitoring features will be added
+as additional and optional modules that will gradually replace <em>OpenWISP Geographic Monitoring</em> too.<br />
+<br />
+The controller is composed of several modules:</p>
+
+<ul class="disc">
+<li><a href="https://github.com/openwisp/netjsonconfig">netjsonconfig</a>: configuration generator based on the <a href="http://netjson.org">NetJSON</a> specification, currently ships backends for OpenWRT/LEDE and OpenWISP Firmware</li>
+<li><a href="https://github.com/openwisp/django-netjsonconfig">django-netjsonconfig</a>: django reusable web app that provides a web interface to manage OpenWRT and OpenWISP configurations using <em>netjsonconfig</em> behind the scenes</li>
+<li><a href="https://github.com/openwisp/django-x509">django-x509</a>:  django app that implements PKI management, used to generate VPN certificates</li>
+<li><a href="https://github.com/openwisp/django-owm-legacy">django-owm-legacy</a>: provides backward compatibility with OpenWISP1 Firmware</li>
+</ul>
+
+<p>To install and play with <em>OpenWISP2 Controller</em>, use
+<a href="https://github.com/openwisp/ansible-openwisp2">ansible-openwisp2</a>.</p>
+
+<h3>OpenWISP2 Firmware</h3>
+
+<p>The new firmware composed of the following modules</p>
+
+<ul class="disc">
+<li><a href="https://github.com/openwisp/openwisp-config">openwisp-config</a>: OpenWRT agent that takes care of downloading and updating the configuration from the new controller</li>
+<li><a href="https://github.com/openwisp/luci-openwisp">luci-openwisp</a>: an optional simplified/limited web interface for operators</li>
+</ul>
+
+<p>To easily compile this new firmware, you can use <a href="https://github.com/openwisp/ansible-openwisp2-imagegenerator">ansible-openwisp2-imagegenerator</a>.</p>
+
+<h3>OpenWISP2 Monitoring</h3>
+
+<p>The new monitoring features that are going to replace <em>OpenWISP Geographic Monitoring</em> have not been integrated with the new controller yet, but some work
+    has already been done in the following projects:</p>
+
+<ul class="disc">
+<li><a href="https://github.com/interop-dev/django-netjsongraph">django-netjsongraph, Network Topology Visualizer</a>: monitors the network topology (for more information read <a href="http://nemesisdesign.net/blog/coding/network-topology-visualizer-django-netjsongraph/">Network Topology Visualizer: django-netjsongraph</a>)</li>
+<li><a href="https://github.com/interop-dev/netjsongraph.js">netjsongraph.js</a>: a javascript library based on d3.js that allows visualization of a <a href="http://netjson.org/docs/what.html#networkgraph">NetJSON NetworkGraph</a></li>
+</ul>
+
+</div>
+
+
+								<h3>Stable Projects (OpenWISP 1)</h3>
 								<div class="p3">
 									<h5 class="prev-indent-bot">OpenWUMS (OpenWISP User System Management)</h5>
 									<figure class="img-indent"><a class="lightboxed" href="images/owums.png" title="OpenWUMS (OpenWISP User System Management)"><img src="images/owums-thumbnail.png" alt="OpenWUMS (OpenWISP User System Management)"></a>
@@ -176,6 +241,13 @@
 									<p class="img-indent-bot">OpenWISP MiddleWare is the glue between OpenWISP applications and the component that permits 3rd party applications integration.
 									</p>
 								</div>
+								<h3>Support</h3>
+                                                                <div class="p3">
+                                                                        <ul>
+                                                                        <li><a href="https://groups.google.com/d/forum/openwisp">Mailing list</a></li>
+                                                                        <li><a href="https://github.com/openwisp" target="_blank">Github</a></li>
+                                                                        </ul>
+                                                                </div>
 							</div>
 						</article>
 						<article class="grid_4">
@@ -212,6 +284,14 @@
 										Captive Portal pages can be customized <b>with single access point granularity</b>. Captive pages can be hosted on any (e.g. pre-existent) CMS.
 									</div>
 								</div>
+								<h3>Support</h3>
+                                                                <div class="p3">
+                                                                        <ul>
+                                                                        <li><a href="https://groups.google.com/d/forum/openwisp">Mailing list</a></li>
+                                                                        <li><a href="https://github.com/openwisp" target="_blank">Github</a></li>
+                                                                        </ul>
+                                                                </div>
+
 							</div>
 						</article>
 					</div>
@@ -221,7 +301,7 @@
       <!--==============================footer=================================-->
 			<footer>
 				<div class="inner">
-					<div class="footer-bg"> openWISP.org © 2012<span></span><span></span>
+					<div class="footer-bg"> openWISP.org © 2016<span></span><span></span>
 					</div>
 				</div>
 			</footer>

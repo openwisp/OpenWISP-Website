@@ -1,0 +1,244 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Keynote</title>
+
+		<!-- Set this flag to be able to run as a full screen app from the home page (requires user to click "Add to Home Screen" button -->
+<!--
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+-->
+
+    <link href="KeynoteDHTMLPlayer.css" rel="stylesheet" type="text/css" media="screen"/>
+
+		<!-- Prevent user from being able to scale the page -->
+		<meta name="viewport" content="initial-scale = 1.0, minimum-scale = 1.0, maximum-scale = 1.0, user-scalable = no, width = device-width" />
+
+<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript" src="DebuggingSupport.js"></script>
+
+<script type="text/javascript" src="string.js"></script>
+<script type="text/javascript" src="Utilities.js"></script>
+<script type="text/javascript" src="ShowController.js"></script>
+<script type="text/javascript" src="TouchController.js"></script>
+<script type="text/javascript" src="DisplayManager.js"></script>
+<script type="text/javascript" src="StageManager.js"></script>
+<script type="text/javascript" src="AnimationManager.js"></script>
+<script type="text/javascript" src="TextureManager.js"></script>
+<script type="text/javascript" src="ScriptManager.js"></script>
+<script type="text/javascript" src="OrientationController.js"></script>
+<script type="text/javascript" src="DocumentInfo.js"></script>
+
+<script type="text/javascript" src="KeynoteDHTMLPlayer.js"></script>
+
+	</head>
+	
+	<body id="body" bgcolor="black">
+		<div id="background" class="bigBlackSquare">
+		</div>
+		
+		<div id="previousButton" class="PreviousButtonDisabled" onClick="gShowController.goBackToPreviousSlide('tapPreviousButton');">
+		</div>
+
+		<div id="nextButton" class="nextButtonDisabled" onClick="gShowController.advanceToNextBuild('tapNextButton');">
+		</div>
+
+		<div id="slideCounter">
+		</div>
+
+		<span id="helpText"></span>
+
+		<div id="infoPanelIcon" onClick="gShowController.showInfoPanel()">
+		</div>
+		
+		<div id="stageArea">
+			<div id="stage" class="stage">
+			</div>
+
+			<div id="hyperlinkPlane" class="stage">
+			</div>
+		</div>
+		<div id="embeddedControlBar">
+			<div id="embeddedControlBarBackground">
+				<div id="embeddedControlBarBezel_LeftEndCap" class="embeddedControlBarBezel">
+				</div>
+				
+				<div id="embeddedControlBarBezel_Filler" class="embeddedControlBarBezel">
+				</div>
+				
+				<div id="embeddedControlBarBezel_RightEndCap" class="embeddedControlBarBezel">
+				</div>
+			</div>
+
+			<div id="embeddedControls_Restart" class="embeddedControls_Restart_Disabled">
+			</div>
+
+			<div id="embeddedControls_Previous" class="embeddedControls_Previous_Disabled">
+			</div>
+
+			<div id="embeddedSlideCounterSection" class="embeddedSlideCounter">
+				<span id="embeddedSlideCounter">1/N</span>
+			</div>
+
+			<div id="embeddedControls_Next" class="embeddedControls_Next_Disabled">
+			</div>
+
+			<div id="embeddedControls_Mute" class="embeddedControls_Mute_Class">
+			</div>
+		</div>
+		
+		<div id="infoPanel">
+			<div id="closeInfoPanelButton" onClick="gShowController.hideInfoPanel();">
+			</div>
+
+			<img id="closeButtonDivider" src='doc_info_mobile_cut.png'>
+
+			<img id="avatar">
+
+			<div id="documentPublisherSection" class="infoPanelSection">
+				<span id="documentPublisherLabel" class="infoPanelLabel"> doc-pub-label </span> <br>
+				<span id="documentPublisherName" class="infoPanelValue"> doc-pub-name </span> <br>
+			</div>
+
+			<div id="publisherEmailSection" class="infoPanelSection">
+				<a id="documentPublisherEmailLink" href="mailto:user@me.com" target="_blank"> <span class="infoPanelLabel" id="documentPublisherEmailText"> pub-email-text </span> </a>
+			</div>
+
+			<div id="documentNameSection" class="infoPanelSection">
+				<span id="documentNameLabel" class="infoPanelLabel"> doc-name-label </span> <br>
+				<span id="documentName" class="infoPanelValue"> doc-name </span>
+			</div>
+
+			<div id="publishDateSection" class="infoPanelSection">
+				<span id="publishDateLabel" class="infoPanelLabel"> pub-date-label </span> <br>
+				<span id="publishDate" class="infoPanelValue"> pub-date </span>
+			</div>
+			
+			<div id="linksSection" class="infoPanelSection">
+				<a class="infoPanelLink" target="_blank" href="http://www.apple.com/legal/iworkcom/en/terms.html"> 
+					<span class="infoPanelLabel" id="termsOfServiceLinkText"> terms-of-service </span> 
+				</a>
+				|
+				<a class="infoPanelLink" target="_blank" href="http://www.apple.com/legal/privacy" target="_blank"> 
+					<span class="infoPanelLabel" id="privacyLinkText"> privacy </span> 
+				</a>
+				|
+				<a class="infoPanelLink" target="_blank" href="http://www.apple.com/en/feedback/iworkcom.html" target="_blank"> 
+					<span class="infoPanelLabel" id="feedbackLinkText"> feedback </span> 
+				</a>
+			</div>
+		</div>
+		
+<!--
+		<div id="embeddedControlBar">
+			<div id="embeddedControlBarBackground">
+				<div id="embeddedControlBarBezel_LeftEndCap" class="embeddedControlBarBezel">
+				</div>
+				
+				<div id="embeddedControlBarBezel_Filler" class="embeddedControlBarBezel">
+				</div>
+				
+				<div id="embeddedControlBarBezel_RightEndCap" class="embeddedControlBarBezel">
+				</div>
+			</div>
+
+			<div id="embeddedControls_Restart" class="embeddedControls_Restart_Disabled">
+			</div>
+
+			<div id="embeddedControls_Previous" class="embeddedControls_Previous_Disabled">
+			</div>
+
+			<div id="embeddedSlideCounterSection" class="embeddedSlideCounter">
+				<span id="embeddedSlideCounter">1/N</span>
+			</div>
+
+			<div id="embeddedControls_Next" class="embeddedControls_Next_Disabled">
+			</div>
+
+			<div id="embeddedControls_Mute" class="embeddedControls_Mute_Class">
+			</div>
+		</div>
+		
+		<div id="infoPanel">
+			<div id="closeInfoPanelButton" onClick="gShowController.hideInfoPanel();">
+			</div>
+
+			<img id="closeButtonDivider" src='doc_info_mobile_cut.png'>
+
+			<img id="avatar">
+
+			<div id="documentPublisherSection" class="infoPanelSection">
+				<span id="documentPublisherLabel" class="infoPanelLabel"> doc-pub-label </span> <br>
+				<span id="documentPublisherName" class="infoPanelValue"> doc-pub-name </span> <br>
+			</div>
+
+			<div id="publisherEmailSection" class="infoPanelSection">
+				<a id="documentPublisherEmailLink" href="mailto:user@me.com" target="_blank"> <span class="infoPanelLabel" id="documentPublisherEmailText"> pub-email-text </span> </a>
+			</div>
+
+			<div id="documentNameSection" class="infoPanelSection">
+				<span id="documentNameLabel" class="infoPanelLabel"> doc-name-label </span> <br>
+				<span id="documentName" class="infoPanelValue"> doc-name </span>
+			</div>
+
+			<div id="publishDateSection" class="infoPanelSection">
+				<span id="publishDateLabel" class="infoPanelLabel"> pub-date-label </span> <br>
+				<span id="publishDate" class="infoPanelValue"> pub-date </span>
+			</div>
+			
+			<div id="linksSection" class="infoPanelSection">
+				<a class="infoPanelLink" target="_blank" href="http://www.apple.com/legal/iworkcom/en/terms.html"> 
+					<span class="infoPanelLabel" id="termsOfServiceLinkText"> terms-of-service </span> 
+				</a>
+				|
+				<a class="infoPanelLink" target="_blank" href="http://www.apple.com/legal/privacy" target="_blank"> 
+					<span class="infoPanelLabel" id="privacyLinkText"> privacy </span> 
+				</a>
+				|
+				<a class="infoPanelLink" target="_blank" href="http://www.apple.com/en/feedback/iworkcom.html" target="_blank"> 
+					<span class="infoPanelLabel" id="feedbackLinkText"> feedback </span> 
+				</a>
+			</div>
+		</div>
+		
+-->
+		<div id="hud">
+			<div id="hudBackground">
+				<div id="hudBezelLeftEndCap" class="hudBezel">
+				</div>
+				
+				<div id="hudBezelFiller" class="hudBezel">
+				</div>
+				
+				<div id="hudBezelRightEndCap" class="hudBezel">
+				</div>
+				
+				<img id="hudBezelLeftDivider" class="hudBezel">
+				<img id="hudBezelRightDivider" class="hudBezel">
+			</div>
+
+			<div id="hudMuteButton" class="hudMuteButton">
+			</div>
+
+			<div id="hudPreviousButton" class="hudPreviousButtonDisabled">
+			</div>
+			
+			<div id="hudSlideCounterSection" class="hudSlideCounter">
+				<span id="hudSlideCounter"></span>
+			</div>
+			
+			<div id="hudNextButton" class="hudNextButtonDisabled">
+			</div>
+			
+			<div id="hudCloseButton" class="hudCloseButtonEnabled" onClick="gShowController.exitShow();">
+			</div>
+		</div>
+
+		<div id="infoPanelButton" onClick="gShowController.showInfoPanel();">
+		</div>
+	
+		<div id="waitingIndicator">
+			<div id="waitingSpinner">
+			</div>
+		</div>
+	</body>
+</html>
