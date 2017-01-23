@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>OpenWISP: OpenWRT Controller, public wifi, RADIUS, mesh networks</title>
+		<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+		<link rel="stylesheet" type="text/css" href="css/jquery.lightbox-0.5.css" media="screen" />
+
+    <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="js/cufon-yui.js" type="text/javascript"></script>
+    <script src="js/cufon-replace.js" type="text/javascript"></script>
+    <script src="js/Asap_400.font.js" type="text/javascript"></script>
+    <script src="js/Asap_italic_400.font.js" type="text/javascript"></script> 
+    <script src="js/FF-cash.js" type="text/javascript"></script>
+    <script src="js/jquery.equalheights.js" type="text/javascript"></script> 
+    <script src="js/jquery.cycle.all.js" type="text/javascript"></script>
+	<script>
+		$('#banners')
+			.cycle({ 
+				fx: 'fade', 
+				delay: 5000 ,
+				timeout: 7000,
+				manualTrump:false,
+				cleartypeNoBg: true,
+				next: '#next',
+				prev: '#prev'
+			});
+	</script>     
+	<!-- Lightbox begin -->
+    <script type="text/javascript" src="js/jquery.lightbox-0.5.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('a.lightboxed').lightBox();
+    });
+    </script>
+    <!-- Lightbox end -->
+	<!--[if lt IE 8]>
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+        	<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+        </a>
+    </div>
+	<![endif]-->
+    <!--[if lt IE 9]>
+   		<script type="text/javascript" src="js/html5.js"></script>
+        <link rel="stylesheet" href="css/ie.css" type="text/css" media="screen">
+	<![endif]-->
+	<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29417559-1']);
+    _gaq.push(['_setDomainName', 'openwisp.org']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+	</head>
+	<body id="page2">
+		<a href="https://github.com/openwisp"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+		<div class="main">
+        <!--==============================header=================================-->
+			<header>
+				<div class="container_12">
+					<div class="wrapper">
+						<div class="grid_12">
+							<div class="wrapper border-bot">
+								<h1><a href="index.html"><img title="OpenWISP" src="images/OpenWISP%20logo.png" alt="OpenWISP Logo" style="border: 0px solid; width: 250px;"></a></h1>
+								<nav>
+									<ul class="menu">
+										<li><a href="index.html">Home</a></li>
+										<li><a class="active" href="whatis.html">What is</a></li>
+										<li><a href="architectures.html">Architectures</a></li>
+										<li><a href="history.html">History</a></li>
+										<li><a href="thecode.html">Source code</a></li>
+										<li><a href="about.html">About us</a></li>
+									</ul>
+								</nav>
+							</div>
+							<div class="wrapper">
+								<div id="banners" class="border-bot">
+									<div>
+										<strong class="title-1">Advanced Wi-Fi platform</strong>
+										<strong class="title-2">State of the art technology</strong>
+									</div>
+									<div>
+										<strong class="title-1">100% open source</strong>
+										<strong class="title-2">Make sure you know what Wi-Fi you're using!</strong>
+									</div>
+									<div>
+										<strong class="title-1">OpenWISP</strong>
+										<strong class="title-2">Wireless, Everywhere</strong>
+									</div>
+								</div>
+								<a id="prev" href="#">prev</a>
+								<a id="next" href="#">next</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+        
+        <!--==============================content================================-->
+			<section id="content">
+				<div class="ic">
+					<div class="inner_copy">All <a  href="http://www.magentothemesworld.com" title="Best Magento Templates">premium Magento themes</a> at magentothemesworld.com!
+					</div>
+				</div>
+				<div class="container_12">
+					<div class="wrapper">
+						<article class="grid_8">
+							<div class="indent-right">
+								<h3>What is OpenWISP?</h3>
+								<div class="p3">
+									<h5 class="prev-indent-bot">OpenWISP is a software platform that can be used to implement a complete Wi-Fi service.</h5>
+									<p class="img-indent-bot">The OpenWISP software suite includes five main applications, derived from tools used to offer public wifi service in Italy and other European countries.
+									</p>
+								</div>
+<h3>OpenWISP2</h3>
+<div class="p3">
+
+<p><a href="https://github.com/openwisp/ansible-openwisp2"><strong>OpenWISP2</strong></a> is a set of software modules
+that aims to replace some of the previous generation projects of OpenWISP, which we now refer to as OpenWISP1.<br />
+<br />
+The OpenWISP1 modules that are being replaced are:</p>
+
+<ul class="disc">
+<li>OpenWISP Manager</li>
+<li>OpenWISP Geographic Monitoring</li>
+<li>OpenWISP Firmware</li>
+</ul>
+
+<p>The goal of this new development is to overcome the high limitations of these softwares, that were
+designed and developed between 2008 and 2011 to solve specific problems, but are hardly reusable in 
+different contexts, more details about the reasons that brought us to this point can be found in
+following blog post: <a href="http://nemesisdesign.net/blog/coding/netjsonconfig-convert-netjson-to-openwrt-uci/">netjsonconfig: convert NetJSON to OpenWRT UCI</a>.
+<br /><br />
+How do the new modules map to the older ones? In the following passages we try to explain this point.</p>
+
+<h3>OpenWISP2 Controller</h3>
+
+<p>
+<a href="https://github.com/openwisp/ansible-openwisp2">OpenWISP2 Controller</a> is a
+<strong>configuration manager</strong> and <strong>controller</strong> for
+<a href="https://openwrt.org/">OpenWRT</a> and <a href="https://lede-project.org/">LEDE</a> devices.<br />
+<br />
+It is replacing <em>OpenWISP Manager</em> and in a second phase new monitoring features will be added
+as additional and optional modules that will gradually replace <em>OpenWISP Geographic Monitoring</em> too.<br />
+<br />
+The controller is composed of several modules:</p>
+
+<ul class="disc">
+<li><a href="https://github.com/openwisp/netjsonconfig">netjsonconfig</a>: configuration generator based on the <a href="http://netjson.org">NetJSON</a> specification, currently ships backends for OpenWRT/LEDE and OpenWISP Firmware</li>
+<li><a href="https://github.com/openwisp/django-netjsonconfig">django-netjsonconfig</a>: django reusable web app that provides a web interface to manage OpenWRT and OpenWISP configurations using <em>netjsonconfig</em> behind the scenes</li>
+<li><a href="https://github.com/openwisp/django-x509">django-x509</a>:  django app that implements PKI management, used to generate VPN certificates</li>
+<li><a href="https://github.com/openwisp/django-owm-legacy">django-owm-legacy</a>: provides backward compatibility with OpenWISP1 Firmware</li>
+</ul>
+
+<p>To install and play with <em>OpenWISP2 Controller</em>, use
+<a href="https://github.com/openwisp/ansible-openwisp2">ansible-openwisp2</a>.</p>
+
+<h3>OpenWISP2 Firmware</h3>
+
+<p>The new firmware composed of the following modules</p>
+
+<ul class="disc">
+<li><a href="https://github.com/openwisp/openwisp-config">openwisp-config</a>: OpenWRT agent that takes care of downloading and updating the configuration from the new controller</li>
+<li><a href="https://github.com/openwisp/luci-openwisp">luci-openwisp</a>: an optional simplified/limited web interface for operators</li>
+</ul>
+
+<p>To easily compile this new firmware, you can use <a href="https://github.com/openwisp/ansible-openwisp2-imagegenerator">ansible-openwisp2-imagegenerator</a>.</p>
+
+<h3>OpenWISP2 Monitoring</h3>
+
+<p>The new monitoring features that are going to replace <em>OpenWISP Geographic Monitoring</em> have not been integrated with the new controller yet, but some work
+    has already been done in the following projects:</p>
+
+<ul class="disc">
+<li><a href="https://github.com/interop-dev/django-netjsongraph">django-netjsongraph, Network Topology Visualizer</a>: monitors the network topology (for more information read <a href="http://nemesisdesign.net/blog/coding/network-topology-visualizer-django-netjsongraph/">Network Topology Visualizer: django-netjsongraph</a>)</li>
+<li><a href="https://github.com/interop-dev/netjsongraph.js">netjsongraph.js</a>: a javascript library based on d3.js that allows visualization of a <a href="http://netjson.org/docs/what.html#networkgraph">NetJSON NetworkGraph</a></li>
+</ul>
+
+</div>
+
+
+								<h3>Stable Projects (OpenWISP 1)</h3>
+								<div class="p3">
+									<h5 class="prev-indent-bot">OpenWUMS (OpenWISP User System Management)</h5>
+									<figure class="img-indent"><a class="lightboxed" href="images/owums.png" title="OpenWUMS (OpenWISP User System Management)"><img src="images/owums-thumbnail.png" alt="OpenWUMS (OpenWISP User System Management)"></a>
+									</figure>
+									<p class="img-indent-bot">The OpenWUMS allows a WISP to manage its user base. It provides self-provisioning of users credentials and self-management of account data.
+										With the OpenWUMS it is possible to create an account (and verify its underlying identity) just through a telephone call.
+										Last but not least users can consult their sessions history with fancy graphs and in a tabular form.
+									</p>
+								</div>
+								<div class="p3">
+									<h5 class="prev-indent-bot">OpenWM (OpenWISP Manager) and OpenWF (OpenWISP Firmware)</h5>
+									<figure class="img-indent"><a class="lightboxed" href="images/owm.png" title="OpenWM (OpenWISP Manager)"><img src="images/owm-thumbnail.png" alt="OpenWM (OpenWISP Manager)"></a>
+									</figure>
+									<p class="img-indent-bot">The OpenWISP Manager makes centralized management of a large number of access points easier.
+										With this tool it is possible to manage devices with a customized version of the OpenWRT firmware (i.e.the OpenWISP Firmware) that is also released with an open-source license.
+										For this reason OpenWM and OpenWF can be used with any access point containing an Atheros Wi-Fi card supported by OpenWRT (a list of supported devices is available on the OpenWRT official website).
+									</p>
+									<p>The OpenWISP Firmware is a bunch of shell (ash) scripts that sit on top of openWRT. Currently it supports any device supported by openWRT with an Atheros WiFi Radio interface (i.e. mac80211 or Madwifi-ng drivers).
+										Access points equipped with the OWF are extremely easy to install because our firmware provides a very easy-to-use web based
+										UI.
+										OWF has native support for multiple connectivity backhaul with automatic failover: OLSR mesh over a WPA WiFi ad-hoc network (i.e. IBSS WPA-None), UMTS/HSDPA connectivity for a limited number of UMTS USB
+										modem
+									</p>
+								</div>
+								<div class="p3">
+									<h5 class="prev-indent-bot">OpenWGM (OpenWISP Geographic Monitoring)</h5>
+									<figure class="img-indent"><a class="lightboxed" href="images/owgm.png" title="OpenWGM (OpenWISP Geographic Monitoring)"><img src="images/owgm-thumbnail.png" alt="OpenWGM (OpenWISP Geographic Monitoring)"></a>
+									</figure>
+									<p class="img-indent-bot">
+										The OpenWISP Geographic Monitoring keeps track of the access points provisioned by a Wireless Internet Service Provider.
+										OpenWISP Geographic Monitoring continuously looks for a given number of access points in order to draw them on a Google Maps map and provide the up/down/unknown count.
+										In case the access points are actually reachable, OWGM will draw an average availability graph.
+									</p>
+								</div>
+								<div class="p3">
+									<h5 class="prev-indent-bot">OpenWCPM (OpenWISP Captive Portal Manager)</h5>
+									<figure class="img-indent"><a class="lightboxed" href="images/owcpm.png" title="OpenWCPM (OpenWISP Captive Portal Manager)"><img src="images/owcpm-thumbnail.png" alt="OpenWCPM (OpenWISP Captive Portal Manager)"></a>
+									</figure>
+									<p class="img-indent-bot">OpenWISP Captive Portal Manager is a full featured captive portal based on Linux's netfilter.
+										<br />
+										<br />
+										<br />
+										<br />
+									</p>
+								</div>
+								<div class="p3">
+									<h5 class="prev-indent-bot">OpenWMW (OpenWISP MiddleWare)</h5>
+									<p class="img-indent-bot">OpenWISP MiddleWare is the glue between OpenWISP applications and the component that permits 3rd party applications integration.
+									</p>
+								</div>
+								<h3>Support</h3>
+                                                                <div class="p3">
+                                                                        <ul>
+                                                                        <li><a href="https://groups.google.com/d/forum/openwisp">Mailing list</a></li>
+                                                                        <li><a href="https://github.com/openwisp" target="_blank">Github</a></li>
+                                                                        </ul>
+                                                                </div>
+							</div>
+						</article>
+						<article class="grid_4">
+							<div class="indent-left3">
+								<h3>At a glance</h3>
+								<div class="wrapper border-bot2 prev-indent-bot">
+									<strong class="numb">1.</strong>
+									<div class="extra-wrap">
+										<span class="color-5">Easy to set up and to manage</span><br />
+										Thanks to automatic VPN configuration, users connectivity and access points management are gathered centrally at the operative center.
+										This permits the use of <b>pre-existing connectivity</b> and a centralized monitoring: cost-effectiveness at its finest.
+									</div>
+								</div>
+								<div class="wrapper border-bot2 prev-indent-bot">
+									<strong class="numb">2.</strong>
+									<div class="extra-wrap">
+										<span class="color-5">Self users signup</span><br />
+										Users can self-register with a simple (and free) mobile phone number verification.
+										Registration and account management is performed by users and operators through  fancy web interfaces.
+									</div>
+								</div>
+								<div class="wrapper border-bot2 prev-indent-bot">
+									<strong class="numb">3.</strong>
+									<div class="extra-wrap">
+										<span class="color-5">Multiple eSSID</span><br />
+										This permits multiple networks with different security profiles (e.g. a public connectivity network with captive portal-based access control and a service network protected with 802.1x).<br />
+										These networks can be multiplexed in a single VPN or distributed among multiple VPNs with different destinations.
+									</div>
+								</div>
+								<div class="wrapper p2">
+									<strong class="numb">4.</strong>
+									<div class="extra-wrap">
+										<span class="color-5">Customizable Captive Portal</span><br />
+										Captive Portal pages can be customized <b>with single access point granularity</b>. Captive pages can be hosted on any (e.g. pre-existent) CMS.
+									</div>
+								</div>
+								<h3>Support</h3>
+                                                                <div class="p3">
+                                                                        <ul>
+                                                                        <li><a href="https://groups.google.com/d/forum/openwisp">Mailing list</a></li>
+                                                                        <li><a href="https://github.com/openwisp" target="_blank">Github</a></li>
+                                                                        </ul>
+                                                                </div>
+
+							</div>
+						</article>
+					</div>
+				</div>
+			</section>
+        
+      <!--==============================footer=================================-->
+			<footer>
+				<div class="inner">
+					<div class="footer-bg"> openWISP.org © 2016<span></span><span></span>
+					</div>
+				</div>
+			</footer>
+		</div>
+    <script type="text/javascript"> Cufon.now(); </script>
+	</body>
+</html>
+

@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Keynote</title>
+
+<LINK REL=StyleSheet HREF="index.css" TYPE="text/css">
+<script src="../player/prototype.js"> type="text/javascript"></script>
+<script src="player.js"> type="text/javascript"></script>
+
+</head>  
+<body onLoad="fallbackPlayerOnload()" bgcolor="black">
+    <div id="embed_background"></div>
+
+    <div id="playback"></div>
+    
+    <div id="waitingIndicator">
+        <div id="waitingSpinner">
+        </div>
+    </div>
+    
+    <div id="hud">
+        <div id="hudBackground">
+            <div id="hudBezelLeftEndCap" class="hudBezel">
+            </div>
+            
+            <div id="hudBezelFiller" class="hudBezel">
+            </div>
+            
+            <div id="hudBezelRightEndCap" class="hudBezel">
+            </div>
+            
+            <img id="hudBezelRightDivider" class="hudBezel">
+        </div>
+
+        <div id="hudPreviousButton" class="hudPreviousButtonDisabled">
+        </div>
+    
+        <div id="hudSlideCounterSection" class="hudSlideCounter">
+            <span id="hudSlideCounter"></span>
+        </div>
+    
+        <div id="hudNextButton" class="hudNextButtonDisabled">
+        </div>
+    
+        <div id="hudCloseButton" class="hudCloseButtonEnabled"">
+        </div>
+    </div>
+    
+    <div id="embeddedControlBar">
+        <div id="embeddedControlBarBackground">
+            <div id="embeddedControlBarBezel_LeftEndCap" class="embeddedControlBarBezel">
+            </div>
+            
+            <div id="embeddedControlBarBezel_Filler" class="embeddedControlBarBezel">
+            </div>
+            
+            <div id="embeddedControlBarBezel_RightEndCap" class="embeddedControlBarBezel">
+            </div>
+        </div>
+
+        <div id="embeddedControls_Restart" class="embeddedControls_Restart_Disabled">
+        </div>
+
+        <div id="embeddedControls_Previous" class="embeddedControls_Previous_Disabled">
+        </div>
+
+        <div id="embeddedSlideCounterSection" class="embeddedSlideCounter">
+            <span id="embeddedSlideCounter">1/N</span>
+        </div>
+
+        <div id="embeddedControls_Next" class="embeddedControls_Next_Disabled">
+        </div>
+
+        <div id="embeddedControls_Link" class="embeddedControls_Link_Enabled" onclick="handleLinkControl();">
+        </div>
+    </div>
+
+</body>
+</html>

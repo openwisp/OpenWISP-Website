@@ -1,0 +1,871 @@
+/* Body
+   ---- */
+
+body
+{
+	overflow: hidden;
+	margin: 0;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+
+@media screen and (max-device-width: 1025px)
+{
+	body
+	{
+		background-color: black;
+	}
+}
+
+div.bigBlackSquare
+{
+	position: absolute; 
+	top: 0px;
+	left: 0px;
+	width: 1024px;
+	height: 1024px;
+	visibility: hidden;
+	background-color: black;
+}
+
+/* Debug Status Display 
+   -------------------- */
+   
+div#statisticsDisplay
+{
+	position: absolute; 
+	color : white;
+	background-color: grey;
+	visibility: hidden;
+}
+
+/* Stage
+   ----- */
+
+div#stageArea
+{
+	position: absolute; 
+	visibility: hidden;
+	overflow: hidden;
+}
+
+div.stage
+{
+	position: absolute; 
+	top: 0;
+	left: 0;
+	/*visibility: visible;*/
+	overflow: hidden; 
+}
+
+/* Hyperlinke Plane
+   ---------------- */
+
+div#hyperlinkPlane
+{
+	visibility: hidden;
+}
+
+div.hyperlink
+{
+	position: absolute;
+	cursor: pointer;
+	
+	/* Debugging: enable the following line to draw a red border around hyperlink areas */
+	/*border: 1px dotted red;*/
+}
+
+/* Embedded Control Bar
+   -------------------- */
+
+div#embeddedControlBar
+{
+	position: absolute;
+	display: none;
+}
+
+div#embeddedControlBarBackground
+{
+	position: absolute;
+	top: 0px;
+	height: 30px;
+	width: 100%;
+}
+
+div.embeddedControlBarBezel
+{
+	position: absolute;
+	top: 0px;
+	height: 30px;
+}
+
+div#embeddedControlBarBezel_LeftEndCap
+{
+	background-image: url('control_bg-cap-left.png');
+	width: 10px;
+}
+
+div#embeddedControlBarBezel_Filler
+{
+	background-image: url('control_bg-fill.png');
+	background-repeat: repeat-x;
+	left: 10px;
+}
+
+div#embeddedControlBarBezel_RightEndCap
+{
+	background-image: url('control_bg-cap-right.png');
+	width: 10px;
+}
+
+div#embeddedSlideCounterSection
+{
+	position: absolute;
+	top: 8px;
+	height: 14px;
+	width: 80px;
+
+	font-family: "Helvetica";
+	font-size: 12px;
+	text-shadow: 0.0em 0.2em #000000;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+/* Embedded Restart Button
+   ----------------------- */
+
+div#embeddedControls_Restart
+{
+	position: absolute;
+	top: 0px;
+	width: 35px;
+	height: 30px;
+}
+
+div.embeddedControls_Restart_Enabled
+{
+	cursor: pointer;
+	background-image: url('control_restart_N.png');
+}
+
+div.embeddedControls_Restart_Enabled:active
+{
+	cursor: pointer;
+	background-image: url('control_restart_P.png');
+}
+
+div.embeddedControls_Restart_Disabled
+{
+	cursor: default;
+	background-image: url('control_restart_D.png');
+}
+
+/* Embedded Prev Button
+   -------------------- */
+
+div#embeddedControls_Previous
+{
+	position: absolute;
+	top: 0px;
+	width: 35px;
+	height: 30px;
+	left: 100px;
+}
+
+div.embeddedControls_Previous_Enabled
+{
+	cursor: pointer;
+	background-image: url('control_previous_N.png');
+}
+
+div.embeddedControls_Previous_Enabled:active
+{
+	background-image: url('control_previous_P.png');
+}
+
+div.embeddedControls_Previous_Disabled
+{
+	cursor: default;
+	background-image: url('control_previous_D.png');
+}
+
+/* Embedded Next Button
+   -------------------- */
+
+div#embeddedControls_Next
+{
+	position: absolute;
+	top: 0px;
+	width: 35px;
+	height: 30px;
+	left: 200px;
+}
+
+div.embeddedControls_Next_Enabled
+{
+	cursor: pointer;
+	background-image: url('control_next_N.png');
+}
+
+div.embeddedControls_Next_Enabled:active
+{
+	background-image: url('control_next_P.png');
+}
+
+div.embeddedControls_Next_Disabled
+{
+	cursor: default;
+	background-image: url('control_next_D.png');
+}
+
+/* Embedded Mute Button
+   -------------------- */
+
+div#embeddedControls_Mute
+{
+	position: absolute;
+	top: 0px;
+	width: 35px;
+	height: 30px;
+	left: 300px;
+	background-image: url('control_sound-on_P.png');
+}
+
+div.embeddedControls_Mute_Class:active
+{
+	background-image: url('control_sound-on_P.png');
+}
+
+/* Embedded iWork.com link Button
+   ------------------------------ */
+
+div#embeddedControls_Link
+{
+	position: absolute;
+	top: 0px;
+	width: 35px;
+	height: 30px;
+	left: 425px;
+}
+
+div.embeddedControls_Link_Enabled
+{
+	cursor: pointer;
+	background-image: url('control_link_N.png');
+}
+
+div.embeddedControls_Link_Enabled:active
+{
+	background-image: url('control_link_P.png');
+}
+
+/* HUD
+   --- */
+
+div#hud
+{
+	position: absolute;
+	width: 420px;
+	height: 59px;
+	display: block;
+	opacity: 0;
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 500ms;
+}
+
+/* HUD Background Bezel
+   -------------------- */
+
+.hudBezel
+{
+	position: absolute;
+	top: 0px;
+	height: 59px;
+}
+
+div#hudBezelLeftEndCap
+{
+	left: 0px;
+	width: 10px;
+	background-image: url('bezel-l.png');
+}
+
+div#hudBezelFiller
+{
+	left: 10px;
+	width: 400px;
+	background-image: url('bezel-m.png');
+}
+
+div#hudBezelRightEndCap
+{
+	left: 410px;
+	width: 10px;
+	background-image: url('bezel-r.png');
+}
+
+img#hudBezelLeftDivider
+{
+	left: 75px;
+	width: 2px;
+	background-image: url('doc_info_mobile_cut.png');
+}
+
+img#hudBezelRightDivider
+{
+	left: 345px;
+	width: 2px;
+	background-image: url('doc_info_mobile_cut.png');
+}
+
+/* HUD Mute Button
+   --------------- */
+
+div.hudMuteButton
+{
+	position: absolute;
+	cursor: pointer;
+	left: 26px;
+	top: 18px;
+	width: 24px;
+	height: 21px;
+	background-image: url('snd_on_n.png');
+}
+
+div#hudMuteButton:active
+{
+	background-image: url('snd_on_p.png');
+}
+
+/* HUD Prev Button
+   --------------- */
+
+div#hudPreviousButton
+{
+	position: absolute;
+	left: 107px;
+	top: 17px;
+	width: 31px;
+	height: 23px;
+}
+
+div.hudPreviousButtonEnabled
+{
+	cursor: pointer;
+	background-image: url('left_arrow_n.png');
+}
+
+div.hudPreviousButtonEnabled:active
+{
+	background-image: url('left_arrow_p.png');
+}
+
+div.hudPreviousButtonDisabled
+{
+	cursor: default;
+	background-image: url('left_arrow_d.png');
+}
+
+/* HUD Slide Counter
+   ----------------- */
+
+div.hudSlideCounter
+{
+	position: absolute;
+	height: 22px;
+	left: 142px;
+	width: 136px;
+
+	font-family: "Helvetica";
+	text-shadow: 0.0em 0.2em #000000;
+	text-align: center;
+	color: #838383;
+}
+
+div#hudSlideCounterSection
+{
+	top: 19px;
+	height: 22px;
+
+	font-size: 16px;
+}
+
+/* HUD Next Button
+   --------------- */
+   
+div#hudNextButton
+{
+	position: absolute;
+	left: 283px;
+	top: 17px;
+	width: 31px;
+	height: 23px;
+}
+
+div.hudNextButtonEnabled
+{
+	cursor: pointer;
+	background-image: url('right_arrow_n.png');
+}
+
+div.hudNextButtonEnabled:active
+{
+	background-image: url('right_arrow_p.png');
+}
+
+div.hudNextButtonDisabled
+{
+	cursor: default;
+	background-image: url('right_arrow_d.png');
+}
+
+/* HUD Close Button
+   ---------------- */
+   
+div#hudCloseButton
+{
+	position: absolute;
+	left: 371px;
+	top: 18px;
+	width: 21px;
+	height: 22px;
+}
+
+div.hudCloseButtonEnabled
+{
+	cursor: pointer;
+	background-image: url('close_n.png');
+}
+
+div.hudCloseButtonEnabled:active
+{
+	background-image: url('close_p.png');
+}
+
+/* iPhone Controls Section
+   ----------------------- */
+
+div#previousButton
+{
+	position: absolute;
+	background-repeat: no-repeat;
+	background-position: center center;
+	visibility: hidden;
+	width: 22px;
+	height: 27px;
+}
+  
+div.previousButtonEnabled
+{
+	background-image: url('left_arrow_mobile_n.png');
+	background-size: 22px 27px;
+	width: 22px;
+	height: 27px;
+}
+  
+div.previousButtonDisabled
+{
+	background-image: url('left_arrow_mobile_d.png');
+	background-size: 22px 27px;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	width: 22px;
+	height: 27px;
+}
+  
+div#nextButton
+{
+	position: absolute;
+	background-repeat: no-repeat;
+	background-position: center center;
+	visibility: hidden;
+	background-size: 22px 27px;
+	width: 22px;
+	height: 27px;
+}
+  
+div.nextButtonEnabled
+{
+	background-image: url('right_arrow_mobile_n.png');
+	background-size: 22px 27px;
+	width: 22px;
+	height: 27px;
+}
+  
+div.nextButtonDisabled
+{
+	background-image: url('right_arrow_mobile_d.png');
+	background-size: 22px 27px;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	width: 22px;
+	height: 27px;
+}
+
+#infoPanelIcon
+{
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: static_url('badge_info_n.png');
+    background-size: 17px 17px;
+    width: 17px;
+    height: 17px;
+    visibility: hidden;
+}
+
+/* iPad assets */
+@media all and (min-device-width: 481px) and (max-device-width: 1024px) {
+    div#previousButton
+    {
+        background-size: 44px 54px;
+        width: 44px;
+        height: 54px;
+    }
+      
+    div#nextButton
+    {
+        background-size: 44px 54px;
+        width: 44px;
+        height: 54px;
+    }
+  
+    div.previousButtonEnabled
+    {
+        background-size: 44px 54px;
+        width: 44px;
+        height: 54px;
+        background-image: static_url('left_arrow_mobile_n-hd.png');
+    }
+      
+    div.previousButtonDisabled
+    {
+        background-size: 44px 54px;
+        width: 44px;
+        height: 54px;
+        background-image: static_url('left_arrow_mobile_d-hd.png');
+    }
+      
+    div.nextButtonEnabled
+    {
+        background-size: 44px 54px;
+        width: 44px;
+        height: 54px;
+        background-image: static_url('right_arrow_mobile_n-hd.png');
+    }
+      
+    div.nextButtonDisabled
+    {
+        background-size: 44px 54px;
+        width: 44px;
+        height: 54px;
+        background-image: static_url('right_arrow_mobile_d-hd.png');
+    }
+    
+    #infoPanelIcon
+    {
+        background-size: 34px 34px;
+        width: 34px;
+        height: 34px;
+        background-image: static_url('badge_info_n-hd.png');
+    }
+}
+
+/* Retina display assets */
+@media all and (-webkit-min-device-pixel-ratio:2) {
+    div.previousButtonEnabled
+    {
+        background-image: static_url('left_arrow_mobile_n-hd.png');
+    }
+      
+    div.previousButtonDisabled
+    {
+        background-image: static_url('left_arrow_mobile_d-hd.png');
+    }
+      
+    div.nextButtonEnabled
+    {
+        background-image: static_url('right_arrow_mobile_n-hd.png');
+    }
+      
+    div.nextButtonDisabled
+    {
+        background-image: static_url('right_arrow_mobile_d-hd.png');
+    }
+    
+    #infoPanelIcon
+    {
+        background-image: static_url('badge_info_n-hd.png');
+    }
+}
+
+div#slideCounter
+{
+	position: absolute; 
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	font-family: Helvetica;
+	font-size: 23px;
+	color: #FFFFFF;
+	text-shadow: 0.0em 0.2em #000000;
+	visibility: hidden;
+}
+
+#helpText
+{
+	position: absolute; 
+	text-align: center;
+	font-family: Helvetica;
+	font-size: 13px;
+	color: #838383;
+	text-shadow: 0.0em 0.2em #000000;
+	visibility: hidden;
+}
+
+/* Waiting Indicator
+   ----------------- */
+   
+div#waitingIndicator
+{
+	position: absolute; 
+	visibility: visible;
+	width: 110px;
+	height: 110px;
+	background-image: url('waiting_bezel.png');
+}
+
+div#waitingSpinner
+{
+	position: absolute; 
+	visibility: visible;
+	top: 32px;
+	left: 38px;
+	width: 32px;
+	height: 32px;
+	background-image: url('spinner_dkgrey.gif');
+}
+
+/* Info Panel
+   ---------- */
+
+div#infoPanelButton
+{
+	position: absolute; 
+	off-background-color: blue;
+	off-opacity: 0.5;
+}
+
+div#infoPanel
+{
+	position: absolute; 
+	visibility: hidden;
+}
+
+div#closeInfoPanelButton
+{
+	position: absolute; 
+	
+	left: 251px;
+	top: 0px;
+	height: 27px;
+	width: 49px;
+	
+	color: #B3B3B3;
+	font-family: "Helvetica";
+	font-size: 13px;
+	
+	padding-top: 10px;
+	padding-right: 1px;
+
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+
+img#closeButtonDivider
+{
+	position: absolute; 
+	left: 250px;
+	top: 0px;
+}
+
+div.layout
+{
+	position: absolute; 
+	padding-top: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
+
+div.infoPanelSection
+{
+	position: absolute; 
+	padding-top: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
+
+img#avatar
+{
+	position: absolute; 
+	left: 20px;
+	top: 47px;
+	width: 60px;
+	height: 60px;
+	-webkit-box-shadow: 0px 2px 3px #454545
+}
+
+div#documentPublisherSection
+{
+	left: 100px;
+	top: 47px;
+	height: 40px;
+	width: 184px;
+}
+
+div#publisherEmailSection
+{
+	left: 100px;
+	top: 87px;
+	height: 20px;
+	width: 184px;
+}
+
+div#documentNameSection
+{
+	left: 20px;
+	top: 114px;
+	width: 264px;
+	height: 35px;
+	white-space: nowrap;
+}
+
+div#publishDateSection
+{
+	left: 20px;
+	top: 156px;
+	width: 264px;
+	height: 35px;
+}
+
+div#linksSection
+{
+	left: 20px;
+	top: 206px;
+	width: 264px;
+	height: 10px;
+}
+
+span.infoPanelLabel
+{
+	font-family: "Helvetica";
+	font-size: 12px;
+	color: #434343;
+	off-color: #1A1A1A;
+	text-shadow: 0px 1px 1px #F6F6F6;
+}
+
+span.infoPanelValue
+{
+	font-family: "Helvetica";
+	font-weight: 700;
+	font-size: 15px;
+	color: #1A1A1A;
+	text-shadow: 0px 1px 1px #F6F6F6;
+}
+
+span#documentPublisherEmailText
+{
+	color: #0040B4;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+a.infoPanelLink:link
+{
+	color: #434343;
+	text-decoration: none;
+}
+
+a.infoPanelLink:visited
+{
+	color: #434343;
+	text-decoration: none;
+}
+
+a.infoPanelLink:active
+{
+	color: #434343;
+	text-decoration: none;
+}
+
+a.infoPanelLink:hover
+{
+	color: blue;
+	text-decoration: none;
+}
+
+/* Info Panel Animation Keyframes
+   ------------------------------ */
+
+@keyframes 'flipStageOut' 
+{
+	0%	{
+		-webkit-transform: rotateY( 0deg );
+		opacity: 1;
+	}
+	50%	{
+		-webkit-transform: rotateY( 90deg );
+		opacity: 0.5;
+	}
+	51% {
+		-webkit-transform: rotateY( 91deg );
+		opacity: 0;
+	}
+	100% {
+		-webkit-transform: rotateY( 180deg );
+		opacity: 0;
+	}
+}
+
+@keyframes 'moveInfoPanelIn'
+{
+	0% {
+		left: 1000px;
+	}
+	100% {
+		left: 10px;
+	}
+}
+
+@keyframes 'flipInfoPanelIn'
+{
+	0%	{
+		-webkit-transform: rotateY( 180deg );
+		opacity: 0;
+	}
+	50%	{
+		-webkit-transform: rotateY( 90deg );
+		opacity: 0;
+	}
+	51% {
+		-webkit-transform: rotateY( 89deg );
+		opacity: 0.5;
+	}
+	100% {
+		-webkit-transform: rotateY( 0deg );
+		opacity: 1;
+	}
+}
+
+@keyframes 'flipStageIn'
+{
+}
+
+@keyframes 'flipInfoPanelOut'
+{
+}
+

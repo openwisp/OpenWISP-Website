@@ -1,0 +1,3328 @@
+/*
+ * Boomerang - ShowController.js
+ * Copyright (c) 2009 Apple, Inc.
+ * All rights reserved.
+ *
+ * Responsibility: jdmack
+ */
+
+// Required Files:
+// ===============
+
+// Class: ShowController
+// ===============================================================
+
+var kDebugShowController							= "ShowController";
+
+// States:
+// -------
+
+var kShowControllerState_Stopped					= "Stopped";
+var kShowControllerState_Starting					= "Starting";
+
+var kShowControllerState_DownloadingScript			= "DownloadingScipt";
+var kShowControllerState_SettingUpScene				= "SettingUpScene";
+
+var kShowControllerState_IdleAtFinalState			= "IdleAtFinalState";
+var kShowControllerState_IdleAtInitialState			= "IdleAtInitialState";
+
+var kShowControllerState_WaitingToJump				= "WaitingToJump";
+var kShowControllerState_ReadyToJump				= "ReadyToJump";
+
+var kShowControllerState_WaitingToDisplay			= "WaitingToDisplay";
+var kShowControllerState_ReadyToDisplay				= "ReadyToDisplay";
+
+var kShowControllerState_WaitingToPlay				= "WaitingToPlay";
+var kShowControllerState_ReadyToPlay				= "ReadyToPlay";
+
+var kShowControllerState_Playing					= "Playing";
+
+// Events:
+// -------
+
+var kKeyDownEvent									= "keydown";
+
+var ShowController = Class.create
+
+({
+	initialize : function()
+	{
+		var kDebugInitialize = "initialize";
+
+		this.extractDelegateFromUrlParameter();
+		
+		// TODO: investigate moving this later on in the process
+		// - it was in displayScene, which only happens after the KPF file is downloaded and the first scene is ready to go
+		// - but there was some mysterious issue with it not initially displaying in the iframe inside heckler
+		
+		this.delegate.showDidLoad();
+		
+		this.showUrl						= getUrlParameter( "showUrl" );
+		
+		debugMessage( kDebugShowController, kDebugInitialize, "showUrl: " + this.showUrl );
+		
+		// These must be created before the OrientationController as they subscribe to its event
+		
+		this.displayManager					= new DisplayManager();
+		this.scriptManager					= new ScriptManager( this.showUrl );
+		this.textureManager					= new TextureManager( this.showUrl );
+		this.stageManager					= new StageManager( this.textureManager, this.scriptManager );
+		this.touchController				= new TouchController();
+		this.animationManager				= new AnimationManager();
+		
+		this.orientationController			= new OrientationController();
+
+		this.activeHyperlinks				= null;
+		
+		this.script							= null;
+		
+		this.currentSceneIndex				= -1;
+		this.nextSceneIndex					= -1;
+		
+		this.sceneToJumpTo					= -1;
+		this.sceneToDisplay					= -1;
+		
+		this.currentSlideIndex				= -1;
+		this.previousSlideIndex				= -1;
+		
+		this.currentSoundTrackIndex			= 0;
+		
+		this.transformOriginValue			= "";
+
+		this.accumulatingDigits				= false;
+		this.digitAccumulator				= 0;
+		
+		this.firstSlide						= true;
+		
+		this.embedMode						= kEmbedModeNonEmbedded;		
+		this.accountID						= "";		
+		this.guid							= "";		
+		this.locale							= "EN";		
+		this.isNavigationBarVisible			= false;		
+		this.isFullscreen					= false;		
+		this.volume							= 3.0;		
+		this.muted							= false;
+
+		this.soundTrackPlayer				= null;
+		
+		// Hookup event handlers to listen for events from helper classes
+		
+		var self = this;
+		
+		document.observe( kStageIsReadyEvent, 			function( event ) { self.handleStageIsReadyEvent( event ); }, false );
+		
+		document.observe( kScriptDidDownloadEvent,		function( event ) { self.handleScriptDidDownloadEvent( event ); }, false );
+		document.observe( kScriptDidNotDownloadEvent,	function( event ) { self.handleScriptDidNotDownloadEvent( event ); }, false );
+		
+		document.observe( kSceneDidPreloadEvent,		function( event ) { self.handleSceneDidPreloadEvent( event ); }, false );
+		document.observe( kSceneDidNotPreloadEvent,		function( event ) { self.handleSceneDidNotPreloadEvent( event ); }, false );
+
+		document.observe( kSwipeEvent,					function( event ) { self.handleSwipeEvent( event ); }, false );
+
+		document.observe( kStageSizeDidChangeEvent, 	function( event ) { self.handleStageSizeDidChangeEvent( event ); }, false );
+
+		document.observe( kKeyDownEvent,				function( event ) { self.handleKeyDownEvent( event ); }, false );
+		
+		// Can't use event observer for tap events
+		// - this would cause the handler to be on a seperate event loop invocation
+		// - this would prevent us from doing this like opening new tabs (popup blocker logic kicks in)
+		
+		this.touchController.registerTapEventCallback( function( event ) { self.handleTapEvent( event ); } );
+		
+		// Initialize our state...
+		
+		this.changeState( kShowControllerState_Stopped );
+	},
+	
+	extractDelegateFromUrlParameter : function()
+	{
+		var kDebugExtractDelegateFromUrlParameter = "";//"extractDelegateFromUrlParameter";
+		
+		var delegateParameter = getUrlParameter( "delegate" );
+		
+		if( (delegateParameter == "")
+		||  (delegateParameter == null)
+		||  (typeof(delegateParameter) == "undefined") )
+		{
+			debugMessage( kDebugShowController, kDebugExtractDelegateFromUrlParameter, "no delegate parameter specified in URL, using null delegate" );
+			
+			this.delegate = new NullDelegate();
+			
+			return;
+		}
+		
+		debugMessage( kDebugShowController, kDebugExtractDelegateFromUrlParameter, "delegate: " + delegateParameter );
+		
+		var indexOfDot = delegateParameter.indexOf( "." );
+		
+		this.delegate = window;
+		
+		while( indexOfDot != -1 )
+		{
+			var nextPart = delegateParameter.substring( 0, indexOfDot );
+			
+			debugMessage( kDebugShowController, kDebugExtractDelegateFromUrlParameter, "- nextPart: " + nextPart );
+			
+			this.delegate = this.delegate[nextPart];
+			
+			delegateParameter = delegateParameter.substring( indexOfDot + 1 );
+			indexOfDot = delegateParameter.indexOf( "." );
+		}
+
+		debugMessage( kDebugShowController, kDebugExtractDelegateFromUrlParameter, "- lasePart: " + delegateParameter );
+
+		this.delegate = this.delegate[delegateParameter];
+	},
+	
+	// Heckler <-> Player Interface Methods
+	// ------------------------------------
+	
+	setDelegate : function( hecklerDelegate )
+	{
+		var kDebugSetDelegate = "";//"setDelegate";
+		
+		debugMessage( kDebugShowController, kDebugSetDelegate, "delegate has been set" );
+	},
+	
+	setProperty : function( propertyName, propertyValue )
+	{
+		var kDebugSetProperty = "";//"setProperty";
+		
+		debugMessage( kDebugShowController, kDebugSetProperty, "setting '" + propertyName + "' to: " + propertyValue );
+
+		switch( propertyName )
+		{
+			case kPropertyName_embedMode:
+				switch( propertyValue )
+				{
+					case kEmbedModeEmbedded:
+					case kEmbedModeNonEmbedded:
+						this.embedMode = propertyValue;
+						break;
+					default:
+						debugMessage( kDebugShowController, kDebugSetProperty, "invalid value specified for " + kPropertyName_embedMode + ": " + propertyValue );
+						break;
+				}
+				break;
+
+			case kPropertyName_presentationName:
+				// TODO: determine if we need setProperty(presentationName)
+				break;
+
+			case kPropertyName_accountID:
+				this.accountID = propertyValue;
+				break;
+
+			case kPropertyName_guid:
+				this.guid = propertyValue;
+				break;
+
+			case kPropertyName_locale:
+				this.locale = propertyValue;
+				break;
+
+			case kPropertyName_currentSlide:
+				this.jumpToSlide( propertyValue );
+				break;
+
+			case kPropertyName_isNavigationBarVisible:
+				this.isNavigationBarVisible	= propertyValue;		
+				break;
+
+			case kPropertyName_isFullscreen:
+				break;
+
+			case kPropertyName_volume:
+				break;
+
+			default:
+				debugMessage( kDebugShowController, kDebugSetProperty, "- unknown property name" );
+				break;
+		}
+	},
+	
+	getProperty : function( propertyName )
+	{
+		var kDebugGetProperty = "";//"getProperty";
+		
+		debugMessage( kDebugShowController, kDebugGetProperty );
+
+		var propertyValue = null;
+		
+		switch( propertyName )
+		{
+			case kPropertyName_embedMode:
+				propertyValue = this.embedMode;
+				break;
+
+			case kPropertyName_presentationName:
+				propertyValue = this.showUrl;
+				break;
+
+			case kPropertyName_accountID:
+				propertyValue = null;
+				break;
+
+			case kPropertyName_guid:
+				propertyValue = null;
+				break;
+
+			case kPropertyName_locale:
+				propertyValue = null;
+				break;
+
+			case kPropertyName_currentSlide:
+				propertyValue = this.currentSlideIndex + 1;
+				break;
+
+			case kPropertyName_isNavigationBarVisible:
+				propertyValue = null;
+				break;
+
+			case kPropertyName_isFullscreen:
+				propertyValue = null;
+				break;
+
+			case kPropertyName_volume:
+				propertyValue = null;
+				break;
+
+			default:
+				debugMessage( kDebugShowController, kDebugSetProperty, "unknown property name" );
+				break;
+		}
+
+		debugMessage( kDebugShowController, kDebugGetProperty, "getting '" + propertyName + "'... returning '" + propertyValue + "'" );
+		
+		return propertyValue;
+	},
+	
+	gotoSlide : function( slideNumber )
+	{
+		var kDebugGotoSlide = "";//"gotoSlide";
+		
+		debugMessage( kDebugShowController, kDebugGotoSlide, "slideNumber: " + slideNumber );
+		
+		this.jumpToSlide( slideNumber );
+	},
+	
+	pause : function()
+	{
+		var kDebugPause = "";//"pause";
+		
+		debugMessage( kDebugShowController, kDebugPause, "currently not implemented!"  );
+	},
+	
+	play : function()
+	{
+		var kDebugPlay = "";//"play";
+		
+		debugMessage( kDebugShowController, kDebugPlay, "currently not implemented!"  );
+	},
+	
+/*debug*/	debugDiagnosticDump : function()
+/*debug*/	{
+/*debug*/		var kDebugDiagnosticsDump = "debugDiagnosticDump";
+/*debug*/				
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "*****************************************************" );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "***  S T A R T   D I A G N O S T I C   D U M P   ****" );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "*****************************************************" );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-               state: " + this.state );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-           numSlides: " + this.script.slideCount );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-           numScenes: " + this.script.numScenes );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-   currentSceneIndex: " + this.currentSceneIndex );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-      nextSceneIndex: " + this.nextSceneIndex );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-   currentSlideIndex: " + this.currentSlideIndex );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-  previousSlideIndex: " + this.previousSlideIndex );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-       loopSlideshow: " + (this.script.loopSlideshow ? "yes" : "no") );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-      hyperlinksOnly: " + (this.script.showMode == kShowModeHyperlinksOnly ? "yes" : "no") );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "-" );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "- Pre-Built Texture Animations:" );
+/*debug*/				
+/*debug*/		for( var textureId in this.textureAnimations )
+/*debug*/		{
+/*debug*/			debugMessage( kDebugShowController, kDebugDiagnosticsDump, "- " + textureId );
+/*debug*/		}
+/*debug*/
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "- Active Hyperlinks:" );
+/*debug*/
+/*debug*/		var numHyperlinks = 0;
+/*debug*/		var iHyperlink;
+/*debug*/
+/*debug*/		if( this.activeHyperlinks != null )
+/*debug*/		{
+/*debug*/			numHyperlinks = this.activeHyperlinks.length;
+/*debug*/		}
+/*debug*/
+/*debug*/      if( numHyperlinks == 0 )
+/*debug*/      {
+/*debug*/          debugMessage( kDebugShowController, kDebugDiagnosticsDump, "- none" );
+/*debug*/      }
+/*debug*/
+/*debug*/		for( iHyperlink = 0; iHyperlink < numHyperlinks; iHyperlink++ )
+/*debug*/		{
+/*debug*/			var hyperlink		= this.activeHyperlinks[iHyperlink];
+/*debug*/
+/*debug*/			debugMessage( kDebugShowController, kDebugDiagnosticsDump, "- " + iHyperlink + "::  x:" + hyperlink.targetRectangle.x + " y:" + hyperlink.targetRectangle.y + " w:" + hyperlink.targetRectangle.width + " h:" + hyperlink.targetRectangle.height + " url:" + hyperlink.url );
+/*debug*/		}
+/*debug*/
+/*debug*/		this.textureManager.debugDumpCache();
+/*debug*/
+/*debug*/      this.stageManager.debugDumpTextures();
+/*debug*/
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "*************************************************" );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "***  E N D   D I A G N O S T I C   D U M P   ****" );
+/*debug*/		debugMessage( kDebugShowController, kDebugDiagnosticsDump, "*************************************************" );
+/*debug*/	},
+	
+	exitShow : function()
+	{
+		var kDebugExitShow = "exitShow";
+		
+		debugMessage( kDebugShowController, kDebugExitShow, "- exiting show..." );
+		
+		this.delegate.showExited();
+	},
+	
+	onKeyPress : function( key, modifier )
+	{
+		var kDebugOnKeyPress = "";//"onKeyPress";
+
+		debugMessage( kDebugShowController, kDebugOnKeyPress, "key: " + key + " modifier(s): " + (modifier.shiftKey ? "shift " : "" ) + (modifier.altKey ? "alt " : "" ) + (modifier.ctrlKey ? "ctrl " : "" ) + (modifier.metaKey ? "meta" : "" ) );
+
+		if( (key >= kKeyCode_Numeric_0)
+		&&  (key <= kKeyCode_Numeric_9) )
+		{
+			key = kKeyCode_0 + (key - kKeyCode_Numeric_0);
+		}
+
+		key += ( modifier.shiftKey	? kKeyModifier_Shift	: 0 );
+		key += ( modifier.altKey	? kKeyModifier_Alt		: 0 );
+		key += ( modifier.ctrlKey	? kKeyModifier_Ctrl		: 0 );
+		key += ( modifier.metaKey	? kKeyModifier_Meta		: 0 );
+		
+		var digitEncountered = false;
+		
+		switch( key )
+		{
+			case kKeyCode_Escape:
+				this.exitShow();
+				break;
+
+/*debug*/	//case kKeyCode_Return + kKeyModifier_Ctrl:
+/*debug*/	//	this.showWaitingIndicator();
+/*debug*/	//	break;
+
+/*debug*/	case kKeyCode_Return + kKeyModifier_Meta:
+/*debug*/		this.debugDiagnosticDump();
+/*debug*/		break;
+				
+			case kKeyCode_Return:
+				if( this.accumulatingDigits )
+				{
+					debugMessage( kDebugShowController, kDebugOnKeyPress, "- return pressed while accumulating digits, accumulator is now: " + this.digitAccumulator );
+					this.accumulatingDigits	= false;
+
+					if( this.script.showMode == kShowModeHyperlinksOnly )
+					{
+						debugMessage( kDebugShowController, kDebugOnKeyPress, "- can't do it, we're in hyperlinks only mode" );
+					}
+					else
+					{
+						if( this.digitAccumulator <= this.script.slideCount )
+						{
+							this.jumpToSlide( this.digitAccumulator );
+						}
+					}
+					break;
+				}
+				else
+				{
+				}
+				// fall through
+				
+			case kKeyCode_N:
+			case kKeyCode_Space:
+			case kKeyCode_RightArrow:
+			case kKeyCode_RightArrow + kKeyModifier_Shift:
+			case kKeyCode_PageDown:
+				debugMessage( kDebugShowController, kDebugOnKeyPress, "- advance to next build..." );
+				this.advanceToNextBuild();
+				break;
+				
+			case kKeyCode_DownArrow + kKeyModifier_Shift:
+			case kKeyCode_PageDown + kKeyModifier_Shift:
+			case kKeyCode_CloseBracket:
+				debugMessage( kDebugShowController, kDebugOnKeyPress, "- advance to next slide..." );
+				this.advanceToNextBuild();
+				break;
+				
+			case kKeyCode_LeftArrow + kKeyModifier_Shift:
+			case kKeyCode_PageUp + kKeyModifier_Shift:
+			case kKeyCode_OpenBracket:
+				debugMessage( kDebugShowController, kDebugOnKeyPress, "- go back to previous build..." );
+				this.goBackToPreviousBuild();
+				break;
+
+			case kKeyCode_P:
+			case kKeyCode_Delete:
+			case kKeyCode_PageUp:
+			case kKeyCode_LeftArrow:
+			case kKeyCode_UpArrow:
+			case kKeyCode_UpArrow + kKeyModifier_Shift:
+				debugMessage( kDebugShowController, kDebugOnKeyPress, "- go back to previous slide..." );
+				this.goBackToPreviousSlide();
+				break;
+
+			case kKeyCode_Home:
+				debugMessage( kDebugShowController, kDebugOnKeyPress, "- go back to first slide..." );
+				if( this.script.showMode == kShowModeHyperlinksOnly )
+				{
+					debugMessage( kDebugShowController, kDebugOnKeyPress, "- can't do it, we're in hyperlinks only mode" );
+				}
+				else
+				{
+					this.jumpToSlide( 1 );
+				}
+				break;
+				
+			case kKeyCode_End:
+				debugMessage( kDebugShowController, kDebugOnKeyPress, "- go back to last slide..." );
+				if( this.script.showMode == kShowModeHyperlinksOnly )
+				{
+					debugMessage( kDebugShowController, kDebugOnKeyPress, "- can't do it, we're in hyperlinks only mode" );
+				}
+				else
+				{
+					this.jumpToSlide( this.script.slideCount );
+				}
+				break;
+				
+			default:
+				if( (key >= kKeyCode_0) && (key <= kKeyCode_9) )
+				{
+					digitEncountered = true;
+					if( this.accumulatingDigits == false )
+					{
+						debugMessage( kDebugShowController, kDebugOnKeyPress, "- digit entered, start accumulating digits..." );
+						this.accumulatingDigits	= true;
+						this.digitAccumulator	= 0;
+					}
+					debugMessage( kDebugShowController, kDebugOnKeyPress, "- accumulator was: " + this.digitAccumulator );
+					this.digitAccumulator *= 10;
+					this.digitAccumulator += (key - kKeyCode_0);
+					debugMessage( kDebugShowController, kDebugOnKeyPress, "- accumulator now: " + this.digitAccumulator );
+					
+				}
+				break;
+		}
+		if( this.accumulatingDigits && (digitEncountered == false) )
+		{
+			debugMessage( kDebugShowController, kDebugOnKeyPress, "- non-digit entered, stop accumulating digits..." );
+			this.accumulatingDigits	= false;
+			this.digitAccumulator	= 0;
+		}
+	},
+
+	// DOM Event Handlers:
+	// ===================
+
+	handleKeyDownEvent : function( event )
+	{
+		var kDebugHandleKeyDownEvent = "";//"handleKeyDownEvent";
+		
+		var key = event.charCode || event.keyCode;
+		
+		var modifiers = 
+		{
+			altKey		: !!event.altKey,
+			ctrlKey 	: !!event.ctrlKey,
+			shiftKey	: !!event.shiftKey,
+			metaKey		: !!event.metaKey
+		};
+		
+		debugMessage( kDebugShowController, kDebugHandleKeyDownEvent, "keyCode: " + key );
+		
+		event.stopPropagation();
+		this.onKeyPress( key, modifiers );	
+	},
+	
+	handleClickEvent : function( event )
+	{
+		var kDebugHandleClickEvent = "";//"handleClickEvent";
+		
+		debugMessage( kDebugShowController, kDebugHandleClickEvent, "location: " + event.x + ", " + event.y);
+
+		var displayCoOrds =
+		{
+			pointX : event.x,
+			pointY : event.y
+		};
+		
+		this.processClickOrTapAtDisplayCoOrds( displayCoOrds );
+	},
+	
+	// Startup
+	// =======
+	
+	incrementViewCount: function()
+	{
+		var kDebugIncrementViewCount = "";//"incrementViewCount";
+		
+		var showUrl = getUrlParameter( "showUrl" );
+		
+		// Obtain accountID and presentationName from showUrl
+		// Match (p[0-9]{10}) for accountID
+		// Match (.*\\.[^\/]*) for presentationName
+		var params = showUrl.match('\/iw\/(p[0-9]{10})\/\/*(.*\\.[^\/]*)');
+		if (params && params.length >= 3) {
+			var accountID = params[1];
+			// Strip out .iWork/Share/ from presentationName (if neccessary)
+			var presentationName = params[2].replace(/.*\//,'');
+			var viewCounterURL = ['/iw', accountID, '.Counters', encodeURIComponent(presentationName) + '?webdav-method=propget&counter'].join('/');
+			
+			debugMessage( kDebugShowController, kDebugIncrementViewCount, "issuing AJAX request to increment view count..." );
+
+			new Ajax.Request( viewCounterURL, 
+				{
+					method: "get",
+					onSuccess: function( transport ) {
+						debugMessage( kDebugShowController, kDebugIncrementViewCount, "view count increment succeeded");
+					},
+					onFailure: function( transport ) {
+						debugMessage( kDebugShowController, kDebugIncrementViewCount, "view count increment failed");
+					}
+			});
+		}
+	},
+
+	startShow : function()
+	{
+		this.changeState( kShowControllerState_DownloadingScript );
+		this.scriptManager.downloadScript();
+		
+		if (gMode == kModeMobile && gIsPublicViewer) {
+  		this.incrementViewCount();
+		}
+	},
+	
+	// State Management
+	// ================
+	
+	changeState : function( newState )
+	{
+		var kDebugChangeState = "changeState";
+
+		if( newState != this.state )
+		{
+			debugMessage( kDebugShowController, kDebugChangeState, "leaving '" + this.state + "' entering '" + newState + "'" );
+
+			this.accumulatingDigits	= false;
+			this.digitAccumulator	= 0;
+
+			this.leavingState();
+			this.state = newState;
+			this.enteringState();
+		}
+	},
+	
+	leavingState : function()
+	{
+		var kDebugLeavingState = "";//"leavingState";
+		
+		var debugMessageExtra = "";
+		
+		switch( this.state )
+		{
+			case kShowControllerState_Stopped:
+				break;
+
+			case kShowControllerState_Starting:
+				break;
+
+			case kShowControllerState_SettingUpScene:
+				break;
+				
+			case kShowControllerState_IdleAtFinalState:
+				break;
+				
+			case kShowControllerState_IdleAtInitialState:
+				break;
+				
+			case kShowControllerState_WaitingToJump:
+				break;
+
+			case kShowControllerState_ReadyToJump:
+				break;
+
+			case kShowControllerState_WaitingToPlay:
+				this.displayManager.hideWaitingIndicator();
+				break;
+
+			case kShowControllerState_ReadyToPlay:
+				break;
+
+			case kShowControllerState_Playing:
+				break;
+		}
+		
+		debugMessage( kDebugShowController, kDebugLeavingState, "leaving " + this.state + " currentSceneIndex: " + this.currentSceneIndex + " " + debugMessageExtra );
+	},
+	
+	enteringState : function()
+	{
+		var kDebugEnteringState = "";//"enteringState";
+		
+		var debugMessageExtra = "";
+		
+		switch( this.state )
+		{
+			case kShowControllerState_Stopped:
+				break;
+
+			case kShowControllerState_Starting:
+				this.showWaitingIndicator();
+				break;
+
+			case kShowControllerState_SettingUpScene:
+				break;
+				
+			case kShowControllerState_IdleAtFinalState:
+				this.updateSlideNumber();
+				this.displayManager.hideWaitingIndicator();
+				break;
+				
+			case kShowControllerState_IdleAtInitialState:
+				this.updateSlideNumber();
+				this.displayManager.hideWaitingIndicator();
+				break;
+				
+			case kShowControllerState_WaitingToJump:
+				this.showWaitingIndicator();
+				break;
+
+			case kShowControllerState_ReadyToJump:
+				break;
+
+			case kShowControllerState_WaitingToPlay:
+				this.showWaitingIndicator();
+				break;
+				
+			case kShowControllerState_ReadyToPlay:
+				break;
+
+			case kShowControllerState_Playing:
+				break;
+		}
+
+		debugMessage( kDebugShowController, kDebugEnteringState, "entering " + this.state + " state, currentSceneIndex: " + this.currentSceneIndex + " " + debugMessageExtra );
+	},
+
+	updateSlideNumber : function()
+	{
+		var kDebugUpdateSlideNumber = "";//"updateSlideNumber";
+
+		var adjustedSceneIndex = this.currentSceneIndex;
+		
+		debugMessage( kDebugShowController, kDebugUpdateSlideNumber, "this.currentSceneIndex: " + this.currentSceneIndex );
+		
+		if( this.state == kShowControllerState_IdleAtFinalState )
+		{
+			debugMessage( kDebugShowController, kDebugUpdateSlideNumber, "- but because we're waiting at end state, we need to add one..." );
+			adjustedSceneIndex++;
+		}
+		
+		var newSlideIndex = this.scriptManager.slideIndexFromSceneIndex( adjustedSceneIndex );
+		
+		if( this.firstSlide )
+		{
+			// TODO: see if we can get it to work here again
+			// - we moved it back to "initialize()" (see comments there for reasoning)
+//			this.delegate.showDidLoad();
+
+			this.firstSlide = false;
+		}
+		
+		debugMessage( kDebugShowController, kDebugUpdateSlideNumber, "- that makes slide index: " + newSlideIndex );
+		
+		if( this.currentSlideIndex != newSlideIndex )
+		{
+			debugMessage( kDebugShowController, kDebugUpdateSlideNumber, "- this differs from previous index of " + this.currentSlideIndex + ", update display and inform delegate..." );
+			
+			this.previousSlideIndex	= this.currentSlideIndex;
+			this.currentSlideIndex	= newSlideIndex;
+			
+			this.displayManager.updateSlideNumber( this.currentSlideIndex + 1, this.script.slideCount );
+			
+			this.delegate.propertyChanged( kPropertyName_currentSlide, this.currentSlideIndex + 1 );
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugUpdateSlideNumber, "- this has not changed, nothing to do..." );
+		}
+	},
+
+	showInfoPanel : function()
+	{
+		var kDebugShowInfoPanel = "";//"showInfoPanel";
+		
+		debugMessage( kDebugShowController, kDebugShowInfoPanel );
+		
+		this.displayManager.showInfoPanel();
+		this.touchController.setTouchTrackingEnabled( false );
+	},
+	
+	hideInfoPanel : function()
+	{
+		var kDebugHideInfoPanel ="";// "hideInfoPanel";
+		
+		debugMessage( kDebugShowController, kDebugHideInfoPanel, "hide the info panel and re-show the slides" );
+		
+		this.displayManager.hideInfoPanel();
+
+		debugMessage( kDebugShowController, kDebugHideInfoPanel, "re-enable touch tracking" );
+		
+		this.touchController.setTouchTrackingEnabled( true );
+
+		debugMessage( kDebugShowController, kDebugHideInfoPanel, "we're done" );
+	},
+	
+	showWaitingIndicator : function()
+	{
+		var kDebugShowWaitingIndicator = "showWaitingIndicator";
+
+		var currentTime					= new Date();
+		var lastPreloadStart			= this.textureManager.lastPreloadStartTime();
+		var timeSinceLastPreloadStart	= currentTime.getTime() - lastPreloadStart;
+		
+		if( timeSinceLastPreloadStart < 0.5 )
+		{
+			debugMessage( kDebugShowController, kDebugShowWaitingIndicator, "0.5s has not elapsed since last preload, don't show spinner" );
+			return;
+		}
+		
+		this.displayManager.showWaitingIndicator();
+	},
+	
+	handleStageSizeDidChangeEvent : function( event )
+	{
+		var kDebugHandleStageSizeDidChangeEvent = "handleStageSizeDidChangeEvent";
+		
+		debugMessage( kDebugShowController, kDebugHandleStageSizeDidChangeEvent, "need to update TouchController with new track area" );
+		
+		this.touchController.setTrackArea( event.memo.left, event.memo.top, event.memo.width, event.memo.height );
+	},
+	
+	handleTapEvent : function( event )
+	{
+		var kDebugHandleTapEvent = "";//"handleTapEvent";
+
+		debugMessage( kDebugShowController, kDebugHandleTapEvent, "fingers: " + event.memo.fingers );
+
+		var displayCoOrds =
+		{
+			pointX : event.memo.pointX,
+			pointY : event.memo.pointY
+		};
+	
+		this.processClickOrTapAtDisplayCoOrds( displayCoOrds );
+	},
+	
+	processClickOrTapAtDisplayCoOrds : function( displayCoOrds )
+	{
+		var kDebugProcessClickOrTapAtDisplayCoOrds = "";//"processClickOrTapAtDisplayCoOrds";
+
+		var isHyperlink = false;
+		var hyperlinkUrl = "";
+		
+		if( this.displayManager.isInfoPanelShowing() )
+		{
+			debugMessage( kDebugShowController, kDebugProcessClickOrTapAtDisplayCoOrds, "info panel is showing, ignore clicks and taps" );
+			return;
+		}
+		
+		debugMessage( kDebugShowController, kDebugProcessClickOrTapAtDisplayCoOrds, "display location: (" + displayCoOrds.pointX + "," + displayCoOrds.pointY + ")" );
+
+		var showCoOrds = this.displayManager.convertDisplayCoOrdsToShowCoOrds( displayCoOrds );
+
+		debugMessage( kDebugShowController, kDebugProcessClickOrTapAtDisplayCoOrds, "- show location: (" + showCoOrds.pointX + "," + showCoOrds.pointY + ")" );
+
+		if( showCoOrds.pointX == -1 )
+		{
+			debugMessage( kDebugShowController, kDebugProcessClickOrTapAtDisplayCoOrds, "- outside of show area" );
+		}
+		else
+		{
+			hyperlinkUrl = this.findHyperlinkAtCoOrds( showCoOrds );
+			isHyperlink = (hyperlinkUrl != "");
+		}
+		
+		if( isHyperlink )
+		{
+			debugMessage( kDebugShowController, kDebugProcessClickOrTapAtDisplayCoOrds, "- hyperlink invokded. url: " + hyperlinkUrl );
+			this.processHyperlinkUrl( hyperlinkUrl );
+		}
+		else
+		{
+			this.advanceToNextBuild();
+		}
+	},
+	
+	processHyperlinkUrl : function( hyperlinkUrl )
+	{
+		var kDebugProcessHyperlinkUrl = "";//"processHyperlinkUrl";
+
+		debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, hyperlinkUrl );
+		
+		if( hyperlinkUrl.indexOf( "?slide=" )  == 0  )
+		{
+			var slideNumberText = hyperlinkUrl.substring( 7 );
+
+			debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's a jump to slide " + slideNumberText );
+
+			var newSlideIndex	= parseInt( slideNumberText );
+				
+			this.jumpToSlide( newSlideIndex );
+		}
+		else if( hyperlinkUrl.indexOf( "?action=retreat" ) == 0  )
+		{
+			if( this.previousSlideIndex != -1 ) 
+			{
+				debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's a jump to the last viewed slide, which was " + this.previousSlideIndex + 1 );
+				this.jumpToSlide( this.previousSlideIndex + 1 );
+			}
+			else
+			{
+				debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's a jump to the last viewed slide, but this is the first slide we've displayed" );
+			}
+		}
+		else if( hyperlinkUrl.indexOf( "?id=" ) == 0  )
+		{
+			var slideNumberText = hyperlinkUrl.substring( 4 );
+
+			debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's a jump to a slide number: " + slideNumberText );
+		}
+		else if( hyperlinkUrl.indexOf( "http:" ) == 0 )
+		{
+			debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's a jump to a web page: " + hyperlinkUrl );
+
+			window.open( hyperlinkUrl, "_blank", null );
+		}
+		else if( hyperlinkUrl.indexOf( "playMovie:" ) == 0 )
+		{
+			var indexOfColon	= hyperlinkUrl.indexOf( ":" );
+			var movieObjectId	= hyperlinkUrl.substring( indexOfColon + 1 );
+			
+			debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's a playMovie directive, movieObjectId: '" + movieObjectId + "'" );
+			
+			this.startMoviePlaying( movieObjectId );
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugProcessHyperlinkUrl, "- it's an unknown hyperlink type" );
+		}
+	},
+	
+	addHyperlink : function( targetRectangle, url )
+	{
+		var newHyperlink = { targetRectangle : targetRectangle, url : url };
+		
+		this.activeHyperlinks.push( newHyperlink );
+	},
+	
+	clearAllHyperlinks : function()
+	{
+		var kDebugClearAllHyperlinks = "";//"clearAllHyperlinks";
+
+		debugMessage( kDebugShowController, kDebugClearAllHyperlinks, "deleting old hyperlinks array and creating new one..." );
+		
+		this.stageManager.clearAllHyperlinks();
+		
+		delete this.activeHyperlinks;
+		this.activeHyperlinks = new Array();
+	},
+	
+	findHyperlinkAtCoOrds : function( showCoOrds )
+	{
+		var kDebugFindHyperlinkAtCoOrds = "";//"findHyperlinkAtCoOrds";
+
+		var numHyperlinks = 0;
+		var iHyperlink;
+
+		if( this.activeHyperlinks != null )
+		{
+			numHyperlinks = this.activeHyperlinks.length;
+		}
+		
+		debugMessage( kDebugShowController, kDebugFindHyperlinkAtCoOrds, "showCoOrds: (" + showCoOrds.pointX + "," + showCoOrds.pointY + ")" );
+
+		debugMessage( kDebugShowController, kDebugFindHyperlinkAtCoOrds, "- looking through " + numHyperlinks + " hyperlinks..." );
+		
+		for( iHyperlink = numHyperlinks; iHyperlink > 0; iHyperlink-- )
+		{
+			var hyperlink		= this.activeHyperlinks[iHyperlink-1];
+			var hyperlinkRect	= hyperlink.targetRectangle;
+			
+			hyperlinkLeft		= hyperlinkRect.x;
+			hyperlinkTop		= hyperlinkRect.y;
+			hyperlinkRight		= hyperlinkLeft + hyperlinkRect.width;
+			hyperlinkBottom		= hyperlinkTop	+ hyperlinkRect.height;
+			
+			debugMessage( kDebugShowController, kDebugFindHyperlinkAtCoOrds, "- " + iHyperlink + ": (left: " + hyperlinkLeft + ", top:" + hyperlinkTop + ", right: " + hyperlinkRight + ", bottom: " + hyperlinkBottom + ", width: " + hyperlinkRect.width + ", height: " + hyperlinkRect.height + ")" );
+
+			if( ( showCoOrds.pointX >= hyperlinkLeft )
+			&&  ( showCoOrds.pointX <= hyperlinkRight )
+			&&  ( showCoOrds.pointY >= hyperlinkTop )
+			&&  ( showCoOrds.pointY <= hyperlinkBottom ) )
+			{
+				debugMessage( kDebugShowController, kDebugFindHyperlinkAtCoOrds, "---- found it: url: " + hyperlink.url );
+				return hyperlink.url;
+			}
+			else
+			{
+				debugMessage( kDebugShowController, kDebugFindHyperlinkAtCoOrds, "---- not in this one..." );
+			}
+		}
+		
+		debugMessage( kDebugShowController, kDebugFindHyperlinkAtCoOrds, "- no hyperlink containing this point found." );
+		
+		return "";
+	},
+	
+	handleSwipeEvent : function( event )
+	{
+		var kDebugHandleSwipeEvent = "";//"handleSwipeEvent";
+
+		debugMessage( kDebugShowController, kDebugHandleSwipeEvent, "direction: " + event.memo.direction + " fingers: " + event.memo.fingers );
+		
+		if( event.memo.direction == "left" )
+		{
+			switch( event.memo.fingers )
+			{
+				case 1:
+					this.advanceToNextBuild();
+					break;
+				case 2:
+					this.advanceToNextSlide();
+					break;
+				default:
+					break;
+			}
+		}
+		else if( event.memo.direction == "right" )
+		{
+			switch( event.memo.fingers )
+			{
+				case 1:
+					this.goBackToPreviousBuild();
+					break;
+				case 2:
+					this.goBackToPreviousSlide();
+					break;
+				default:
+					break;
+			}
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugHandleSwipeEvent, "unsupported swipe" );
+		}
+	},
+	
+	toggleMute : function()
+	{
+		var kDebugToggleMute = "toggleMute";
+		
+		if( this.muted )
+		{
+			debugMessage( kDebugShowController, kDebugToggleMute, "turn sound on..." );
+			this.muted = false;
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugToggleMute, "turn sound off..." );
+			this.muted = true;
+		}
+		
+		if( this.soundTrackPlayer )
+		{
+			debugMessage( kDebugShowController, kDebugToggleMute, "- setting mute state of running soundtrack..." );
+			this.soundTrackPlayer.muted = this.muted;
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugToggleMute, "- there is no running soundtrack to mute/un-mute" );
+		}
+		
+		debugMessage( kDebugShowController, kDebugToggleMute, "- check if there are any running videos..." );
+		
+		this.stageManager.setMutedStateOnAllVideoElements( this.muted );
+		
+		this.updateNavigationButtons(); // this will update the mute button
+
+		debugMessage( kDebugShowController, kDebugToggleMute, "- and we're done!" );
+	},
+	
+	advanceToNextSlide : function()
+	{
+		var kDebugAdvanceToNextSlide = "advanceToNextSlide";
+
+		if( this.script.showMode == kShowModeHyperlinksOnly )
+		{
+			debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "can't do it, we're in hyperlinks only mode" );
+			return;
+		}
+		
+		if( this.displayManager.infoPanelIsShowing )
+		{
+			debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "can't do it, info panel is showing" );
+			return;
+		}
+
+		debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "===                A D V A N C E   T O   N E X T   S L I D E                 ===" );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "-             state: " + this.state );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "- currentSceneIndex: " + this.currentSceneIndex );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "-    nextSceneIndex: " + this.nextSceneIndex );
+	
+		switch( this.state )
+		{
+			case kShowControllerState_IdleAtInitialState:
+			case kShowControllerState_IdleAtFinalState:
+				var currentSlideIndex		= this.scriptManager.slideIndexFromSceneIndex( this.currentSceneIndex );
+				var nextSlideIndex			= currentSlideIndex + 1;
+				
+				if( nextSlideIndex == this.script.slideCount )
+				{
+					debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "we're at the end of the show, check to see if it's a looping show..." );
+					
+					if( this.script.loopSlideshow )
+					{
+						debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "- yes it is, set next slide to 0" );
+						nextSlideIndex = 0;
+					}
+/*debug*/			else
+/*debug*/			{
+/*debug*/				debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "- no it is NOT, i guess we're done here" );
+/*debug*/			}
+				}
+				
+				if( nextSlideIndex < this.script.slideCount )
+				{
+					var sceneIndexOfNextSlide	= this.scriptManager.sceneIndexFromSlideIndex( nextSlideIndex );
+					
+					debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "this.currentSceneIndex: " + this.currentSceneIndex + " currentSlideIndex: " + currentSlideIndex );
+					debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "nextSlideIndex: " + nextSlideIndex + " sceneIndexOfNextSlide: " + sceneIndexOfNextSlide );
+	
+					if( this.textureManager.isScenePreloaded( sceneIndexOfNextSlide ) )
+					{
+						debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "sceneIndex: " + sceneIndexOfNextSlide + " already preloaded, displaying now..." );
+						this.displayScene( sceneIndexOfNextSlide, 0 );
+					}
+					else
+					{
+						debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "sceneIndex: " + sceneIndexOfNextSlide + " not yet preloaded, issuing request and waiting..." );
+						this.sceneToJumpTo = sceneIndexOfNextSlide;
+						this.changeState( kShowControllerState_WaitingToJump );
+						this.textureManager.preloadScene( sceneIndexOfNextSlide );
+					}
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "can't advance, alrady at end of show" );
+				}
+				break;
+				
+			default:
+				debugMessage( kDebugShowController, kDebugAdvanceToNextSlide, "can't advance now, not in an idle state (currently in '" + this.state + "' state)" );
+				break;
+		}
+	},
+	
+	advanceToNextBuild : function()
+	{
+		var kDebugAdvanceToNextBuild = "advanceToNextBuild";
+
+		if( this.script.showMode == kShowModeHyperlinksOnly )
+		{
+			debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "can't do it, we're in hyperlinks only mode" );
+			return;
+		}
+		
+		if( this.displayManager.infoPanelIsShowing )
+		{
+			debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "can't do it, info panel is showing" );
+			return;
+		}
+
+		debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "===                A D V A N C E   T O   N E X T   B U I L D                 ===" );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "-             state: " + this.state );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "- currentSceneIndex: " + this.currentSceneIndex );
+		debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "-    nextSceneIndex: " + this.nextSceneIndex );
+		
+		switch( this.state )
+		{
+			case kShowControllerState_IdleAtFinalState:
+				if( this.nextSceneIndex == -1 )
+				{
+					debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "- this.nextSceneIndex is -1, that's the end!" );
+					break;
+				}
+				debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "- we're sitting idle on final state of " + this.currentSceneIndex + ", jump to next scene... (" + this.nextSceneIndex + ")" );
+				var playAnimations;
+				if( this.nextSceneIndex > this.currentSceneIndex )
+				{
+					debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "next > current, we're NOT looping back to the start, so play animations after jump" );
+					playAnimations = true;
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "next <= current, we ARE looping back to the start, so do NOT play animations after jump" );
+					playAnimations = false;
+				}
+				this.jumpToScene( this.nextSceneIndex, playAnimations );
+				this.textureManager.preloadScene( this.nextSceneIndex );
+				break;
+				
+			case kShowControllerState_IdleAtInitialState:
+				debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "- we're sitting idle on initial state of " + this.currentSceneIndex + ", preload next scene (" + this.nextSceneIndex + "), and play current scene..." );
+				this.textureManager.preloadScene( this.nextSceneIndex );
+				this.playCurrentScene();
+				break;
+				
+			default:
+				debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "nextSceneIndex: " + this.nextSceneIndex + " can't advance now, not in an idle state (currently in '" + this.state + "' state)" );
+				break;
+		}
+	},
+
+	goBackToPreviousSlide : function()
+	{
+		var kDebugGoBackToPreviousSlide = "goBackToPreviousSlide";
+
+		if( this.script.showMode == kShowModeHyperlinksOnly )
+		{
+			debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "can't do it, we're in hyperlinks only mode" );
+			return;
+		}
+		
+		if( this.displayManager.infoPanelIsShowing )
+		{
+			debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "can't do it, info panel is showing" );
+			return;
+		}
+
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "===            G O   B A C K   T O   P R E V I O U S   S L I D E             ===" );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "-             state: " + this.state );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "- currentSceneIndex: " + this.currentSceneIndex );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "-    nextSceneIndex: " + this.nextSceneIndex );
+	
+		switch( this.state )
+		{
+			case kShowControllerState_IdleAtFinalState:
+			case kShowControllerState_IdleAtInitialState:
+				var sceneIndexToUse = this.currentSceneIndex;
+				if( this.state == kShowControllerState_IdleAtFinalState )
+				{
+					sceneIndexToUse++;
+				}
+				if( (sceneIndexToUse == 0) && (this.script.loopSlideshow == false) )
+				{
+					debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "- can't go back, already at start of show" );
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "- currentSceneIndex: " + this.currentSceneIndex );
+
+					var currentSlideIndex 			= this.scriptManager.slideIndexFromSceneIndex( sceneIndexToUse );
+					var previousSlideIndex			= (currentSlideIndex > 0 ? currentSlideIndex - 1 : this.script.slideCount - 1);
+					var sceneIndexOfPreviousSlide	= this.scriptManager.sceneIndexFromSlideIndex( previousSlideIndex );
+					
+					debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "- currentSlideIndex: " + currentSlideIndex );
+					debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "- previousSlideIndex: " + previousSlideIndex );
+					debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "- sceneIndexOfPreviousSlide: " + sceneIndexOfPreviousSlide + " jumping to it now..." );
+	
+					this.jumpToScene( sceneIndexOfPreviousSlide );
+				}
+				break;
+				
+			default:
+				debugMessage( kDebugShowController, kDebugGoBackToPreviousSlide, "can't go back now, not in an idle state (currently in '" + this.state + "' state)" );
+				break;
+		}
+	},
+	
+	goBackToPreviousBuild : function()
+	{
+		var kDebugGoBackToPreviousBuild = "goBackToPreviousBuild";
+
+		if( this.script.showMode == kShowModeHyperlinksOnly )
+		{
+			debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "can't do it, we're in hyperlinks only mode" );
+			return;
+		}
+		
+		if( this.displayManager.infoPanelIsShowing )
+		{
+			debugMessage( kDebugShowController, kDebugAdvanceToNextBuild, "can't do it, info panel is showing" );
+			return;
+		}
+
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "===            G O   B A C K   T O   P R E V I O U S   B U I L D             ===" );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "================================================================================" );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "-             state: " + this.state );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "- currentSceneIndex: " + this.currentSceneIndex );
+		debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "-    nextSceneIndex: " + this.nextSceneIndex );
+
+		if( (this.currentSceneIndex == 0) && (this.script.loopSlideshow == false) )
+		{
+			debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "can't go back, already at start of show" );
+		}
+		else
+		{
+			var previousSceneIndex;
+			
+			if( this.currentSceneIndex == 0 )
+			{
+				debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "was at first scene of show, going to last scene..." ); // or should it be last slide? 
+				previousSceneIndex = this.script.numScenes - 1;
+			}
+			//else if( this.currentSceneIndex == this.script.page Count )
+			//{
+			//	debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "was at black screen at end of show, going to last scene..." );
+			//	previousSceneIndex = this.script.page Count - 1;
+			//}
+			else
+			{
+				switch( this.state )
+				{
+					case kShowControllerState_IdleAtFinalState:
+						previousSceneIndex = this.currentSceneIndex;
+						debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "we're somewhere in the middle of the desk sitting on the final state of a scene, this.currentSceneIndex: " + this.currentSceneIndex + " previousSceneIndex: " + previousSceneIndex );
+						break;
+
+					case kShowControllerState_IdleAtInitialState:
+						previousSceneIndex = this.currentSceneIndex - 1;
+						debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "we're somewhere in the middle of the desk sitting on the initial state of a scene, this.currentSceneIndex: " + this.currentSceneIndex + " previousSceneIndex: " + previousSceneIndex );
+						break;
+
+					default:
+						debugMessage( kDebugShowController, kDebugGoBackToPreviousBuild, "we're somewhere in the middle of the desk in stete: " + this.state + " - what do we do now?" );
+						break;
+				}
+			}
+			this.jumpToScene( previousSceneIndex, false );
+		}
+	},
+	
+	handleStageIsReadyEvent : function( event )
+	{
+		var kDebugHandleStageIsReadyEvent = "";//"handleStageIsReadyEvent";
+
+		debugMessage( kDebugShowController, kDebugHandleStageIsReadyEvent );
+	},
+	
+	handleScriptDidDownloadEvent : function( event )
+	{
+		var kDebugHandleScriptDidDownloadEvent = "handleScriptDidDownloadEvent";
+
+		debugMessage( kDebugShowController, kDebugHandleScriptDidDownloadEvent );
+		
+		switch( this.state )
+		{
+			case kShowControllerState_DownloadingScript:
+				this.script = event.memo.script;
+				this.script.numScenes = this.script.eventTimelines.length - 1;
+
+				debugMessage( kDebugShowController, kDebugHandleScriptDidDownloadEvent, "- this.script.numScenes: " + this.script.numScenes );
+
+				debugMessage( kDebugShowController, kDebugHandleScriptDidDownloadEvent, "- switching to 'starting'..." );
+
+				this.changeState( kShowControllerState_Starting );
+		
+				debugMessage( kDebugShowController, kDebugHandleScriptDidDownloadEvent, "- checking to see if a starting slide number was specified in url..." );
+				
+				var startingSlide = getUrlParameter( "currentSlide" );
+				var startingSlideNumber;
+				
+				if( this.script.showMode == kShowModeHyperlinksOnly )
+				{
+					this.displayManager.setHyperlinksOnlyMode();
+				}
+				
+				if( startingSlide )
+				{
+					startingSlideNumber	= parseInt( startingSlide );
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugHandleScriptDidDownloadEvent, "- nope, not there, use 1..." );
+					startingSlideNumber = 1;
+				}
+				this.jumpToSlide( startingSlideNumber );	
+				break;
+			
+			default:
+				debugMessage( kDebugShowController, kDebugHandleScriptDidDownloadEvent, "- hmmm we seem to have arrived here from an unpredicted state" );
+				break;
+		}
+	},
+	
+	handleScriptDidNotDownloadEvent : function( event )
+	{
+		var kDebugHandleScriptDidNotDownloadEvent = "handleScriptDidNotDownloadEvent";
+
+		debugMessage( kDebugShowController, kDebugHandleScriptDidNotDownloadEvent );
+
+		var tryAgain = this.promptUserToTryAgain( kUnableToReachiWorkTryAgain );
+		
+		if( tryAgain )
+		{
+			this.scriptManager.downloadScript();
+		}
+		else
+		{
+			// TODO: handle error condition here.  Perhaps display some message like "cannot play show at current time"?
+			this.displayManager.hideWaitingIndicator();
+		}
+	},
+	
+	startSoundTrack : function()
+	{
+		var kDebugStartSoundTrack = "startSoundTrack";
+		
+		if( gMode == kModeMobile )
+		{
+			debugMessage( kDebugShowController, kDebugStartSoundTrack, "soundTrackMode are currently not supported on the phone..." );
+			return;
+		}
+		
+		if( this.script.soundTrackMode == kSoundTrackModeOff )
+		{
+			debugMessage( kDebugShowController, kDebugStartSoundTrack, "soundTrackMode is 'off', nothing to do here..." );
+			return;
+		}
+		
+		if( this.script.soundTrackMedia == null )
+		{
+			debugMessage( kDebugShowController, kDebugStartSoundTrack, "soundTrackMedia is null, nothing to do here..." );
+			return;
+		}
+
+		debugMessage( kDebugShowController, kDebugStartSoundTrack, "soundTrackMedia is present, start it playing... (There are " + this.script.soundTrackMedia.length + " items)" );
+		
+		this.currentSoundTrackIndex = 0;
+		this.playNextItemInSoundTrack();
+		this.updateNavigationButtons(); // this will enable the mute button
+	},
+	
+	playNextItemInSoundTrack : function()
+	{
+		var kDebugPlayNextItemInSoundTrack = "playNextItemInSoundTrack";
+		
+		//debugMessage( kDebugShowController, kDebugPlayNextItemInSoundTrack, "look up ID and URL of next itme to play..." );
+
+		var itemId	= this.script.soundTrackMedia[this.currentSoundTrackIndex];
+		var itemUrl	= this.textureManager.urlForMovie( itemId );
+		
+		//debugMessage( kDebugShowController, kDebugPlayNextItemInSoundTrack, "- itemId: " + itemId );
+		//debugMessage( kDebugShowController, kDebugPlayNextItemInSoundTrack, "- itemUrl: " + itemUrl );
+		
+		debugMessage( kDebugShowController, kDebugPlayNextItemInSoundTrack, "time: " + Date().toString() + ", start item " + this.currentSoundTrackIndex + " playing..." );
+		
+		this.soundTrackPlayer = new Audio();
+		
+		var self = this;
+		
+		this.soundTrackPlayer.muted = this.muted;
+		this.soundTrackPlayer.style.display = "none";
+		this.soundTrackPlayer.src = itemUrl;
+		this.soundTrackPlayer.observe( "ended", function( event ) { self.soundTrackItemDidComplete(); }, false );
+		this.soundTrackPlayer.load();
+		this.soundTrackPlayer.play();
+	},
+	
+	soundTrackItemDidComplete : function()
+	{
+		var kDebugSoundTrackItemDidComplete = "soundTrackItemDidComplete";
+
+		debugMessage( kDebugShowController, kDebugSoundTrackItemDidComplete, "time: " + Date().toString() + ", item " + this.currentSoundTrackIndex + " completed playing, lets see if there's anything else to play..." );
+		
+		this.currentSoundTrackIndex++;
+	
+		if( this.currentSoundTrackIndex < this.script.soundTrackMedia.length )
+		{
+			debugMessage( kDebugShowController, kDebugSoundTrackItemDidComplete, "- why yes there is..." );
+		
+			this.playNextItemInSoundTrack();
+		}
+		else
+		{
+			if( this.script.soundTrackMode == kSoundTrackModePlayOnce )
+			{
+				debugMessage( kDebugShowController, kDebugSoundTrackItemDidComplete, "- nope, that's it" );
+				this.soundTrackPlayer = null;
+				this.updateNavigationButtons(); // this will disable the mute button
+			}
+			else if( this.script.soundTrackMode == kSoundTrackModeLooping )
+			{
+				debugMessage( kDebugShowController, kDebugSoundTrackItemDidComplete, "- nope, but we're in loop mode so take it from the top..." );
+				this.startSoundTrack();
+			}
+		}
+	},
+	
+	promptUserToTryAgain : function( message )
+	{
+		var kDebugPromptUserToTryAgain = "promptUserToTryAgain";
+
+		var tryAgain = false;
+		
+		if( gMode == kModeMobile )
+		{
+			debugMessage( kDebugShowController, kDebugPromptUserToTryAgain, "we're in mobile mode, pop up a 'confirm' dialog..." );
+			tryAgain = confirm( kUnableToReachiWorkTryAgain );
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugPromptUserToTryAgain, "we're in desktop mode, pop up a 'confirm' dialog..." );
+			// TODO: interface with heckler to find out if user wants to try again
+			//tryAgain = ????
+			tryAgain = confirm( kUnableToReachiWorkTryAgain );
+		}
+		
+		return tryAgain;
+	},
+	
+	jumpToSlide : function( slideNumber )
+	{
+		var slideIndex = slideNumber - 1;
+		
+		var sceneIndex = this.scriptManager.sceneIndexFromSlideIndex( slideIndex );
+		
+		this.jumpToScene( sceneIndex, false );
+	},
+
+	jumpToScene : function( sceneIndex, playAnimations )
+	{
+		var kDebugJumpToScene = "jumpToScene";
+		
+/*debug*/	//kDebugJumpToScene = "";
+		
+		debugMessage( kDebugShowController, kDebugJumpToScene, "sceneIndex: " + sceneIndex + " playAnimations: " + (playAnimations ? "true" : "false") + " state: " + this.state );
+		
+		// TODO: rethink whether we need to test state in jumpToSlide
+		switch( this.state )
+		{
+			case kShowControllerState_Starting:
+			case kShowControllerState_IdleAtInitialState:
+			case kShowControllerState_IdleAtFinalState:
+			case kShowControllerState_ReadyToJump:
+				break;
+
+			default:
+				debugMessage( kDebugShowController, kDebugJumpToScene, "- '" + this.state + "' state does not supports jumping..." );
+				return;
+		}
+
+		if( this.textureManager.isScenePreloaded( sceneIndex ) == false )
+		{
+			debugMessage( kDebugShowController, kDebugJumpToScene, "- not yet preloaded, issuing request and waiting..." );
+
+			this.jumpParameters = { sceneToJumpTo : sceneIndex, playAnimationsAfterJumping : playAnimations };
+			this.changeState( kShowControllerState_WaitingToJump );
+			this.textureManager.preloadScene( sceneIndex );
+			return;
+		}
+
+		this.changeState( kShowControllerState_SettingUpScene );
+
+		debugMessage( kDebugShowController, kDebugJumpToScene, "- state changed (UI controls should disable), run partTwo in next event loop..." );
+
+		var self = this;
+		
+		runInNextEventLoop( function() { self.jumpToScene_partTwo( sceneIndex, playAnimations ); } );
+	},
+	
+	jumpToScene_partTwo : function( sceneIndex, playAnimations )
+	{
+		var kDebugJumpToScene = "jumpToScene_partTwo";
+
+		debugMessage( kDebugShowController, kDebugJumpToScene, "sceneIndex: " + sceneIndex + " playAnimations: " + playAnimations );
+
+		this.createAnimationsForScene( sceneIndex );
+		this.displayScene( sceneIndex, playAnimations ? 1 : 0 );
+		
+		if( playAnimations )
+		{
+			debugMessage( kDebugShowController, kDebugJumpToScene, "- playAnimations was set to 'true' so let 'er rip..." );
+			
+			this.playCurrentScene();
+		}
+		else
+		{
+			this.changeState( kShowControllerState_IdleAtInitialState );
+		}
+	},
+
+	calculateNextSceneIndex : function( sceneIndex )
+	{
+		var kDebugCalculateNextSceneIndex = "calculateNextSceneIndex";
+
+		var nextSceneIndex = this.calculateNextSceneIndex_internal( sceneIndex );
+		
+		if( gMode == kModeMobile )
+		{
+			if( this.scriptManager.isOnlyActionInSceneAMovieStart( nextSceneIndex ) )
+			{
+				debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "we're on a phone and the next build is only a movie start, go to one after that..." )
+
+				nextSceneIndex = this.calculateNextSceneIndex_internal( nextSceneIndex );
+			}
+		}
+		
+		return nextSceneIndex;
+	},
+
+	calculateNextSceneIndex_internal : function( sceneIndex )
+	{
+		var kDebugCalculateNextSceneIndex = "calculateNextSceneIndex_internal";
+		
+		var nextSceneIndex = -1;
+		
+		debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "using sceneIndex: " + sceneIndex );
+		debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "-          state: " + this.state );
+		debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "-      numSlides: " + this.script.slideCount );
+		debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "-      numScenes: " + this.script.numScenes );
+		debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "- lastSceneIndex: " + this.script.lastSceneIndex );
+
+		if( sceneIndex < this.script.lastSceneIndex ) 
+		{
+			nextSceneIndex = sceneIndex + 1;
+			debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "- we're NOT at the end, so set it to current + 1... (" + sceneIndex + " + 1 = " + nextSceneIndex + ")" );
+		}
+		else
+		{
+			if( this.script.loopSlideshow )
+			{
+				nextSceneIndex = 0;
+				debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "- we're at the end, and we're looping so set it to 0..." );
+			}
+			else
+			{
+				nextSceneIndex = -1;
+				debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "- we're at the end, and we're NOT looping so set it to -1..." );
+			}
+		}
+		debugMessage( kDebugShowController, kDebugCalculateNextSceneIndex, "---------- for sceneIndex: " + sceneIndex +  " nextSceneIndex is: " + nextSceneIndex );
+		
+		return nextSceneIndex;
+	},
+	
+	assignNextSceneIndex : function()
+	{
+		var kDebugAssignNextSceneIndex = "assignNextSceneIndex";
+
+		debugMessage( kDebugShowController, kDebugAssignNextSceneIndex );
+
+		this.nextSceneIndex = this.calculateNextSceneIndex( this.currentSceneIndex );
+
+		this.textureManager.preloadScene( this.nextSceneIndex );
+	},
+	
+	playCurrentScene : function()
+	{
+		var kDebugPlayCurrentScene = "";//"playCurrentScene";
+		
+		debugMessage( kDebugShowController, kDebugPlayCurrentScene, "this.currentSceneIndex: " + this.currentSceneIndex + " this.overallEndTime: " + this.overallEndTime );
+				
+		this.changeState( kShowControllerState_Playing );
+		
+		var anyMovies = this.applyAnimationsForScene();
+		
+		//if( anyMovies == false )
+		{
+			var self = this;
+			setTimeout( function() { self.currentSceneDidComplete(); }, this.overallEndTime * 1000 + 100 ); // convert seconds to milliseconds and add 100 ms to be safe
+		}
+	},
+	
+	currentSceneDidComplete : function()
+	{
+		var kDebugCurrentSceneDidComplete = "";//"currentSceneDidComplete";
+		
+		debugMessage( kDebugShowController, kDebugCurrentSceneDidComplete, "this.currentSceneIndex: " + this.currentSceneIndex );
+		
+		this.changeState( kShowControllerState_IdleAtFinalState );
+
+		if( this.nextSceneIndex == -1 )
+		{
+			debugMessage( kDebugShowController, kDebugCurrentSceneDidComplete, "- next scene is -1, nothing to do except update navigation button status" );
+			this.updateNavigationButtons();
+		}
+		else if( this.script.eventTimelines[this.nextSceneIndex].automaticPlay == 1 )
+		{ 
+			debugMessage( kDebugShowController, kDebugCurrentSceneDidComplete, "- next scene (" + this.nextSceneIndex + ") is autoplay, invoking advanceToNextBuild() on next event loop..." );
+
+			var self = this;
+	
+			runInNextEventLoop( function() { self.advanceToNextBuild(); } );
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugCurrentSceneDidComplete, "- we just finished animating, should be waiting on end state, update navigation button status and add hyperlinks of next scene..." );
+
+			this.updateNavigationButtons();
+			this.createHyperlinks( this.nextSceneIndex > this.currentSceneIndex ? this.nextSceneIndex : this.currentSceneIndex );
+		}
+		// TODO: if there's a movie in the next scene we should jump to it then stop without playing its animations
+	},
+	
+	ensureInitialStateHasEmphasisTransform : function( sceneIndex, textureId, keyName, eventInitialStates, fromValue )
+	{
+		var kDebugEnsureInitialStateHasEmphasisTransform = "";//"ensureInitialStateHasEmphasisTransform";
+		
+		var initialEmphasisTransformIsPresent = false;
+		
+		var textureInitialState = this.initialStateForTexture( sceneIndex, textureId );
+		
+		switch( keyName )
+		{
+			case "translationEmphasis":
+				initialEmphasisTransformIsPresent = (textureInitialState.translationEmphasis != null);
+				break;
+				
+			case "rotationEmphasis":
+				initialEmphasisTransformIsPresent = (textureInitialState.rotationEmphasis != null);
+				break;
+
+			case "opacityMultiplier":
+				initialEmphasisTransformIsPresent = (textureInitialState.opacityMultiplier != null);
+				break;
+
+			case "scaleEmphasis":
+				initialEmphasisTransformIsPresent = (textureInitialState.scaleEmphasis != null);
+				break;
+
+		} // switch
+		
+		if( initialEmphasisTransformIsPresent )
+			return;
+			
+		debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "textureId: '" + textureId + "' has no initial emphasis transform" );
+
+		switch( keyName )
+		{
+			case "translationEmphasis":
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- using fromValue.translationEmphasis: (" + fromValue.translationEmphasis + ")" );
+				textureInitialState.translationEmphasis = fromValue.translationEmphasis;
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- translationEmphasis is now: " + textureInitialState.translationEmphasis );
+				break;
+				
+			case "rotationEmphasis":
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- using fromValue.rotationEmphasis: (" + fromValue.rotationEmphasis + ")" );
+				textureInitialState.rotationEmphasis = fromValue.rotationEmphasis;
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- rotationEmphasis is now: " + textureInitialState.rotationEmphasis );
+				break;
+
+			case "opacityMultiplier":
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- using fromValue.opacityMultiplier: (" + fromValue.opacityMultiplier + ")" );
+				textureInitialState.opacityMultiplier = fromValue.opacityMultiplier;
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- opacityMultiplier is now: " + textureInitialState.opacityMultiplier );
+				break;
+
+			case "scaleEmphasis":
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- using fromValue.scaleEmphasis: (" + fromValue.scaleEmphasis + ")" );
+				textureInitialState.scaleEmphasis = fromValue.scaleEmphasis;
+				debugMessage( kDebugShowController, kDebugEnsureInitialStateHasEmphasisTransform, "- scaleEmphasis is now: " + textureInitialState.scaleEmphasis );
+				break;
+
+		} // switch
+							
+	},
+	
+	preProcessSceneAnimations : function( sceneIndex, eventAnimations, eventInitialStates )
+	{
+		var kDebugPreProcessSceneAnimations = "";//"preProcessSceneAnimations";
+
+		var debugTimer = new DebugTimer( "preProcessSceneAnimations" );
+		
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- First, calculate overall duration of eventTimeline -" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------------------------------------------------------" );
+		
+		var iEventAnimation		= 0;
+		var numEventAnimations	= eventAnimations.length;
+
+		this.overallEndTime	= 0;
+		
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- numEventAnimations: " + numEventAnimations );
+		
+		for( iEventAnimation = 0; iEventAnimation < numEventAnimations; iEventAnimation++ )
+		{
+			var eventAnimation	= eventAnimations[iEventAnimation];
+			var beginTime		= eventAnimation.beginTime;
+			var duration		= eventAnimation.duration;
+			var endTime			= beginTime + duration;
+			
+			debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- iEventAnimation: " + iEventAnimation + ": beginTime: " + beginTime + ": duration: " + duration + " endTime: " + endTime );
+
+			if( endTime > this.overallEndTime )
+			{
+				this.overallEndTime = endTime;
+				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-   that's a new maximum, overallEndTime now " + this.overallEndTime );
+			}
+			
+		} // for( iEventAnimation ) // first time
+
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "this.overallEndTime: " + this.overallEndTime );
+
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------------------------------------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- Second, build x-ref table between canvasObjectID and applicable textureIds -" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------------------------------------------------------------------------------" );
+
+		var canvasObjectToTextureLookupTable = {};
+		
+		var iEventInitialState;
+		var numEventInitialStates = eventInitialStates.length;
+		
+		for( iEventInitialState = 0; iEventInitialState < numEventInitialStates; iEventInitialState++ )
+		{
+			var eventInitialState	= eventInitialStates[iEventInitialState];
+			var canvasObjectID		= eventInitialState.canvasObjectID;
+			
+			debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- textureId: " + eventInitialState.texture );
+			
+			if( canvasObjectID != null )
+			{
+				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "---- has a canvasObjectID: " + canvasObjectID );
+				
+				var applicableTextures = canvasObjectToTextureLookupTable[canvasObjectID];
+				
+				if( applicableTextures == null )
+				{
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------ this is the first texture with this canvasObjectID, creating entry in table..." );
+					applicableTextures = new Array();
+					canvasObjectToTextureLookupTable[canvasObjectID] = applicableTextures;
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------ there are already textures with this canvasObjectID..." );
+				}
+				
+				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------ appending textureId to array for  this canvasObjectID..." );
+				applicableTextures.push( eventInitialState.texture );
+			}
+		}
+		
+/*debug*/		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- dumping table..." );
+/*debug*/		
+/*debug*/		for( var canvasObjectID in canvasObjectToTextureLookupTable )
+/*debug*/		{
+/*debug*/			debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- canvasObjectID: " + canvasObjectID );
+/*debug*/			
+/*debug*/			var applicableTextures = canvasObjectToTextureLookupTable[eventInitialState.canvasObjectID];
+/*debug*/			var iTexture;
+/*debug*/			var numTextures = applicableTextures.length;
+/*debug*/			
+/*debug*/			for( iTexture = 0; iTexture < numTextures; iTexture++ )
+/*debug*/			{
+/*debug*/				var textureId = applicableTextures[iTexture];
+/*debug*/				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "--- textureId: " + textureId );
+/*debug*/			}
+/*debug*/		}
+		
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------------------------------------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- Third, calculate individual delay and duration of each property animation  -" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------------------------------------------------------------------------------" );
+
+		this.textureAnimations = {};
+
+		for( iEventAnimation = 0; iEventAnimation < numEventAnimations; iEventAnimation++ )
+		{
+			debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- iEventAnimation: " + iEventAnimation );
+			
+			var eventAnimation	= eventAnimations[iEventAnimation];
+			var actions			= eventAnimation.actions;
+			
+			if( actions == null )
+			{
+				actions = eventAnimation.noPluginActions;
+			}
+			
+			// Check if this is an "action build"...
+			
+			var isActionBuild	= false;
+			var textureArray	= null;
+			
+			if( ( eventAnimation.animationType != null )
+			&&  ( eventAnimation.animationType == "actionBuild" ) )
+			{
+				isActionBuild = true;
+
+				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "--- this one is an actionBuild..." );
+				
+				var canvasObjectId = eventAnimation.canvasObjectID;
+				textureArray = canvasObjectToTextureLookupTable[canvasObjectId];
+				
+				if( typeof(textureArray) == "undefined" )
+				{
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- textureArray is undefined, using empty array" );
+					textureArray = new Array();
+				}
+			}
+			
+			var numActions = actions.length;
+			var iAction;
+			
+			for( iAction = 0; iAction < numActions; iAction++ )
+			{
+				var action = actions[iAction];
+				
+				// if this is NOT an actionBuild...
+				// - create an array with the single textureId this action applies to
+				
+				if( isActionBuild == false )
+				{
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "--- this one is NOT an actionBuild, create an array with 1 texture in it..." );
+					var textureId = action.texture;
+					textureArray = new Array();
+					textureArray[0] = textureId;
+				}
+				
+				// loop over all textures in the array
+				
+				var iTexture;
+				var numTextures = textureArray.length;
+				
+				for( iTexture = 0; iTexture < numTextures; iTexture++ )
+				{
+					var textureId		= textureArray[iTexture];
+					
+					var beginTime		= action.beginTime;
+					var duration		= action.duration;
+					var endTime			= beginTime + duration;
+					var keyName			= action.action;
+					
+					// TODO: temp hack to work around z-position vs. z-order ambiguity issue in KPF
+
+					if( keyName == "transform.translation.z" ) 
+					{
+						if( eventAnimation.effect != "apple:revolve" )
+						{
+							keyName = "z.order"; // TODO: should this be "zIndex" instead of "z.order"?
+						}
+					}
+
+					// end hack
+					
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-   texure: " + textureId );
+	
+					var textureAnimation = this.textureAnimations[textureId];
+					
+					if( textureAnimation == null )
+					{
+						debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-     - was not in textureAnimations yet, adding now..."  );
+						textureAnimation = 
+						{ 
+							numAnimatedKeys : 0,
+							numRequiredDivs : 0,
+							keyAnimations: {}
+						};
+						this.textureAnimations[textureId] = textureAnimation;
+					}
+					
+					var keyAnimation = textureAnimation.keyAnimations[keyName];
+					
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-     keyName: " + keyName );
+	
+					if( keyAnimation == null )
+					{
+						debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-       - was not in textureAnimation.keyAnimations yet, adding now..."  );
+						keyAnimation = 
+						{
+							earliestBeginTime: 99999,
+							latestEndTime: -1,
+							keyActions: []
+						}
+						
+						textureAnimation.keyAnimations[keyName] = keyAnimation;
+						textureAnimation.numAnimatedKeys++;
+						
+						if( (keyName != "opacity" )
+						&&  (keyName != "isPlaying"  )
+						&&  (keyName != "zOrderHint"  )
+						&&  (keyName != "hidden"  ) )
+						{
+							textureAnimation.numRequiredDivs++;
+						}
+					}
+					
+					if( beginTime < keyAnimation.earliestBeginTime )
+					{
+						debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-       beginTime of " + beginTime + " is a new earlist, updating..." );
+						keyAnimation.earliestBeginTime = beginTime;
+					}
+					
+					if( endTime > keyAnimation.latestEndTime )
+					{
+						debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-       endTime of " + endTime + " is a new latest, updating..." );
+						keyAnimation.latestEndTime = endTime;
+					}
+					
+				} // for iTexture
+				
+			} // for iAction
+			
+		} // for( iEventAnimation ) // second time
+		
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-----------------------------------------------------------------------------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- Fourth, iterate over all actions in all eventAnimations, converting there begin/duration to % of individual duration -" );
+		debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-----------------------------------------------------------------------------------------------------------------------" );
+
+		for( iEventAnimation = 0; iEventAnimation < numEventAnimations; iEventAnimation++ )
+		{
+			debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- iEventAnimation: " + iEventAnimation );
+	
+			var eventAnimation	= eventAnimations[iEventAnimation];
+			var actions			= eventAnimation.actions;
+			
+			if( actions == null )
+			{
+				actions = eventAnimation.noPluginActions;
+			}
+			
+			// Check if this is an "action build"...
+			
+			var isActionBuild	= false;
+			var textureArray	= null;
+			
+			if( ( eventAnimation.animationType != null )
+			&&  ( eventAnimation.animationType == "actionBuild" ) )
+			{
+				isActionBuild = true;
+
+				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "--- this one is an actionBuild..." );
+				
+				var canvasObjectId = eventAnimation.canvasObjectID;
+				textureArray = canvasObjectToTextureLookupTable[canvasObjectId];
+				
+				if( typeof(textureArray) == "undefined" )
+				{
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "- textureArray is undefined, using empty array" );
+					textureArray = new Array();
+				}
+			}
+			
+			var numActions		= actions.length;
+			var iAction;
+			
+			for( iAction = 0; iAction < numActions; iAction++ )
+			{
+				var action			= actions[iAction];
+				var beginTime		= action.beginTime;
+				var duration		= action.duration;
+				var endTime			= beginTime + duration;
+				var keyName			= action.action;
+				
+				debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "--- iAction: " + iAction + ", keyName: " + keyName );
+	
+				// if this is NOT an actionBuild...
+				// - create an array with the single textureId this action applies to
+				
+				if( isActionBuild == false )
+				{
+					var textureId = action.texture;
+					textureArray = new Array();
+					textureArray[0] = textureId;
+				}
+
+				// loop over all textures in the array
+				
+				var iTexture;
+				var numTextures = textureArray.length;
+				
+				for( iTexture = 0; iTexture < numTextures; iTexture++ )
+				{
+					var textureId		= textureArray[iTexture];
+					
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "------ iTexture: " + iTexture + ", textureId: " + textureId );
+	
+					// TODO: temp hack to work around z-position vs. z-order ambiguity issue in KPF
+					
+					if( keyName == "transform.translation.z" ) 
+					{
+						if( eventAnimation.effect != "apple:revolve" )
+						{
+							keyName = "z.order";
+						}
+					}
+					
+					// end hack
+	
+					// TODO: temp hack to ensure initial state has emphasis info
+					// - remove once eric fixes export to do this
+					
+					if( (keyName == "translationEmphasis")
+					||  (keyName == "rotationEmphasis")
+					||  (keyName == "opacityMultiplier")
+					||  (keyName == "scaleEmphasis") )
+					{
+						this.ensureInitialStateHasEmphasisTransform( sceneIndex, textureId, keyName, eventInitialStates, action.from );
+					}
+					
+					// end hack
+					
+					var textureAnimation	= this.textureAnimations[textureId];
+					
+					var keyAnimation		= textureAnimation.keyAnimations[keyName];
+					
+					var keyActions			= keyAnimation.keyActions;
+					
+					var animationDuration	= keyAnimation.latestEndTime - keyAnimation.earliestBeginTime;
+					
+					var adjustedBeginTime	= (beginTime - keyAnimation.earliestBeginTime)
+					var adjustedEndTime		= (endTime - keyAnimation.earliestBeginTime)
+	
+					var startKeyframe	= 0;
+					var endKeyframe		= 100;
+	
+					if( animationDuration > 0 )
+					{
+						//startKeyframe	= Math.floor( 100 * adjustedBeginTime / animationDuration );
+						//endKeyframe		= Math.ceil ( 100 * (endTime   - keyAnimation.earliestBeginTime) / animationDuration );
+						startKeyframe	= Math.floor( 100 * beginTime / this.overallEndTime );
+						endKeyframe		= Math.floor ( 100 * endTime / this.overallEndTime );
+					}
+	
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-   Action: " + iAction  );
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-     textureId: " + textureId );
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-       keyName: " + keyName );
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-    overallEndTime: " + this.overallEndTime );
+					//debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-         beginTime: " + beginTime + " adjustedBeginTime: " + adjustedBeginTime + " startKeyframe: "+ startKeyframe );
+					//debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-           endTime: " + endTime   + " adjustedEndTime: " + adjustedEndTime + " endKeyframe: " + endKeyframe );
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-         beginTime: " + beginTime + " startKeyframe: "+ startKeyframe );
+					debugMessage( kDebugShowController, kDebugPreProcessSceneAnimations, "-           endTime: " + endTime   + " endKeyframe: " + endKeyframe );
+					
+					var newAction = 
+					{ 
+						startKeyframe: startKeyframe, 
+						endKeyframe: endKeyframe,
+						from: action.from,
+						to: action.to,
+						timingFunction: action.timingFunction
+					}
+	
+					if( action.timingFunction == "custom" )
+					{
+						newAction.timingControlPoint1x = action.timingControlPoint1x;
+						newAction.timingControlPoint1y = action.timingControlPoint1y;
+						newAction.timingControlPoint2x = action.timingControlPoint2x;
+						newAction.timingControlPoint2y = action.timingControlPoint2y;
+					}
+					keyActions.push( newAction );
+	
+				} // for iTexture
+				
+			} // for iAction
+			
+		} //  // for( iEventAnimation ) // third time
+
+		debugStopTimer( debugTimer );
+	},
+	
+/*	
+	debugDumpPreProcessedEventAnimations : function()
+	{
+		var kDebugDumpPreProcessedEventAnimations = "";//"debugDumpPreProcessedEventAnimations";
+		
+		if( kDebugDumpPreProcessedEventAnimations == "" )
+			return;
+			
+		debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-------------------------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "- D U M P   O F   P R E P R O C E S S S E D   A N I M A T I O N S -" );
+		debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-------------------------------------------------------------------" );
+		
+		for( var textureId in this.textureAnimations )
+		{
+			var textureAnimation = this.textureAnimations[textureId];
+			
+			debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "texture: " + textureId + " (" + textureAnimation.numAnimatedKeys + " animated key(s), Required Divs: " + textureAnimation.numRequiredDivs + ")" );
+
+			var iKey = 0;
+
+			for( var keyName in textureAnimation.keyAnimations )
+			{
+				var keyAnimation = textureAnimation.keyAnimations[keyName];
+				
+				var keyActions = keyAnimation.keyActions;
+				
+				debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-   key " + iKey + ": " + keyName + " (from t=" + keyAnimation.earliestBeginTime + " to t=" + keyAnimation.latestEndTime + " - " + keyActions.length + " actions)" );
+
+				for( var iAction = 0; iAction < keyActions.length; iAction++ )
+				{
+					var action = keyActions[iAction];
+					
+					debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-     action: " + iAction  );
+					debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-          curve: " + action.timingFunction );
+					
+					if( action.timingFunction == "custom" )
+					{
+						debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-           cp1x: " + action.timingControlPoint1x );
+						debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-           cp1y: " + action.timingControlPoint1y );
+						debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-           cp2x: " + action.timingControlPoint2x );
+						debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-           cp2y: " + action.timingControlPoint2y );
+					}
+					debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-          start: " + action.startKeyframe + " at " + this.cssPropertyValueForActionValue( keyName, action.from ) );
+					debugMessage( kDebugShowController, kDebugDumpPreProcessedEventAnimations, "-            end: " + action.endKeyframe   + " at " + this.cssPropertyValueForActionValue( keyName,  action.to ) );
+				}
+				iKey++;
+			}
+		}
+	},
+*/	
+	cssPropertyNameForAction : function( actionName )
+	{
+		switch( actionName )
+		{
+			case "hidden":
+				return kVisibilityPropertyName;
+			
+			case "anchorPoint":
+				return kTransformOriginPropertyName;
+				
+			case "opacityMultiplier":
+				return kOpacityPropertyName;
+				
+			case "translationEmphasis":
+			case "rotationEmphasis":
+			case "scaleEmphasis":
+			
+			case "position":
+			
+			case "transform":
+			case "transform.scale":
+			case "transform.rotation.x": 
+			case "transform.rotation.y": 
+			case "transform.rotation.z": 
+			case "transform.translation.x": 
+			case "transform.translation.y": 
+			case "transform.translation.z": 
+				return kTransformPropertyName;
+
+			case "zOrderHint":
+				return kZIndexPropertyName;
+
+			default:
+				return actionName;
+		}
+	},
+
+	cssPropertyValueForActionValue : function( actionName, actionValue )
+	{
+		switch( actionName )
+		{
+			case "hidden":
+				if( actionValue.scalar == true )
+				{
+					return "hidden";
+				}
+				else
+				{
+					return "visible";
+				}
+			
+			case "anchorPoint":
+				return actionValue.pointX + " " + actionValue.pointY;
+				
+			case "position":
+				return "translate(" + actionValue.pointX + "px," + actionValue.pointY + "px)";
+				
+			case "translationEmphasis":
+				return "translateX(" + actionValue.translationEmphasis[0] + "px) translateY(" + actionValue.translationEmphasis[1] + "px) translateZ(" + actionValue.translationEmphasis[2] + ")";
+
+			case "rotationEmphasis":
+				return "rotateZ(" + actionValue.rotationEmphasis[6] + "rad)"; 
+				
+			case "scaleEmphasis":
+				return "scale3d(" + ensureScaleFactorNotZero( actionValue.scaleEmphasis[3] ) + "," + ensureScaleFactorNotZero( actionValue.scaleEmphasis[4] ) + "," + ensureScaleFactorNotZero( actionValue.scaleEmphasis[5] ) + ")";
+
+			case "transform.scale":
+				return "scale(" + ensureScaleFactorNotZero( actionValue.scalar ) + ")";
+				
+			case "transform.scale.x":
+				return "scaleX(" + ensureScaleFactorNotZero( actionValue.scalar ) + ")";
+				
+			case "transform.scale.y":
+				return "scaleY(" + ensureScaleFactorNotZero( actionValue.scalar ) + ")";
+				
+			case "transform.rotation.x": 
+				return "rotateX(" + actionValue.scalar + "rad)";
+
+			case "transform.rotation.y": 
+				return "rotateY(" + actionValue.scalar + "rad)";
+
+			case "transform.rotation.z": 
+				return "rotateZ(" + actionValue.scalar + "rad)";
+
+			case "transform.translation.x": 
+				return "translateX(" + actionValue.scalar + "px)";
+				
+			case "transform.translation.y": 
+				return "translateY(" + actionValue.scalar + "px)";
+
+			case "transform.translation.z": 
+				return "translateZ(" + actionValue.scalar + "px)";
+
+			case "zOrderHint":
+			case "isPlaying":
+			case "zPosition":
+			case "opacity":
+			case "opacityMultiplier":
+				return actionValue.scalar + "";
+				
+			case "transform": 
+				return "matrix3d(" + actionValue.transform + ")";
+				
+			default:
+				return "some value";
+		}
+	},
+
+	createTimingFunctionForAction : function( action )
+	{
+		switch( action.timingFunction )
+		{
+			case "easeIn":
+				return "ease-in";
+
+			case "easeOut":
+				return "ease-Out";
+
+			case "easeInOut":
+			case "easeInEaseOut":
+				return "ease-in-out";
+
+			case "custom":
+				return "cubic-bezier(" + action.timingControlPoint1x + "," + action.timingControlPoint1y + "," + action.timingControlPoint2x + "," + action.timingControlPoint2y + ")";
+
+			case "linear":
+			default:
+				return "linear";
+				
+		}
+	},
+	
+	initialStateForTexture : function( sceneIndex, textureId )
+	{
+		var kDebugInitialStateForTexture = "initialStateForTexture";
+
+		debugMessage( kDebugShowController, kDebugInitialStateForTexture, "looking for initial state of texture '" + textureId + "' in scene " + sceneIndex );
+		
+		var eventTimeline		= this.script.eventTimelines[sceneIndex];
+		var eventInitialStates	= eventTimeline.eventInitialStates;
+		var numTextures			= eventInitialStates.length;
+		var iTexture;
+		
+		debugMessage( kDebugShowController, kDebugInitialStateForTexture, "- there are " + numTextures + " textures in this scene" );
+
+		for( iTexture = 0; iTexture < numTextures; iTexture++ )
+		{
+			var textureInitialState	= eventInitialStates[iTexture];
+			var thisTextureId		= textureInitialState.texture;
+			
+			debugMessage( kDebugShowController, kDebugInitialStateForTexture, "- looking at: " + thisTextureId  );
+
+			if( thisTextureId == textureId )
+			{
+				debugMessage( kDebugShowController, kDebugInitialStateForTexture, "- found it!"  );
+				return textureInitialState;
+			}
+		}
+		debugMessage( kDebugShowController, kDebugInitialStateForTexture, "- not found!"  );
+		
+		return null;
+	},
+	
+	createInitialKeyframeValue : function( sceneIndex, textureId, keyName, fromValue )
+	{
+		var kDebugCreateInitialKeyframeValue = "createInitialKeyframeValue";
+
+		debugMessage( kDebugShowController, kDebugCreateInitialKeyframeValue, "sceneIndex: " + sceneIndex + " textureId: " + textureId + " keyName: " + keyName );
+
+		var actionValue =
+		{
+		}
+		
+		var textureInitialState = this.initialStateForTexture( sceneIndex, textureId );
+		
+		switch( keyName )
+		{
+			case "opacity":
+				actionValue.scalar = textureInitialState.opacity;
+				break;
+				
+			case "hidden":
+				actionValue.scalar = textureInitialState.hidden;
+				break;
+			
+			case "position":
+				actionValue.pointX = fromValue.pointX;
+				actionValue.pointY = fromValue.pointY;
+				break;
+				
+			case "translationEmphasis":
+				actionValue.translationEmphasis = textureInitialState.translationEmphasis;
+				debugMessage( kDebugShowController, kDebugCreateInitialKeyframeValue, "- got a translationEmphasis, hope this works! actionValue.translationEmphasis: " + actionValue.translationEmphasis );
+				break;
+				
+			case "rotationEmphasis":
+				actionValue.rotationEmphasis = textureInitialState.rotationEmphasis;
+				debugMessage( kDebugShowController, kDebugCreateInitialKeyframeValue, "- got a rotationEmphasis, hope this works! actionValue.rotationEmphasis: " + actionValue.rotationEmphasis );
+				break;
+				
+			case "scaleEmphasis":
+				actionValue.scaleEmphasis = textureInitialState.scaleEmphasis;
+				debugMessage( kDebugShowController, kDebugCreateInitialKeyframeValue, "- got a scaleEmphasis, hope this works! actionValue.scaleEmphasis: " + actionValue.scaleEmphasis );
+				break;
+				
+			default:
+				actionValue.scalar = 0;
+				actionValue.pointX = 0;
+				actionValue.pointY = 0;
+				actionValue.transform = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 ]; // should never need this
+				break;
+		}
+		
+		return actionValue;
+	},
+	
+	createAnimationRuleForKeyframe : function( animation, keyframe, keyName, value, timingFunction )
+	{
+		var kDebugCreateAnimationRuleForKeyframe = "";//"createAnimationsForScene";
+
+		var animationRule 		= this.cssPropertyNameForAction( keyName ) + ": " + this.cssPropertyValueForActionValue( keyName, value ) + "; "
+								+ (keyframe < 100 ? "-webkit-animation-timing-function: " + timingFunction + ";" : "" )
+
+		var transformOriginRule = ""
+		
+		if( this.transformOriginValue != "" )
+		{
+			transformOriginRule = kTransformOriginPropertyName + ": " + this.transformOriginValue + ";"
+		}
+		else if( this.emphasisTransformOrigin != "" )
+		{
+			transformOriginRule = kTransformOriginPropertyName + ": " + this.emphasisTransformOrigin + ";"
+			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "emphasisTransformOrigin: " + this.emphasisTransformOrigin );
+		}
+		
+		var ruleText			= keyframe + "% "
+								+ "{" 
+								+ transformOriginRule
+								+ animationRule
+								+ "}";
+								
+		animation.insertRule( ruleText );
+		
+/*debug*/		if( this.transformOriginValue == "" )
+/*debug*/		{
+/*debug*/			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "-   " + ruleText  );
+/*debug*/		}
+/*debug*/		else
+/*debug*/		{
+/*debug*/			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "-   " + keyframe + "%" );
+/*debug*/			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "-   {" ); 
+/*debug*/			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "-      " + transformOriginRule  );
+/*debug*/			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "-      " + animationRule  );
+/*debug*/			debugMessage( kDebugShowController, kDebugCreateAnimationRuleForKeyframe, "-   }" ); 
+/*debug*/		}
+	},
+
+	createAnimationsForScene : function( sceneIndex )
+	{
+		var kDebugCreateAnimationsForScene 				= "";//"createAnimationsForScene";
+		var kDebugCreateAnimationsForScene_Adjustments	= "";//"createAnimationsForScene";
+		
+		debugMessage( kDebugShowController, kDebugCreateAnimationsForScene );
+		debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "---------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- c r e a t e A n i m a t i o n s F o r S c e n e -" );
+		debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "---------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- sceneIndex: " + sceneIndex );
+		
+		var eventTimeline		= this.script.eventTimelines[sceneIndex];
+		var eventInitialStates	= eventTimeline.eventInitialStates;
+		var eventAnimations		= eventTimeline.eventAnimations;
+
+		this.preProcessSceneAnimations( sceneIndex, eventAnimations, eventInitialStates );
+//		this.debugDumpPreProcessedEventAnimations();
+
+		var debugTimer = new DebugTimer( "createAnimationsForScene" );
+
+		var kDelta = 1;
+		
+		for( var textureId in this.textureAnimations )
+		{
+			var textureAnimation = this.textureAnimations[textureId];
+			
+			debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- texture: " + textureId );
+
+			this.transformOriginValue = "";
+			
+			for( var keyName in textureAnimation.keyAnimations )
+			{
+				if( keyName == "playing" )
+				{
+					debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- keyName: " + keyName + " - we don't animate this one..." );
+					continue;
+				}
+				
+				var keyAnimation	= textureAnimation.keyAnimations[keyName];
+				var keyActions		= keyAnimation.keyActions;
+				
+				var animationName	= escapeTextureId( textureId ) + "-" + escapeTextureId( keyName );
+				var animation		= this.animationManager.createAnimation( animationName );
+
+				debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- @keyframe " + animationName );
+				debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- {"  );
+	
+				if( keyName == "anchorPoint" )
+				{
+/*debug*/			//debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "-   this is an anchor point action, need special case" );
+
+					var action = keyActions[0];
+
+					var width	= this.scriptManager.script.slideWidth;
+					var height	= this.scriptManager.script.slideHeight;
+					
+					var originalOrigin	= {};
+					var newOrigin		= {};
+					var originOffset 	= {};
+					var offsetValue 	= {};
+					
+					originalOrigin.x 	= width/2;
+					originalOrigin.y 	= height/2;
+					
+					newOrigin.x			= action.to.pointX * width;
+					newOrigin.y			= action.to.pointY * height;
+
+					originOffset.deltaX	= newOrigin.x - originalOrigin.x;
+					originOffset.deltaY	= newOrigin.y - originalOrigin.y;
+					
+/*debug*/			//debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "-   originalOrigin: (" + originalOrigin.x + ", " + originalOrigin.y + ")" );
+/*debug*/			//debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "-        newOrigin: (" + newOrigin.x + ", " + newOrigin.y + ")" );
+/*debug*/			//debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "-     originOffset: (" + originOffset.deltaX + ", " + originOffset.deltaY + ")" );
+
+					offsetValue.pointX	= -originOffset.deltaX;
+					offsetValue.pointY	= -originOffset.deltaY;
+
+					this.createAnimationRuleForKeyframe( animation, 0,   "position", offsetValue, "linear" );
+					this.createAnimationRuleForKeyframe( animation, 100, "position", offsetValue );
+
+					// now set the transformOriginValue to force all subsequent animations to have an -webkit-transform-origin value
+
+					this.transformOriginValue = newOrigin.x + "px " + newOrigin.y + "px"; 
+				}
+				else
+				{
+					// If first action does not start at keyframe 0%
+					// - insert 2 keyframes: 0 and N-1 (where N is the first keyframe in the array)
+	
+					var action = keyActions[0];
+					
+					if( action.startKeyframe != 0 )
+					{
+						var initialValue = this.createInitialKeyframeValue( sceneIndex, textureId, keyName, action.from );
+
+						if( keyName != "hidden" )
+						{
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> insert keyframe at 0 because 1st keyframe in list (" + action.startKeyframe + ") is not 0" );
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> and this is NOT a visibility animation"  );
+
+							this.createAnimationRuleForKeyframe( animation, 0, keyName, initialValue, "linear" );
+//							this.createAnimationRuleForKeyframe( animation, action.startKeyframe - kDelta, keyName, initialValue, "linear" );
+
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> end of inserted keyframe(s)" );
+						}
+						else
+						{
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> insert keyframes at 0 and " + (action.startKeyframe - 1) + " because 1st keyframe in list (" + action.startKeyframe + ") is not 0" );
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> and this IS a visibility animation"  );
+	
+							this.createAnimationRuleForKeyframe( animation, 0, keyName, initialValue, "linear" );
+							this.createAnimationRuleForKeyframe( animation, action.startKeyframe - kDelta, keyName, initialValue, "linear" );
+
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> end of inserted keyframe(s)" );
+						}
+					}
+					
+					var lastKeyframe	= -1;
+					var lastToValue		= null;
+					
+					//debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- iterating over keyActions... there are " + keyActions.length );
+					
+					for( var iAction = 0; iAction < keyActions.length; iAction++ )
+					{
+						action = keyActions[iAction];
+					
+						if( keyName == "rotationEmphasis" )
+						{
+							this.emphasisTransformOrigin = action.from.rotationEmphasis[0] + "px " + action.from.rotationEmphasis[1] + "px";
+						}
+						else
+						{
+							this.emphasisTransformOrigin = "";
+						}
+						
+						// If this action does not start where the last action ended
+						// - insert 1 keyframe: N-1 (where N is the start keyframe of the current action)
+						
+						if( ( lastKeyframe != -1 )
+						&&  ( lastKeyframe != action.startKeyframe ) )
+						{
+							var insertedKeyFrame = action.startKeyframe - kDelta;
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> insert keyframe at " + insertedKeyFrame + " because previous 'end' keyframe (" + lastKeyframe + ") is not current 'start' keyframe (" + action.startKeyframe + ")"  );
+							
+							this.createAnimationRuleForKeyframe( animation, insertedKeyFrame, keyName, lastToValue, "linear" );
+							
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> end of inserted keyframe(s)" );
+						}
+						
+						var kDebugKeyFrameWasAdjusted = false;
+						
+						if( lastKeyframe == action.startKeyframe )
+						{
+							debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> this next keyframe was the same as last one, adjusting by adding 1... (" + action.startKeyframe + " -> " + (action.startKeyframe+1) + ")" );
+/*debug*/					kDebugKeyFrameWasAdjusted = true;
+
+							action.startKeyframe += kDelta;
+						}
+						
+						var timingFunction = this.createTimingFunctionForAction( action );
+
+						{
+							this.createAnimationRuleForKeyframe( animation, action.startKeyframe, keyName, action.from, timingFunction );
+						}
+						
+/*debug*/ 				if( kDebugKeyFrameWasAdjusted )
+/*debug*/				{
+/*debug*/					debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> end of adjusted keyframe(s)" );
+/*debug*/				}
+
+						this.createAnimationRuleForKeyframe( animation, action.endKeyframe,   keyName, action.to,   "linear" );
+	
+						lastToValue		= action.to;
+						lastKeyframe	= action.endKeyframe;
+					
+					} // for( iAction )
+					
+					// If last action does not end at keyframe 100%
+					// - insert 2 keyframes: N+1 and 100 (where N is the last keyframe in the array)
+					
+					if( lastKeyframe != 100 )
+					{
+						debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> inserting keyframes at " + (lastKeyframe + 1) + " and 100 because last keyframe in list (" + lastKeyframe + ") is not 100"  );
+	
+						this.createAnimationRuleForKeyframe( animation, lastKeyframe + kDelta, keyName, lastToValue, "linear" );
+						this.createAnimationRuleForKeyframe( animation, 100, keyName, lastToValue, "linear" );
+
+						debugMessage( kDebugShowController, kDebugCreateAnimationsForScene_Adjustments, "---> end of inserted keyframe(s)" );
+					}
+					
+				} // else - if( anchorPoint )
+
+				debugMessage( kDebugShowController, kDebugCreateAnimationsForScene, "- }"  );
+			}
+		}
+		debugStopTimer( debugTimer );
+	},
+
+	applyAnimationsForScene : function()
+	{
+		var kDebugApplyAnimationsForScene = "";//"applyAnimationsForScene";
+		
+		debugMessage( kDebugShowController, kDebugApplyAnimationsForScene );
+		debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-------------------------------------------------" );
+		debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "- a p p l y A n i m a t i o n s F o r S c e n e -" );
+		debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-------------------------------------------------" );
+
+		var anyMovies = false;
+		
+		for( var textureId in this.textureAnimations )
+		{
+			var textureAnimation = this.textureAnimations[textureId];
+			var escapedTextureId = escapeTextureId( textureId );
+			
+			debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "- texture: " + textureId + " (escaped: " + escapedTextureId + ")" );
+
+			// TODO: TEMP HACK - some animations are NOT making their textures visible when the animation starts
+			// - for now, force all textures to be visible when the animation starts
+
+			var imageElement = document.getElementById( escapedTextureId + "-root" );
+			imageElement.style.visibility = "visible";
+			
+			var clearInitialTransform = false;
+			
+			// apply animations for each key
+			
+			for( var keyName in textureAnimation.keyAnimations )
+			{
+				var keyAnimation		= textureAnimation.keyAnimations[keyName];
+
+				/*
+				// TODO: re-evaluate what we do when we get a "playing" action
+				if( keyName == "playing" )
+				{
+					debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "setting timeout to start movie '" + escapedTextureId + " in " + keyAnimation.earliestBeginTime + " seconds..." );
+					
+					var self = this;
+					setTimeout( function() { self.startMoviePlaying( escapedTextureId ); }, keyAnimation.earliestBeginTime * 1000 );
+					continue;
+				}
+				*/
+
+				var keyActions			= keyAnimation.keyActions;
+				var lastAction			= keyActions[keyActions.length - 1];
+
+				var animationName		= escapedTextureId + "-" + escapeTextureId( keyName );
+
+				var propertyName		= this.cssPropertyNameForAction( keyName );
+				var propertyValue		= this.cssPropertyValueForActionValue( keyName, lastAction.to );
+
+				var animationDuration	= keyAnimation.latestEndTime - keyAnimation.earliestBeginTime;
+				
+				var elementId	= "";
+				var isMovie		= false;
+				
+				switch( keyName )
+				{
+					case "opacity":
+						elementId = escapedTextureId;
+						break;
+					
+					case "zOrderHint":
+					case "transform.translation.z":
+					case "hidden":
+						elementId = escapedTextureId + "-root";
+						break;
+
+					case "isPlaying":
+						elementId = escapedTextureId + "-movieObject";
+						isMovie = true;
+						anyMovies = true;
+						break;
+					
+					case "position":
+						clearInitialTransform = true;
+						// fall through
+						
+					case "transform.scale":
+					case "transform.scale.x":
+					case "transform.scale.y":
+						// fall through
+
+					default:
+						elementId = animationName;
+						break;
+				}
+				
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-  keyName: " + keyName );
+
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-    animationName: " + animationName );
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-        elementId: " + elementId );
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-         duration: " + this.overallEndTime );
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-     propertyName: " + propertyName );
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "-      final value: " + propertyValue );
+
+				var element = document.getElementById( elementId );
+				
+				if( element )
+				{
+					if( isMovie )
+					{
+						if( gMode == kModeMobile )
+						{
+							debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "- this animation is an 'isPlaying' one, but we're on the phone so don't start the movie..." );
+						}
+						else
+						{
+							debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "- this animation is an 'isPlaying' one, start the movie..." );
+							
+							this.startMoviePlaying( elementId );
+							this.updateNavigationButtons(); // we need to update the mute button state
+						}
+					}
+					else
+					{
+						element.style.setProperty( propertyName, propertyValue );
+						element.style.setProperty( kAnimationNamePropertyName, animationName );
+						element.style.setProperty( kAnimationDurationPropertyName, this.overallEndTime + "s" );
+					}
+				}
+			}
+
+			// if any of the keys were 2D translation, clear out "initial state" transform
+			
+			if( clearInitialTransform )
+			{
+				debugMessage( kDebugShowController, kDebugApplyAnimationsForScene, "- clearing out 'initial state' transform" );
+
+				var textureElement = document.getElementById( escapedTextureId + "-root" );
+				
+				textureElement.style.setProperty( kTransformPropertyName, "" );
+			}
+		}
+		
+		return anyMovies;
+	},
+	
+	startMoviePlaying : function( escapedTextureId )
+	{
+		var kDebugStartMoviePlaying = "startMoviePlaying";
+		
+		debugMessage( kDebugShowController, kDebugStartMoviePlaying, "escapedTextureId: " + escapedTextureId );
+		
+		var movieObject = document.getElementById( escapedTextureId );
+		
+		if( movieObject )
+		{
+			if( movieObject.play )
+			{
+				debugMessage( kDebugShowController, kDebugStartMoviePlaying, "- movieObject.play() is valid, invoking..." );
+				
+				var self = this;
+				
+				movieObject.addEventListener( 'play',  function( event ) { self.handleMovieDidStart( event, escapedTextureId ); } );
+				movieObject.addEventListener( 'ended', function( event ) { self.handleMovieDidEnd( event, escapedTextureId ); } );
+				movieObject.addEventListener( 'error', function( event ) { self.handleMovieError( event, escapedTextureId ); } );
+				
+				movieObject.play();
+				
+				debugMessage( kDebugShowController, kDebugStartMoviePlaying, "- movie should be playing now" );
+			}
+			else
+			{
+				debugMessage( kDebugShowController, kDebugStartMoviePlaying, "- movieObject.play() is null, that can't be good" );
+			}
+		}
+		else
+		{
+			debugMessage( kDebugShowController, kDebugStartMoviePlaying, "- could not find movie object by ID!" );
+		}
+	},
+	
+	handleMovieDidStart : function( event, escapedTextureId )
+	{
+		var kDebugHandleMovieDidStart = "handleMovieDidStart";
+		
+		debugMessage( kDebugShowController, kDebugHandleMovieDidStart, "textureId: " + escapedTextureId   );
+	},
+	
+	handleMovieDidEnd : function( event, escapedTextureId )
+	{
+		var kDebugHandleMovieDidEnd = "handleMovieDidEnd";
+		
+		debugMessage( kDebugShowController, kDebugHandleMovieDidEnd, "textureId: " + escapedTextureId   );
+	},
+	
+	handleMovieError : function( event, escapedTextureId )
+	{
+		var kDebugHandleMovieError = "handleMovieError";
+		
+		debugMessage( kDebugShowController, kDebugHandleMovieError, "textureId: " + escapedTextureId   );
+	},
+	
+	playScene : function( sceneIndex )
+	{
+		var kDebugPlayScene = "";//"playScene";
+		
+		debugMessage( kDebugShowController, kDebugPlayScene, "sceneIndex: " + sceneIndex   );
+
+		switch( this.state )
+		{
+			case kShowControllerState_IdleAtInitialState:
+			case kShowControllerState_IdleAtFinalState:
+			case kShowControllerState_ReadyToDisplay:
+				break;
+
+			default:
+				debugMessage( kDebugShowController, kDebugPlayScene, "- '" + this.state + "' state does not supports playing..." );
+				return;
+		}
+
+		if( this.textureManager.isScenePreloaded( sceneIndex ) == false )
+		{
+			debugMessage( kDebugShowController, kDebugPlayScene, "- not yet preloaded, issuing request and waiting..." );
+			this.sceneToPlay = sceneIndex;
+			this.changeState( kShowControllerState_WaitingToDisplay );
+			this.textureManager.preloadScene( sceneIndex );
+			return;
+		}
+
+		this.changeState( kShowControllerState_SettingUpScene );
+
+		debugMessage( kDebugShowController, kDebugJumpToScene, "- state changed (UI controls should disable), run partTwo in next event loop..." );
+
+		var self = this;
+		
+		runInNextEventLoop( function() { self.jumpToScene_partTwo( sceneIndex, true ); } );
+	},
+
+	createHyperlinks : function( hyperlinkSceneIndex )
+	{
+		var kDebugCreateHyperlinks = "";//"createHyperlinks";
+		
+		if( hyperlinkSceneIndex == -1 )
+		{
+			debugMessage( kDebugShowController, kDebugCreateHyperlinks, "hyperlinkSceneIndex is -1, nothing to do" );
+			return;
+		}
+		
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks );
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks, "-               state: " + this.state );
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks, "-   currentSceneIndex: " + this.currentSceneIndex );
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks, "-      nextSceneIndex: " + this.nextSceneIndex );
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- hyperlinkSceneIndex: " + hyperlinkSceneIndex );
+		
+/*debug*/ //kDebugCreateHyperlinks = "";
+
+		var eventTimeLine = this.script.eventTimelines[hyperlinkSceneIndex];
+		
+		if( eventTimeLine == null )
+		{
+			debugMessage( kDebugShowController, kDebugCreateHyperlinks, "eventTimeLine for the specified scene index is null!" );
+			return;
+			
+		}
+		var hyperlinks = eventTimeLine.hyperlinks;
+
+		if( hyperlinks == null )
+		{
+			debugMessage( kDebugShowController, kDebugCreateHyperlinks, "hyperlinks property for the specified scene index is null!" );
+			return;
+		}
+		
+		var numHyperlinks = hyperlinks.length;
+		var iHyperlink;
+		
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- iterating over " + numHyperlinks + " hyperlinks..." );
+
+		var kMinHyperlinkWidth	= 150;
+		var kMinHyperlinkHeight	= 50;
+		
+		var showWidth			= this.displayManager.showWidth;
+		var showHeight			= this.displayManager.showHeight;
+		
+		for( iHyperlink = 0; iHyperlink < numHyperlinks; iHyperlink++ )
+		{
+			var hyperlink		= hyperlinks[iHyperlink];
+			var hyperlinkRect	= hyperlink.targetRectangle;
+
+			var activeHyperlink = { targetRectangle : hyperlinkRect, url: hyperlink.url };
+				
+			var spaceOnLeft		= hyperlinkRect.x;
+			var spaceOnTop		= hyperlinkRect.y;
+			var spaceOnRight	= showWidth  - (hyperlinkRect.x + hyperlinkRect.width);
+			var spaceOnBottom	= showHeight - (hyperlinkRect.y	+ hyperlinkRect.top);
+			
+			debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- " + iHyperlink + ": (x:" + hyperlinkRect.x + ", y:" + hyperlinkRect.y + ", w:" + hyperlinkRect.width + ", h:" + hyperlinkRect.height + ")" );
+			
+			if( gMode == kModeMobile )
+			{
+				if( hyperlinkRect.width < kMinHyperlinkWidth )
+				{
+					var deltaWidth	= kMinHyperlinkWidth - hyperlinkRect.width;
+					var leftShift	= deltaWidth / 2;
+					var rightShift	= deltaWidth / 2;
+					
+					debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- width too small by: " + deltaWidth );
+					
+					if( spaceOnLeft < leftShift )
+					{
+						leftShift = spaceOnLeft;
+					}
+					else if( spaceOnRight < rightShift )
+					{
+						leftShift = leftShift + (rightShift - spaceOnRight);
+					}
+					
+					activeHyperlink.targetRectangle.x		-= leftShift;
+					activeHyperlink.targetRectangle.width	+= deltaWidth;
+				}
+				
+				if( hyperlinkRect.height < kMinHyperlinkHeight )
+				{
+					var deltaHeight	= kMinHyperlinkHeight - hyperlinkRect.height;
+					var topShift	= deltaHeight / 2;
+					var bottomShift	= deltaHeight / 2;
+					
+					debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- height too small by: " + deltaHeight );
+					
+					if( spaceOnTop < topShift )
+					{
+						topShift = spaceOnTop;
+					}
+					else if( spaceOnBottom < bottomShift )
+					{
+						topShift = topShift + (rightShift - spaceOnRight);
+					}
+					
+					activeHyperlink.targetRectangle.y		-= topShift;
+					activeHyperlink.targetRectangle.height	+= deltaHeight;
+				}
+			}
+			debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- adding hyperlink to stage..." );
+
+			this.stageManager.addHyperlink( activeHyperlink.targetRectangle );
+			
+			debugMessage( kDebugShowController, kDebugCreateHyperlinks, "- adding hyperlink struct to array..." );
+
+			this.activeHyperlinks[iHyperlink] = activeHyperlink;
+		}
+		
+		debugMessage( kDebugShowController, kDebugCreateHyperlinks, "finished." );
+	},
+	
+	updateNavigationButtons : function()
+	{
+		var kDebugUpdateNavigationButtons = "updateNavigationButtons";
+
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "-             state: " + this.state );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "-     loopSlideshow: " + this.script.loopSlideshow );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "- currentSlideIndex: " + this.currentSlideIndex );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "- currentSceneIndex: " + this.currentSceneIndex );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "-    nextSceneIndex: " + this.nextSceneIndex );
+
+		var enableBackwardButton = ( this.script.loopSlideshow || (this.currentSlideIndex > 0) );
+		var enableForwardButton  = ( this.script.loopSlideshow || (this.state == kShowControllerState_IdleAtInitialState) || (this.nextSceneIndex != -1) );
+		
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "- backward button should be: " + (enableBackwardButton ? "enabled" : "disabled") );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "-  forward button should be: " + (enableForwardButton  ? "enabled" : "disabled") );
+
+		var anyVideo = this.stageManager.anyVideoElementsOnStage();
+		var anyAudio = (this.soundTrackPlayer != null);
+
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "-                 any Video: " + (anyVideo ? "yes" : "no") );
+		debugMessage( kDebugShowController, kDebugUpdateNavigationButtons, "-                 any Audio: " + (anyAudio ? "yes" : "no") );
+		
+		var muteButtonState = ((anyVideo || anyAudio) ? kMuteButtonState_Enabled : kMuteButtonState_Disabled) | (this.muted ? kMuteButtonState_Muted : kMuteButtonState_NotMuted);
+		
+		this.displayManager.setPreviousButtonEnabled( enableBackwardButton );
+		this.displayManager.setNextButtonEnabled( enableForwardButton );
+
+		this.displayManager.setHudMuteButtonState( muteButtonState ); 
+	},
+	
+	setCurrentSceneIndexTo : function( sceneIndex )
+	{
+		var kDebugSetCurrentSceneIndexTo = "setCurrentSceneIndexTo";
+		
+		debugMessage( kDebugShowController, kDebugSetCurrentSceneIndexTo, "changing it from " + this.currentSceneIndex + " to " + sceneIndex );
+		
+		this.currentSceneIndex = sceneIndex;
+		this.assignNextSceneIndex();
+
+		this.updateSlideNumber();
+		this.updateNavigationButtons();
+	},
+	
+	displayScene : function( sceneIndex, hyperlinkSceneOffset )
+	{
+		var kDebugDisplayScene = "displayScene";
+		
+		debugMessage( kDebugShowController, kDebugDisplayScene, "sceneIndex: " + sceneIndex   );
+
+		if( sceneIndex == -1 )
+		{
+			debugMessage( kDebugShowController, kDebugDisplayScene, "- sceneIndex is -1, ignoring..." );
+			return;
+		}
+
+		if( this.firstSlide )
+		{
+			var self = this;
+			
+			runInNextEventLoop( function() { self.startSoundTrack(); self.displayManager.clearLaunchMode(); } );
+		}
+
+		this.setCurrentSceneIndexTo( sceneIndex );
+		
+		this.clearAllHyperlinks();
+
+		var eventTimeline		= this.script.eventTimelines[sceneIndex];
+		var eventInitialStates	= eventTimeline.eventInitialStates;
+		var numTextures			= eventInitialStates.length;
+		var zOrder				= 0;
+		var iTexture;
+
+/*debug*/ 	kDebugDisplayScene = "";
+
+		debugMessage( kDebugShowController, kDebugDisplayScene, "eventTimeline: " + eventTimeline );
+		
+		for( var property in eventTimeline )
+		{
+			debugMessage( kDebugShowController, kDebugDisplayScene, "- " + property + ": " + eventTimeline[property] );
+		}
+
+		debugMessage( kDebugShowController, kDebugDisplayScene, "precessing hyperlinks..." ); 
+		debugMessage( kDebugShowController, kDebugDisplayScene, "- hyperlinkSceneOffset: " + hyperlinkSceneOffset ); 
+		
+		debugMessage( kDebugShowController, kDebugDisplayScene, "determing which existig textures to remove from stage... (remove everything but leave movies in place)" );
+		
+		var stage				= this.stageManager.stage;
+		var childNodesToRemove	= new Array();
+		var moviesLeftInScene	= {};
+		
+		for( iTexture = 0; iTexture < stage.childNodes.length; iTexture++ )
+		{
+			var thisTexture	= stage.childNodes[iTexture];
+			var textureId	= thisTexture.id;
+			var removeChild	= true;
+			
+			debugMessage( kDebugShowController, kDebugDisplayScene, "- " + iTexture + ": " + textureId );			
+			
+			if( thisTexture && typeof thisTexture != "undefined" && typeof textureId != "undefined" && textureId != "" )
+			{
+				if( this.isMovie( textureId ) )
+				{
+					debugMessage( kDebugShowController, kDebugDisplayScene, "-    this one's a movie, let's see if it's in the next scene..." );
+					if( this.scriptManager.isMovieInScene( this.calculateNextSceneIndex( sceneIndex ), textureId ) )
+					{
+						debugMessage( kDebugShowController, kDebugDisplayScene, "-    it is! leave it in." );
+						removeChild = false;
+					}
+				}
+			}
+
+			if( removeChild )
+			{
+				debugMessage( kDebugShowController, kDebugDisplayScene, "- add it to list of textures to remove" );
+				childNodesToRemove.push( thisTexture );
+			}
+			else
+			{
+				debugMessage( kDebugShowController, kDebugDisplayScene, "- add it to list of movies left in scene" );
+				moviesLeftInScene[textureId] = true;
+			}
+		}
+
+		debugMessage( kDebugShowController, kDebugDisplayScene, "- iterating over list of movies we're keeping..." );
+
+		for( movieTextureId in moviesLeftInScene )
+		{
+			debugMessage( kDebugShowController, kDebugDisplayScene, "- " + movieTextureId );
+		}
+		
+		debugMessage( kDebugShowController, kDebugDisplayScene, "- iterating over list of textures to remove..." );
+
+		for( iTexture = 0; iTexture < childNodesToRemove.length; iTexture++ )
+		{
+			var thisTexture	= childNodesToRemove[iTexture];
+			var textureId	= thisTexture.id;
+			debugMessage( kDebugShowController, kDebugDisplayScene, "- " + iTexture + ": " + textureId );			
+			stage.removeChild( thisTexture );
+		}
+		
+/*debug*/ kDebugDisplayScene = "";
+
+		debugMessage( kDebugShowController, kDebugDisplayScene, "processing " + numTextures + " textures..." );
+
+		for( iTexture = 0; iTexture < numTextures; iTexture++ )
+		{
+			var textureInitialState	= eventInitialStates[iTexture];
+			var textureId			= textureInitialState.texture;
+			var textureAnimation	= this.textureAnimations[textureId];
+			var escapedTextureId	= escapeTextureId( textureId ) + "-root";
+			
+			debugMessage( kDebugShowController, kDebugDisplayScene, "- " + iTexture + ": " + textureId + " (" + escapedTextureId + ")" );
+
+			if( moviesLeftInScene[escapedTextureId] )
+			{
+				debugMessage( kDebugShowController, "displayScene", "- this movie was in the last scene, no need to add it again..." );
+				continue;
+			}
+			
+			var numRequiredDivs		= 0;
+			
+			if( textureAnimation != null )
+			{
+				numRequiredDivs = textureAnimation.numRequiredDivs
+			}
+			var visibility			= (textureInitialState.hidden == 0 ? "visible" : "hidden");
+			var opacity				= textureInitialState.opacity;
+			var textureTransform	= "";
+			var textureProperties	= this.script.textures[textureId];
+			var nativeWidth			= textureProperties.width;
+			var nativeHeight		= textureProperties.height;
+			var use3DTransforms		= true;
+			
+			zOrder = textureInitialState.zIndex;
+			
+			if( (use3DTransforms == true)
+			&&  (typeof textureInitialState.transform != "undefined") )
+			{
+				textureTransform = "matrix3D(" + textureInitialState.transform + ")";
+			}
+			else
+			{
+				textureTransform = "matrix(" + textureInitialState.affineTransform + ")";
+			}
+	
+			debugMessage( kDebugShowController, kDebugDisplayScene, "         opacity: " + opacity );
+			debugMessage( kDebugShowController, kDebugDisplayScene, "      visibility: " + visibility );
+			debugMessage( kDebugShowController, kDebugDisplayScene, "     nativeWidth: " + nativeWidth );
+			debugMessage( kDebugShowController, kDebugDisplayScene, "    nativeHeight: " + nativeHeight );
+			debugMessage( kDebugShowController, kDebugDisplayScene, "       transform: " + textureTransform );
+			debugMessage( kDebugShowController, kDebugDisplayScene, "          zOrder: " + zOrder );
+			debugMessage( kDebugShowController, kDebugDisplayScene, "        num Divs: " + numRequiredDivs );
+
+			var divNames = new Array();
+			
+			if( textureAnimation )
+			{
+				debugMessage( kDebugShowController, kDebugDisplayScene, "adding keyNames to divNames..." );
+	
+				for( var keyName in textureAnimation.keyAnimations )
+				{
+					if( (keyName != "opacity" )
+					&&  (keyName != "isPlaying"  )
+					&&  (keyName != "zOrderHint"  )
+					&&  (keyName != "hidden"  ) )
+					{
+						debugMessage( kDebugShowController, kDebugDisplayScene, "-  " + keyName );
+						divNames.push( keyName );
+					}
+					else
+					{
+						debugMessage( kDebugShowController, kDebugDisplayScene, "-  " + keyName + " (no div required for this key)" );
+					}
+				}
+			}
+
+			this.stageManager.addTextureToStage( textureId, nativeWidth, nativeHeight, visibility, opacity, zOrder, textureTransform, divNames, textureInitialState );
+			//zOrder += 0.1;
+			//zOrder += 1;
+		}
+
+		var hyperlinkSceneIndex;
+		
+		switch( hyperlinkSceneOffset )
+		{
+			case 0:
+				debugMessage( kDebugShowController, kDebugDisplayScene, "- use hyperlinks from THIS scene" );
+				hyperlinkSceneIndex = this.currentSceneIndex;
+				break;
+				
+			case 1:
+				debugMessage( kDebugShowController, kDebugDisplayScene, "- use hyperlinks from NEXT scene" );
+				hyperlinkSceneIndex = this.nextSceneIndex;
+				break;
+				
+			default:
+				debugMessage( kDebugShowController, kDebugDisplayScene, "- not sure what we should do here" );
+				hyperlinkSceneIndex = -1;
+				break;
+		}
+		
+		this.createHyperlinks( hyperlinkSceneIndex );
+
+		this.changeState( kShowControllerState_IdleAtInitialState ); 
+		this.textureManager.preloadScene( this.nextSceneIndex );
+		
+		if( this.script.eventTimelines[this.currentSceneIndex].automaticPlay == 1 )
+		{
+			debugMessage( kDebugShowController, "displayScene", "this scene (" + this.currentSceneIndex + ") is autoplay, invoking advanceToNextBuild() on next event loop..." );
+
+			var self = this;
+	
+			runInNextEventLoop( function() { self.advanceToNextBuild(); } );
+		}
+
+		this.updateNavigationButtons();
+
+		debugMessage( kDebugShowController, kDebugDisplayScene, "complete." );
+	},
+
+	isMovie : function( textureId )
+	{
+		return( textureId.indexOf( "movie" ) != -1 );
+	},
+	
+	handleSceneDidPreloadEvent : function( event )
+	{
+		var kDebugHandleSceneDidPreloadEvent = "";//"handleSceneDidPreloadEvent";
+		
+		debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "sceneIndex: " + event.memo.sceneIndex + " state: " + this.state );
+		
+		this.displayManager.setNextButtonEnabled( this.currentSceneIndex < (this.script.pageCount - 1) );
+		
+		switch( this.state )
+		{
+			case kShowControllerState_WaitingToJump:
+				if( event.memo.sceneIndex == this.jumpParameters.sceneToJumpTo )
+				{
+					debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "this is the scene we were waiting to jump to, jumping to it now..." );
+					this.changeState( kShowControllerState_ReadyToJump );
+					this.jumpToScene( this.jumpParameters.sceneToJumpTo, this.jumpParameters.playAnimationsAfterJumping );
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "this (" + event.memo.sceneIndex + ") is NOT the scene we were waiting to jump to (" + this.jumpParameters.sceneToJumpTo + "), hmmm... what to do?" );
+				}
+				break;
+			
+			case kShowControllerState_WaitingToDisplay:
+				if( event.memo.sceneIndex == this.sceneToDisplay )
+				{
+					debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "this is the scene we were waiting to display, displaying it now..." );
+					this.changeState( kShowControllerState_ReadyToDisplay );
+					this.displayScene( this.sceneToDisplay, 0 );
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "this is NOT the scene we were waiting to display, hmmm... what to do?" )
+				}
+				break;
+				
+			case kShowControllerState_WaitingToPlay:
+				if( event.memo.sceneIndex == this.nextSceneIndex )
+				{
+					debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "this is the next scene, we were waiting for this before we could play the current one, playing now..." )
+					this.changeState( kShowControllerState_ReadyToPlay ); 
+					this.playCurrentScene();
+				}
+				else
+				{
+					debugMessage( kDebugShowController, kDebugHandleSceneDidPreloadEvent, "this is NOT the next scene, we were waiting for that before we could play the current one, hmmm... what to do?" )
+				}
+				break;
+		}
+	},
+	
+	handleSceneDidNotPreloadEvent : function( event )
+	{
+		var kDebugHandleSceneDidNotPreloadEvent = "handleSceneDidNotPreloadEvent";
+		
+		debugMessage( kDebugShowController, kDebugHandleSceneDidNotPreloadEvent, "sceneIndex: " + event.memo.sceneIndex );
+		
+		var tryAgain = this.promptUserToTryAgain( kUnableToReachiWorkTryAgain );
+
+		if( tryAgain )
+		{
+			this.textureManager.preloadScene( event.memo.sceneIndex );
+		}
+		else
+		{
+		}
+		// TODO: handle error condition: retry or enter 
+	}
+	
+})
+
