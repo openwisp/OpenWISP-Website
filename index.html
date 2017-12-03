@@ -1,210 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<title>OpenWISP Project - Homepage</title>
-		<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
-		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
-		<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
-		
-    <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
-    <script src="js/cufon-yui.js" type="text/javascript"></script>
-    <script src="js/cufon-replace.js" type="text/javascript"></script>
-    <script src="js/Asap_400.font.js" type="text/javascript"></script>
-    <script src="js/Asap_italic_400.font.js" type="text/javascript"></script>
-    <script src="js/FF-cash.js" type="text/javascript"></script>
-    <script src="js/jquery.equalheights.js" type="text/javascript"></script>
-    <script src="js/jquery.cycle.all.js" type="text/javascript"></script>
-    <script>
-		$('#banners')
-			.cycle({ 
-				fx: 'fade', 
-				delay: 5000 ,
-				timeout: 7000,
-				manualTrump:false,
-				cleartypeNoBg: true,
-				next: '#next',
-				prev: '#prev'
-			});
-	</script>
-    <!--[if lt IE 8]>
-    <div style=' clear: both; text-align:center; position: relative;'>
-        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-        	<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
-        </a>
-    </div>
-	<![endif]-->
-    <!--[if lt IE 9]>
-   		<script type="text/javascript" src="js/html5.js"></script>
-        <link rel="stylesheet" href="css/ie.css" type="text/css" media="screen">
-	<![endif]-->
-	<script type="text/javascript">
-
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-29417559-1']);
-    _gaq.push(['_setDomainName', 'openwisp.org']);
-    _gaq.push(['_setAllowLinker', true]);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-
-  </script>
-
-<!-- Start Shareaholic Sexybookmark script -->
-
-<script type="text/javascript">
-var SHRSB_Settings = {"shr_class":{"src":"shareaholic","link":"","service":"88,5,304,7,201,2,3","apikey":"6ffe2cbf142c45bd4cd03b01ec46b8658","localize":true,"shortener":"tinyurl","shortener_key":"","designer_toolTips":true,"twitter_template":"OpenWISP suite - http://openwisp.org via @openWISP"}};
-</script>
-
-<script type="text/javascript">
-(function() {
-var sb = document.createElement("script"); sb.type = "text/javascript";sb.async = true;
-sb.src = ("https:" == document.location.protocol ? "https://dtym7iokkjlif.cloudfront.net" : "http://cdn.shareaholic.com") + "/media/js/jquery.shareaholic-publishers-sb.min.js";
-var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(sb, s);
-})();
-</script>
-<!-- End Shareaholic Sexybookmark script -->
+		<link rel="stylesheet" href="./css/reset.css">
+		<link rel="stylesheet" href="./css/semantic.min.css">
+		<style>
+			canvas {
+				height: 100vh;
+			}
+			.canvas-text {
+			  font-size: 4em;
+			  color: white;
+			  letter-spacing: 2px;
+			  pointer-events: none;
+			  font-weight: 700;
+			  position: absolute;
+			  top: 40%;
+			  left: 0;
+			  right: 0;
+			  text-align: center;
+			}
+			.canvas-text-secondary {
+			  font-size: 2.5em;
+			  color: white;
+			  pointer-events: none;
+			  font-weight: 700;
+			  position: absolute;
+			  top: 55%;
+			  left: 0;
+			  right: 0;
+			  text-align: center;
+			}
+			.master {
+				min-height: 500px;
+			}
+			.master .content {
+				margin-top: 8em;
+				margin-bottom: 0%;
+			}
+		</style>
 	</head>
-	<body id="page1">
-		<a href="https://github.com/openwisp"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-		<div class="main">
-      	<!--==============================header=================================-->
-			<header>
-				<div class="container_12">
-					<div class="wrapper p3">
-						<div class="grid_12">
-							<div class="wrapper border-bot">
-								<h1><a href="index.html"><img title="OpenWISP" src="images/OpenWISP%20logo.png" alt="OpenWISP Logo" style="border: 0px solid; width: 250px;"></a></h1>
-								<nav>
-									<ul class="menu">
-										<li><a class="active" href="index.html">Home</a></li>
-										<li><a href="whatis.html">What is</a></li>
-										<li><a href="architectures.html">Architectures</a></li>
-										<li><a href="history.html">History</a></li>
-										<li><a href="thecode.html">The code</a></li>
-										<li><a href="about.html">About us</a></li>
-									</ul>
-								</nav>
-							</div>
-							<div class="wrapper">
-								<div id="banners" class="border-bot">
-									<div>
-										<strong class="title-1">OpenWISP</strong>
-										<strong class="title-2">Wireless, Everywhere</strong>
-									</div>
-									<div>
-										<strong class="title-1">Advanced Wi-Fi platform</strong>
-										<strong class="title-2">State of the art technology</strong>
-									</div>
-									<div>
-										<strong class="title-1">100% open source</strong>
-										<strong class="title-2">Make sure you know what Wi-Fi you're using!</strong>
-									</div>
-								</div>
-								<a id="prev" href="#">prev</a> <a id="next" href="#">next</a>
-							</div>
-						</div>
-					</div>
-					<article class="grid_3">
-						<div class="box">
-							<figure><a href="whatis.html"><img alt="" src="images/whatis.png"></a>
-							</figure>
-							<div class="padding"> <strong class="title-3 color-1"><span style="text-decoration: underline;">What is</span></strong>
-								<a class="link" href="whatis.html">OpenWISP is a software platform that implements a complete Wi-Fi service...</a>
-							</div>
-						</div>
-					</article>
-					<article class="grid_3">
-						<div class="box">
-							<figure><a href="architectures.html"><img src="images/architectures.png" alt=""></a>
-							</figure>
-							<div class="padding"> <strong class="title-3 color-2">Architectures</strong>
-								<a class="link" href="architectures.html">OpenWISP can be used to implements various architectures...</a>
-							</div>
-						</div>
-					</article>
-					<article class="grid_3">
-						<div class="box">
-							<figure><a href="history.html"><img src="images/history.png" alt=""></a>
-							</figure>
-							<div class="padding"> <strong class="title-3 color-3">History</strong>
-								<a class="link" href="history.html">OpenWISP is derived from tools used in the Provinciawifi project...</a>
-							</div>
-						</div>
-					</article>
-					<article class="grid_3">
-						<div class="box">
-							<figure><a href="thecode.html"><img src="images/thecode.png" alt=""></a>
-							</figure>
-							<div class="padding"> <strong class="title-3 color-4">The code</strong>
-								<a class="link" href="thecode.html">OpenWISP is not a static project. The OpenWISP's community contributes daily...</a>
-							</div>
-						</div>
-					</article>
-				</div>
-			</header>
-      <!--==============================content================================-->
-			<section id="content" style="clear:both;">
-				<div class="ic">
-					<div class="inner_copy">All <a href="http://www.magentothemesworld.com" title="Best Magento Templates">premium Magento themes</a> at magentothemesworld.com!
-					</div>
-				</div>
-				<div class="container_12">
-					<div class="wrapper">
-						<article class="grid_4">
-							<div class="indent-right">
-								<div class="maxheight img-indent-bot">
-									<h3>Welcome!</h3>
-									<p>This is the openWISP project home page. OpenWISP is a free and open source project.
-										<br>
-										Do you want to learn more on OpenWISP? click on one of the links above.
-									</p>
-								</div>
-							</div>
-						</article>
-						<article class="grid_4">
-							<div class="indent">
-								<div class="maxheight img-indent-bot">
-									<h3>Recent News</h3>
-									<time class="tdate-1" datetime="2012-04-26"><a class="link" href="#">Posted: 26 Apr 2012</a></time>
-									<p>The new OpenWISP site is online!</p>
-								</div>
-							</div>
-						</article>
-						<article class="grid_4">
-							<div class="indent-left">
-								<div class="maxheight img-indent-bot">
-									<h3 class="p1">Links</h3>
-									<ul class="list-1">
-										<li>OpenWISP <a href="http://github.com/openwisp" target="_blank"> project @github</a></li>
-										<li><a href="http://www.provincia.roma.it/percorsitematici/innovazione-tecnologica/progetti/4035" target="_blank">ProvinciaWiFi</a>, one of the biggest free Wi-Fi networks worldwide. Provinciawifi is based on the openWISP software
-										</li>
-										<li><a href="http://www.freeitaliawifi.it/" target="_blank">Free ItaliaWiFi</a>: federation of Italian Public Administrations official website
-										</li>
-									</ul>
-								</div>
-							</div>
-						</article>
-					</div>
-				</div>
-<!-- Start Shareaholic Sexybookmark HTML-->
-				<div class="container_12">
-					<div class="shr_class shareaholic-show-on-load grid_6 prefix_3 suffix_3"></div>
-				</div>
-<!-- End Shareaholic Sexybookmark HTML -->
-			</section>
-      <!--==============================footer=================================-->
-			<footer>
-				<div class="inner">
-					<div class="footer-bg">openWISP.org © 2012<span></span><span></span>
-					</div>
-				</div>
-			</footer>
+	<body>
+		<div class="ui container">
+			<div class="canvas-text">OpenWISP</div>
+			<div class="canvas-text-secondary">Complete Wifi Service Solution</div>
 		</div>
-    <script type="text/javascript"> Cufon.now(); </script>
+		<canvas></canvas>
+		<div class="ui borderless top fixed menu">
+			<div class="item">
+				<img src="./images/logo.svg" alt="OpenWISP" style="width: 10rem">
+			</div>
+			<div class="right menu">
+				<a class="active item" href="index.html">Home</a>
+				<a class="item" href="whatis.html">What is</a>
+				<a class="item" href="architectures.html">Architectures</a>
+				<a class="item" href="history.html">History</a>
+				<a class="item" href="thecode.html">The code</a>
+				<a class="item" href="about.html">About us</a>
+			</div>
+		</div>
+		<div class="ui teal inverted segment" style="margin-top: 0px;">
+			<div class="ui container">
+				<div class="ui grid">
+					<div class="six wide column">
+						<img src="./images/question-mark.svg" class="ui image">
+					</div>
+					<div class="ten wide center aligned column">
+						<div class="ui text container">
+							<h1 style="margin-top: 9rem">OpenWISP is a software suite that can be used to implement a complete Wi-Fi service.</h1>
+						</div>
+						<div class="ui hidden divider"></div>
+						<a href="whatis.html" class="ui big primary inverted button">Documentation</a>
+						<a href="whatis.html" class="ui big inverted button">Learn More</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui center aligned container">
+			<div class="ui two column grid">
+				<div class="column">
+					<div class="ui piled segment">
+						<h1>OpenWISP Controller</h1>
+						<h3>A configuration manager and controller for OpenWRT and LEDE devices.</h3>
+						<div class="ui embed" data-url="https://www.youtube.com/embed/MY097Y2cPQ0" data-placeholder="/images/logo.svg"></div>
+					</div>
+				</div>
+				<div class="column">
+					<div class="ui piled segment">
+						<h1>OpenWISP Monitoring</h1>
+						<p>
+							The OpenWISP Monitoring keeps track of the access points provisioned by a Wireless Internet Service Provider. OpenWISP  Monitoring continuously looks for a given number of access points in order to draw them on a Google Maps map and provide the up/down/unknown count. In case the access points are actually reachable, OpenWISP Monitoring will draw an average availability graph.
+						</p>
+					</div>
+					<div class="ui piled segment">
+						<h1>OpenWISP Firmware</h1>
+						<p>
+							The OpenWISP Firmware is a bunch of shell (ash) scripts that sit on top of openWRT. Currently it supports any device supported by openWRT with an Atheros WiFi Radio interface (i.e. mac80211 or Madwifi-ng drivers). Access points equipped with the OWF are extremely easy to install because our firmware provides a very easy-to-use web based UI. OWF has native support for multiple connectivity backhaul with automatic failover: OLSR mesh over a WPA WiFi ad-hoc network (i.e. IBSS WPA-None), UMTS/HSDPA connectivity for a limited number of UMTS USB modem
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui basic master segment">
+			<div class="ui center aligned text content container">
+				<h1>Something even more interesting is that we are open source!</h1>
+				<div class="ui hidden divider"></div>
+				<div class="ui buttons">
+					<a href="http://openwisp.io/docs/developer/contributing.html" class="ui primary big button"><i class="book icon"></i>Read Guidelines</a>
+					<div class="or"></div>
+					<a href="https://github.com/openwisp" class="ui secondary big button"><i class="github icon"></i>Start Contributing on Github</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui yellow inverted segment">
+			<div class="ui container">
+				<div class="ui grid">
+					<div class="six wide column">
+						<h1>Recent News:</h1>
+						<ul>
+							<li>
+								Posted: 28 Nov 2017 <br>
+								<a href="">Google Code-In 2017</a>
+							</li><br>
+							<li>
+								Posted: 3 Mar 2017 <br>
+								<a href="">OpenWISP Endorses LEDE</a>
+							</li><br>
+							<li>
+								Posted: 28 Feb 2017 <br>
+								<a href="">Google Summer of Code 2017</a>
+							</li><br>
+							<li>
+								Posted: 6 Feb 2017 <br>
+								<a href="">Introduction to OpenWISP2</a>
+							</li>
+						</ol>
+					</div>
+					<div class="ten wide center aligned column">
+						<img src="./images/logo.svg" style="width: 25rem;"><br>
+						<div class="ui buttons">
+							<a href="https://facebook.com/openwisp" class="ui facebook button">
+								<i class="facebook icon"></i>
+								Facebook
+							</a>
+							<a href="https://twitter.com/openwisp" class="ui twitter button">
+								<i class="twitter icon"></i>
+								Twitter
+							</a>
+						</div><br>
+						<h2>&copy; OpenWISP 2017</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="./js/jquery-1.7.1.min.js"></script>
+		<script src="./js/semantic.min.js"></script>
+		<script src="./js/script.js"></script>
 	</body>
 </html>
