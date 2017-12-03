@@ -64,7 +64,6 @@ p {margin-bottom:10px;}
 
 .buttons a:hover {cursor:pointer;}
 
-.menu li a,
 .list-1 a,
 .list-2 a,
 .link,
@@ -90,27 +89,6 @@ h1 {
 		letter-spacing:-2px;
 	}
 	h1 strong {color:#dc5130;}
-	
-/***** menu *****/
-.menu {
-	padding:51px 0 0 0; 
-	float:right;
-}
-.menu li {
-	float:left; 
-	position:relative;
-	padding-left:12px;
-}
-.menu > li:first-child {padding-left:0;}
-.menu a {
-	display:inline-block; 
-	font-size:13px; 
-	line-height:20px; 
-	padding:3px 20px; 
-	color:#999;
-}
-.menu a.active,
-.menu a:hover {background:#dc5130; color:#fff;}
 
 /***** slider style *****/
 #banners {
