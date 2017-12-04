@@ -30,6 +30,7 @@
 			  left: 0;
 			  right: 0;
 			  text-align: center;
+			  line-height: 50px;
 			}
 			.master {
 				min-height: 500px;
@@ -46,26 +47,43 @@
 			<div class="canvas-text-secondary">Complete Wifi Service Solution</div>
 		</div>
 		<canvas></canvas>
-		<div class="ui borderless top fixed menu">
-			<div class="item">
-				<img src="./images/logo.svg" alt="OpenWISP" style="width: 10rem">
+		<div class="ui grid">
+			<div class="ui tablet only computer only sixteen column">
+				<div class="ui borderless top fixed menu">
+					<div class="item">
+						<img src="./images/logo.svg" alt="OpenWISP" style="width: 10rem">
+					</div>
+					<div class="right menu">
+						<a class="active item" href="index.html">Home</a>
+						<a class="item" href="whatis.html">What is</a>
+						<a class="item" href="architectures.html">Architectures</a>
+						<a class="item" href="history.html">History</a>
+						<a class="item" href="thecode.html">The code</a>
+						<a class="item" href="about.html">About us</a>
+					</div>
+				</div>	
 			</div>
-			<div class="right menu">
-				<a class="active item" href="index.html">Home</a>
-				<a class="item" href="whatis.html">What is</a>
-				<a class="item" href="architectures.html">Architectures</a>
-				<a class="item" href="history.html">History</a>
-				<a class="item" href="thecode.html">The code</a>
-				<a class="item" href="about.html">About us</a>
+			<div class="ui mobile only sixteen wide column">
+				<div class="ui stackable top menu">
+					<div class="item">
+						<img src="./images/logo.svg" alt="OpenWISP" style="width: 10rem">
+					</div>
+					<a class="active item" href="index.html">Home</a>
+					<a class="item" href="whatis.html">What is</a>
+					<a class="item" href="architectures.html">Architectures</a>
+					<a class="item" href="history.html">History</a>
+					<a class="item" href="thecode.html">The code</a>
+					<a class="item" href="about.html">About us</a>
+				</div>	
 			</div>
 		</div>
 		<div class="ui teal inverted segment" style="margin-top: 0px;">
 			<div class="ui container">
 				<div class="ui grid">
-					<div class="six wide column">
+					<div class="six wide computer only column">
 						<img src="./images/question-mark.svg" class="ui image">
 					</div>
-					<div class="ten wide center aligned column">
+					<div class="ten wide computer sixteen wide mobile center aligned column">
 						<div class="ui text container">
 							<h1 style="margin-top: 9rem">OpenWISP is a software suite that can be used to implement a complete Wi-Fi service.</h1>
 						</div>
@@ -77,15 +95,15 @@
 			</div>
 		</div>
 		<div class="ui center aligned container">
-			<div class="ui two column grid">
-				<div class="column">
+			<div class="ui grid">
+				<div class="eight wide computer eight wide tablet sixteen wide mobile column">
 					<div class="ui piled segment">
 						<h1>OpenWISP Controller</h1>
 						<h3>A configuration manager and controller for OpenWRT and LEDE devices.</h3>
-						<div class="ui embed" data-url="https://www.youtube.com/embed/MY097Y2cPQ0" data-placeholder="/images/logo.svg"></div>
+						<div class="ui embed" data-url="https://www.youtube.com/embed/MY097Y2cPQ0" data-placeholder="./images/logo.svg"></div>
 					</div>
 				</div>
-				<div class="column">
+				<div class="eight wide computer eight wide tablet sixteen wide mobile column">
 					<div class="ui piled segment">
 						<h1>OpenWISP Monitoring</h1>
 						<p>
@@ -102,20 +120,32 @@
 			</div>
 		</div>
 		<div class="ui basic master segment">
-			<div class="ui center aligned text content container">
-				<h1>Something even more interesting is that we are open source!</h1>
-				<div class="ui hidden divider"></div>
-				<div class="ui buttons">
-					<a href="http://openwisp.io/docs/developer/contributing.html" class="ui primary big button"><i class="book icon"></i>Read Guidelines</a>
-					<div class="or"></div>
-					<a href="https://github.com/openwisp" class="ui secondary big button"><i class="github icon"></i>Start Contributing on Github</a>
+			<div class="ui grid">
+				<div class="ui computer only sixteen wide column">
+					<div class="ui center aligned text content container">
+						<h1>Something even more interesting is that we are open source!</h1>
+						<div class="ui hidden divider"></div>
+						<div class="ui buttons">
+							<a href="http://openwisp.io/docs/developer/contributing.html" class="ui primary big button"><i class="book icon"></i>Read Guidelines</a>
+							<div class="or"></div>
+							<a href="https://github.com/openwisp" class="ui secondary big button"><i class="github icon"></i>Start Contributing on Github</a>
+						</div>
+					</div>
+				</div>
+				<div class="ui mobile only sixteen wide column">
+					<div class="ui center aligned text content container">
+						<h1>Something even more interesting is that we are open source!</h1>
+						<div class="ui hidden divider"></div>
+						<a href="http://openwisp.io/docs/developer/contributing.html" class="ui primary big button"><i class="book icon"></i>Read Guidelines</a><br><br>
+						<a href="https://github.com/openwisp" class="ui secondary big button"><i class="github icon"></i>Start Contributing on Github</a>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="ui yellow inverted segment">
 			<div class="ui container">
 				<div class="ui grid">
-					<div class="six wide column">
+					<div class="six wide computer sixteen wide mobile column">
 						<h1>Recent News:</h1>
 						<ul>
 							<li>
@@ -136,7 +166,7 @@
 							</li>
 						</ol>
 					</div>
-					<div class="ten wide center aligned column">
+					<div class="ten wide computer sixteen wide mobile center aligned column">
 						<img src="./images/logo.svg" style="width: 25rem;"><br>
 						<div class="ui buttons">
 							<a href="https://facebook.com/openwisp" class="ui facebook button">
