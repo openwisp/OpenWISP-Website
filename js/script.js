@@ -92,4 +92,7 @@ loop();
 
 $(document).ready(function() {
   $('.ui.embed').embed();
+  $('.menu-open').click(function() {
+    $('.ui.sidebar').sidebar('toggle');
+  })
 })
