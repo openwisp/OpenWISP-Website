@@ -158,11 +158,11 @@ h1 {
 	background:url(../images/pic-1.gif) 217px 0 repeat-y;
 }
 
-h3 {
-	font-size:30px; 
-	line-height:1.8em; 
+h2 {
+	font-size:20px; 
+	line-height:3em; 
 	color:#4c4c4c;
-	letter-spacing:-2px;
+	letter-spacing:-1px;
 	background:url(../images/h3-tail.gif) 0 bottom repeat-x;
 	margin-bottom:8px;
 }
