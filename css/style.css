@@ -10,6 +10,7 @@ body {font-family:Arial, Helvetica, sans-serif;font-size:13px;line-height:25px;c
 .main {
 	width:960px;
 	margin:0 auto;
+	margin-top: 90px;
 }
 
 a {color:#dc5130; outline:none;}
@@ -64,7 +65,6 @@ p {margin-bottom:10px;}
 
 .buttons a:hover {cursor:pointer;}
 
-.menu li a,
 .list-1 a,
 .list-2 a,
 .link,
@@ -90,27 +90,6 @@ h1 {
 		letter-spacing:-2px;
 	}
 	h1 strong {color:#dc5130;}
-	
-/***** menu *****/
-.menu {
-	padding:51px 0 0 0; 
-	float:right;
-}
-.menu li {
-	float:left; 
-	position:relative;
-	padding-left:12px;
-}
-.menu > li:first-child {padding-left:0;}
-.menu a {
-	display:inline-block; 
-	font-size:13px; 
-	line-height:20px; 
-	padding:3px 20px; 
-	color:#999;
-}
-.menu a.active,
-.menu a:hover {background:#dc5130; color:#fff;}
 
 /***** slider style *****/
 #banners {
@@ -179,11 +158,11 @@ h1 {
 	background:url(../images/pic-1.gif) 217px 0 repeat-y;
 }
 
-h3 {
-	font-size:30px; 
-	line-height:1.8em; 
+h2 {
+	font-size:20px; 
+	line-height:3em; 
 	color:#4c4c4c;
-	letter-spacing:-2px;
+	letter-spacing:-1px;
 	background:url(../images/h3-tail.gif) 0 bottom repeat-x;
 	margin-bottom:8px;
 }

@@ -27,9 +27,6 @@ var{
 		outline: 0;
     vertical-align: top; }
 
-ol, ul {
-	list-style: none;
-}
 blockquote, q {
 	quotes: none;
 }
@@ -38,6 +35,13 @@ table, table td {
 	border:none;
 	border-collapse:collapse;
 }
+
+ol, ul {
+	font-size: 14px;
+    margin-left: 20px;
+     list-style-type: disk
+}
+
 img {
 	vertical-align:top; 
 }
