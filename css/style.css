@@ -73,14 +73,12 @@ canvas, .canvas-text, #animation{
   margin: 4em 0;
   overflow: visible;
 }
-
 #main .meetopenwisp .content h2{
   margin: 0 0 0.5em 0;
 }
 #main .meetopenwisp .content p{
   font-size: 1.3em;
 }
-
 #main .meetopenwisp img{
   float: left;
   width: 100px;
@@ -98,6 +96,7 @@ canvas, .canvas-text, #animation{
 #main .badges{ margin-bottom: 0 }
 
 @media only screen and (max-width: 600px) {
+  
   #main .meetopenwisp img{
     float: none;
     margin: 0 auto 1em;
@@ -107,15 +106,12 @@ canvas, .canvas-text, #animation{
     margin: 3em 0;
   }
 }
-
 #main .meetopenwisp .content:first-child{
   margin-top: 1.5em
 }
-
 #main .meetopenwisp .content:last-child{
   margin-bottom: 0
 }
-
 #main .news h1 { margin: 0 }
 #main .news .icon {
   font-size: 2.5em;
@@ -128,7 +124,6 @@ canvas, .canvas-text, #animation{
   bottom: -0.35em;
   position: relative;
 }
-
 #main .news .content {
   margin-bottom: 1em
 }
@@ -136,7 +131,6 @@ canvas, .canvas-text, #animation{
   margin-bottom: 0.5em;
   font-weight: bold;
 }
-
 .padding-vertical {
   padding-top: 2em !important;
   padding-bottom: 2em !important
@@ -144,18 +138,16 @@ canvas, .canvas-text, #animation{
 .padding-vertical:last-child{
   padding-bottom: 1em !important;
 }
-
 a {
   color: #d12800;
   text-decoration: underline;
   font-weight: bold;
 }
-a:hover { color: #d94f34; text-decoration:none }
+a:hover { color: #d94f34; text-decoration: none }
 p.center { text-align: center }
 p.buttons .button{ margin-bottom: 1em }
 p.buttons .button:last-child{ margin-bottom: 0 }
 .button.inverted.grey{ color: #767676 !important }
-
 body.content #top-bar{
   max-width: 1000px;
   margin: 0 auto !important;
@@ -171,9 +163,10 @@ body.content #main article {
   text-align: justify;
 }
 body.content.readable #main article{
-  font-size: 1.2em
+  font-size: 1.2em;
 }
 @media only screen and (min-width: 1000px) {
+  
   body.content #top-bar > div {
     padding-left: 0.5em !important;
     padding-right: 0 !important;
@@ -182,7 +175,6 @@ body.content.readable #main article{
 body.content .buttons { margin-bottom: -1em }
 body.content .buttons:last-child{ margin-bottom: 0 }
 body.content .buttons .button{ margin-bottom: 1em }
-
 body.content #footer .container {
   max-width: 1000px !important;
 }
@@ -199,28 +191,25 @@ body.content #main h4,
 body.content #main li{
   text-align: left;
 }
-
 body.content iframe {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 @media only screen and (max-width: 400px) {
+  
   body.content #main p,
   body.content #main li,
   body.content #main div,
   body.content #main blockquote{
     line-height: 1.6em
   }
-
   body.content #main article{
     font-size: 1.2em
   }
-
   body.content iframe{
     max-height: 200px;
   }
 }
-
 #footer {
   background: rgba(0, 0, 0, 1) !important;
   padding-bottom: 2.5em !important;
@@ -240,7 +229,6 @@ body.content iframe {
   margin: 0 0.5em 1em 0.5em !important;
   padding: 0.8em 1em 0.8em
 }
-
 #footer { text-align: center }
 #footer .logo a { margin: 0 auto }
 #footer p { line-height: 1.8em }
