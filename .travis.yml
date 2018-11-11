@@ -1,0 +1,15 @@
+language: node_js
+node_js: "stable"
+
+before_install:
+  - npm install -g npm@latest
+
+install:
+  - npm install -g htmlhint
+  - npm install -g jshint
+  - npm install -g stylelint
+
+script:
+  - htmlhint **/*.html *.html --config htmlhint.conf
+  - jshint ./js/*.js --config .jshint
+  - stylelint "css/*.css" --config .stylelintrc.json
