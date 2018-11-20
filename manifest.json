@@ -1,0 +1,37 @@
+{
+    "name": "OpenWISP",
+    "description": "OpenWISP is an open source network management system aimed at low cost networks: from public wifi, to university wifi, mesh networks and IoT.",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "orientation": "portrait",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "images/icons/32.png",
+            "type": "image/png",
+            "sizes": "32x32"
+        },
+        {
+            "src": "images/icons/48.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        },
+        {
+            "src": "images/icons/72.png",
+            "type": "image/png",
+            "sizes": "72x72"
+        },
+        {
+            "src": "images/icons/192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "images/icons/256.png",
+            "type": "image/png",
+            "sizes": "256x256"
+        }
+    ]
+}
