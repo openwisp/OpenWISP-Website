@@ -82,7 +82,13 @@
   <script src="js/jquery-1.7.1.min.js"></script>
   <script src="js/semantic.min.js"></script>
   <script src="js/showdown.min.js"></script>
+  <script src="js/iconify.min.js"></script>
   <script src="js/scripts.js"></script>
   <script src="js/feed.js"></script>
+  <script>
+    $(document).ready(function() {
+      createActivityFeed({"posts": 10, "loadMore": true, "addPage": true});
+    });
+  </script>
 </body>
 </html>
