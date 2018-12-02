@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>OpenWISP: Open Source Network Management System</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="description" content="OpenWISP is an open source network management system aimed at low cost networks: from public wifi, to university wifi, mesh networks and IoT.">
+  <link rel="stylesheet" href="css/reset.css" type="text/css">
+  <link rel="stylesheet" href="css/semantic.min.css" type="text/css">
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+  <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+</head>
+
+<body>
+    <div id="head-content" data-setactive="home">
+
+    </div>
+    <div class="ui grid" id="main">
+      <div id="animation">
+        <canvas></canvas>
+        <div class="ui center aligned text canvas-text">
+          <h1>OpenWISP-RADIUS</h1>
+          <h2 id="promo-1">SIMPLE</h2>
+          <h2 id="promo-2">OPEN-SOURCE</h2>
+          <h2 id="promo-3">WEB-BASED UI</h2>
+          <h2 id="promo-4">MULTI-TENANT</h2>
+          <h2 id="promo-6">RESTful</h2>
+          <h2 id="promo-7">MODULAR</h2>
+          <h2 id="promo-8">HACKABLE (by you, not your users)</h2>
+          <h2 id="promo-9">POWERED BY - Django/python</h2>
+          <h2 id="promo-10">FREE</h2>
+          <div class="ui hidden divider"></div>
+          <p class="buttons center">
+            <a href="https://django-freeradius.readthedocs.io/en/latest/general/goals.html" class="ui big primary inverted button">
+              <i class="lightbulb outline icon"></i>
+              Motivation and Goals
+            </a>
+            <a href="https://django-freeradius.readthedocs.io" class="ui big secondary inverted button">
+              <i class="icon book"></i>
+              Documentation
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="row">
+          <div class="six wide center aligned column">
+            <a href="https://freeradius.org/" target="_blank">
+              <img class="ui centered large image" src="images/freerad-logo.svg" alt="">
+            </a>
+          </div>
+          <div class="ten wide center aligned column">
+            <h2>What is FreeRADIUS?</h2>
+            <p style="font-size: medium">
+              The word <a href="https://en.wikipedia.org/wiki/RADIUS" target="_blank">RADIUS</a> stands for <b>Remote
+                Authentication Dial-In User Service. freeRADIUS</b>
+              is a high performance, <b>OPEN-SOURCE & free</b> RADIUS suite. freeRADIUS suite is developed and
+              distributed under
+              <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html" target="_blank">GNU GPLv2</a>.
+              Because of the broad support and the ubiquitous nature of the RADIUS protocol, it is often used
+              by <b>Internet service providers (ISPs) and enterprises to manage access to the Internet or internal
+                networks, wireless networks, and integrated e-mail services.</b> These networks may incorporate modems,
+              digital subscriber line (DSL), access points, virtual private networks (VPNs), network ports, web
+              servers,
+              etc.
+              FreeRADIUS is the most popular open source RADIUS server and the most widely deployed RADIUS
+              server in the world. It provides <a href="https://en.wikipedia.org/wiki/AAA_(computer_security)" target="_blank">AAA</a>
+              solution to
+              many Fortune-500 companies, telcos, and Tier 1 ISPs. It is also widely used in the academic
+              community, including
+              <a href="https://www.eduroam.org/" target="_blank">eduroam</a>.
+              Check out more about freeRADIUS on <a href="https://freeradius.org/" target="_blank">freeradius.org</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h2>Now, What is OpenWISP-RADIUS?</h2>
+          <p style="font-size: large">
+            Simply, it's all about <b>simplicity, modularity and</b>
+            <a href="https://en.wikipedia.org/wiki/Multitenancy" target="_blank">multi-tenancy</a>.
+            openwisp-radius is a new openwisp module which provides a web interface and RESTful API to manage
+            freeradius.
+            It will be integrated with the rest of the OpenWISP2 applications. This module is based on
+            <a href="https://github.com/openwisp/django-freeradius" target="_blank">Django-freeradius</a>
+            which is another OpenWISP module. Django-freeradius provides you the main web-ui and
+            <a href="https://github.com/openwisp/openwisp-radius" target="_blank">openwisp-radius</a>
+            adds the 'cherry' of multi-tenancy on top of it.
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <a href="https://github.com/openwisp/openwisp-radius/" target="_blank">
+            <img class="ui centered medium image" src="images/logo.svg" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <h1 class="ui huge header">Thinking about difference between openwisp-radius and Django-freeradius?</h1>
+      <p style="font-size: large">
+        The <b>Django-freeradius</b> module is like <b>heart</b> of <b>openwisp-radius. Django-freeradius</b>
+        module provides the <b>RESTful api</b> and the <b>web-ui</b> to <b>openwisp-radius</b>. But, the
+        <b>openwisp-radius</b> module adds <b>multi-tenancy</b> and will be integrated to
+        <b>OpenWISP2</b>. Though, you are free to add openwisp-radius' <b>base module (Django-freeradius)</b>
+        to make your own applications without using OpenWISP.
+        <br>
+        In short : <b>openwisp-radius</b> is built upon <b>Django-freeradius</b> to add some more
+        features.
+      </p>
+    </div>
+    <div class="ui center aligned segment">
+      <h1 class="ui huge header">Let's talk about features</h1>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Open-Source</h1>
+          <p>
+            Feel The Freedom of using open-source software
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered tiny image" src="images/foss-logo.svg" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Powered by djando</h1>
+          <p>
+            Get the robustness and power of python. We made it flexible
+            using Django
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered small image" src="images/python-django.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Multi Tenancy</h1>
+          <p>
+            Work with ease and team-power with the multi-tenancy feature
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered medium image" src="images/multitenant.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Web-Based UI</h1>
+          <p>
+            Forget about cluttery & resource-heavy GUIs. Our GUI runs on web.
+            Any browser. Any device.
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <a href="images/web-ui.png" target="_blank">
+          <img class="ui centered medium image" src="images/web-ui.png" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>RESTful</h1>
+          <p>
+            Our module works with REST API. So, you and your software,
+            both can REST.
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered medium image" src="images/rest-api.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+        <h1>Globalized</h1>
+          <p>
+            OpenWISP 1 was mainly focused on one country(Italy). But, this version, we
+            are making it international users in mind.
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered small image" src="images/global.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Easy Account Management</h1>
+          <p>
+            We made the account management even easier. From password reset to
+            multiple ways of account verification and social logins, we nailed them all.
+            <div>(Icon made from
+              <a href="http://www.onlinewebfonts.com/icon">Icon Fonts</a> is licensed by CC BY 3.0)
+            </div>
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered small image" src="images/account-mng.svg" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Secured</h1>
+          <p>
+            We are making it as secure as possible by hashing algorithms and others.
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered small image" src="images/lock.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Well-built statistics</h1>
+          <p>
+            Our admin page shows statistics about your users' and overall system's
+            in a generous and simple way that you'll love.
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <img class="ui centered small image" src="images/stats.svg" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="ui basic center aligned segment">
+      <div class="ui internally celled very relaxed stackable center aligned grid">
+        <div class="twelve wide center aligned column">
+          <h1>Under GNU GPL v3.0</h1>
+          <p>
+            The GNU General Public License is a free, copyleft license for software and other kinds of works.
+            And, what that means to you? Freedom!!!
+          </p>
+        </div>
+        <div class="four wide center aligned column">
+          <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">
+            <img class="ui centered small image" src="images/GPLv3.svg" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="ui center aligned segment">
+      <h1 class="ui huge header">Get the source</h1>
+    </div>
+    <div class="ui center aligned basic segment">
+      <p class="buttons">
+        <a href="https://github.com/openwisp/openwisp-radius" class="ui secondary big button"><i class="github icon"></i>openwisp-radius</a>
+        <a href="https://github.com/openwisp/django-freeradius" class="ui secondary big button"><i class="github icon"></i>Django-freeradius</a>
+        <a href="https://github.com/FreeRADIUS/freeradius-server" class="ui secondary big button"><i class="github icon"></i>freeradius-server</a>
+      </p>
+    </div>
+    <div class="ui center aligned segment">
+      <h1 class="ui huge header">Understand The Vision</h1>
+    </div>
+    <div class="ui center aligned basic segment">
+      <p class="buttons">
+        <a href="https://django-freeradius.readthedocs.io/" class="ui primary big button"><i class="book icon"></i>Documentation</a>
+        <a href="https://django-freeradius.readthedocs.io/en/latest/general/goals.html" class="ui green big button"><i
+          class="lightbulb outline icon"></i>Read about
+          the goals and motivations
+        </a>
+      </p>
+    </div>
+    <div class="ui center aligned segment">
+      <h1 class="ui huge header">Get Involved</h1>
+    </div>
+    <div class="ui center aligned basic segment">
+      <p class="buttons">
+        <a href="http://openwisp.io/docs/developer/contributing.html" class="ui primary big button"><i class="book icon"></i>contributing</a>
+        <a href="https://github.com/openwisp/" class="ui secondary big button"><i class="github icon"></i>OpenWISP Github</a>
+      </p>
+    </div>
+    <div id="foot-content">
+
+    </div>
+
+  <script src="js/jquery-1.7.1.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <script src="js/wrap.js"></script>
+  <script src="js/radius.js"></script>
+</body>
+
+</html>
