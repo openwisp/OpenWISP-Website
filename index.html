@@ -188,6 +188,13 @@
         </div>
       </div>
     </div>
+    <div class="ui grid container">
+      <div class="sixteen wide column">
+        <h2 class="center">Recent GitHub Activity</h2>
+        <div class="ui large feed feed-container"></div>
+        <a class="ui button big black" href="activity.html">See full activity</a>
+      </div>
+    </div>
     <div class="ui black inverted segment padding-vertical" id="footer">
       <div class="ui container stackable two column grid">
         <div class="column logo white">
@@ -216,6 +223,14 @@
   </div>
   <script src="js/jquery-1.7.1.min.js"></script>
   <script src="js/semantic.min.js"></script>
+  <script defer src="js/iconify.min.js"></script>
+  <script defer src="js/showdown.min.js"></script>
   <script src="js/scripts.js"></script>
+  <script defer src="js/feed.js"></script>
+  <script>
+    $(document).ready(function() {
+      createActivityFeed({"posts": 5, "loadMore": false});
+    });
+  </script>
 </body>
 </html>
