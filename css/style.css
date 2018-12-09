@@ -248,6 +248,7 @@ body.content iframe {
   margin-right: 5px;
   margin-bottom: -1px;
 }
+#main .task-list-item input[type=checkbox]{ margin-left: 0 !important }
 .loading-overlay{
   position: fixed;
   width: 100%;
