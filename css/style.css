@@ -96,7 +96,7 @@ canvas, .canvas-text, #animation{
 #main .badges{ margin-bottom: 0 }
 
 @media only screen and (max-width: 600px) {
-  
+
   #main .meetopenwisp img{
     float: none;
     margin: 0 auto 1em;
@@ -166,7 +166,7 @@ body.content.readable #main article{
   font-size: 1.2em;
 }
 @media only screen and (min-width: 1000px) {
-  
+
   body.content #top-bar > div {
     padding-left: 0.5em !important;
     padding-right: 0 !important;
@@ -196,7 +196,7 @@ body.content iframe {
 }
 
 @media only screen and (max-width: 400px) {
-  
+
   body.content #main p,
   body.content #main li,
   body.content #main div,
@@ -237,4 +237,34 @@ body.content iframe {
 }
 @media only screen and (max-width: 800px) {
   #footer p:last-child { width: 100% }
+}
+#load-more {
+  display: block;
+  margin: 1.5em auto 2em;
+  width: 200px;
+}
+.feed .date { color: rgba(0, 0, 0, 0.8) !important }
+.feed .header svg {
+  margin-right: 5px;
+  margin-bottom: -1px;
+}
+.loading-overlay{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding-top: 45%;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+#main #github{
+  margin-top: 0;
+}
+#main #github div,
+#main #github p{
+  font-size: 14px;
 }

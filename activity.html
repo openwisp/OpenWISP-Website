@@ -82,7 +82,20 @@
   <script src="js/jquery-1.7.1.min.js"></script>
   <script src="js/semantic.min.js"></script>
   <script src="js/showdown.min.js"></script>
+  <script src="js/iconify.min.js"></script>
   <script src="js/scripts.js"></script>
   <script src="js/feed.js"></script>
+  <script>
+    $(document).ajaxStart(function() {
+      $("body").append('<div class="loading-overlay">Loading...</div>');
+    });
+    $(document).ajaxStop(function() {
+      var overlay = $(".loading-overlay");
+      overlay.fadeOut(750, function(){ overlay.remove() });
+    });
+    $(document).ready(function() {
+      createActivityFeed({"posts": 50, "loadMore": true, "addPage": true});
+    });
+  </script>
 </body>
 </html>
