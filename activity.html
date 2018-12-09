@@ -86,8 +86,15 @@
   <script src="js/scripts.js"></script>
   <script src="js/feed.js"></script>
   <script>
+    $(document).ajaxStart(function() {
+      $("body").append('<div class="loading-overlay">Loading...</div>');
+    });
+    $(document).ajaxStop(function() {
+      var overlay = $(".loading-overlay");
+      overlay.fadeOut(750, function(){ overlay.remove() });
+    });
     $(document).ready(function() {
-      createActivityFeed({"posts": 10, "loadMore": true, "addPage": true});
+      createActivityFeed({"posts": 50, "loadMore": true, "addPage": true});
     });
   </script>
 </body>

@@ -37,8 +37,8 @@ function createActivityFeed(options) {
       if (i === options.posts)
         return false;
 
-      if (window.__githubApiPage === 10) // last page for all organizations 
-        $("#loadMore").remove();
+      if (window.__githubApiPage === 10) // last page for all organizations
+        $("#load-more").remove();
 
       if (field.actor.display_login === "coveralls")
         return; // don't display if comment is from coveralls
@@ -199,13 +199,23 @@ function createActivityFeed(options) {
     });
 
     if (options.loadMore) {
+      $("#load-more").remove();
       $(".feed-container").append(
-        $("<button/>", { "class": "ui button big black", "id": "loadMore" }).text("Load more")
-      )
+        $("<button/>", {
+          "class": "ui button big black",
+          "id": "load-more"
+        }).text("Load more")
+      );
 
-      $("#loadMore").click(function () {
-        createActivityFeed({ "posts": 30, "loadMore": true, "addPage": true });
-        $("#loadMore").remove();
+      $("#load-more").click(function () {
+        createActivityFeed({
+          "posts": 30,
+          "loadMore": true,
+          "addPage": true
+        });
+        $("#load-more").removeAttr("href")
+                       .removeClass("black")
+                       .addClass("gray");
       });
     }
 
@@ -214,5 +224,5 @@ function createActivityFeed(options) {
     }
 
     $(window).trigger("resize");
-  })
+  });
 }
