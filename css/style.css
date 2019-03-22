@@ -194,6 +194,9 @@ body.content #main li{
 body.content iframe {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
+body.content ul ul{
+  margin-left: 1.8em !important
+}
 
 @media only screen and (max-width: 400px) {
 
