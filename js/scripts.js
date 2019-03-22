@@ -21,6 +21,9 @@
     $('.menu-open').click(function() {
       $('.ui.sidebar').sidebar('toggle');
     });
+    $('.ui.sidebar').sidebar('setting', {
+      scrollLock: 'true'
+    });
     setFooter();
   });
 
