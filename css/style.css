@@ -248,6 +248,22 @@ body.content iframe {
   margin-right: 5px;
   margin-bottom: -1px;
 }
+.feed .event pre,
+.feed .event p > code {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1em 0;
+  padding: 1em;
+  font-weight: normal;
+  line-height: 2em;
+  border: 1px solid #ccc;
+  display: block;
+  white-space: pre;
+}
+.feed .content{
+  width: 100%;
+  overflow-x: hidden;
+}
 #main .task-list-item input[type=checkbox]{ margin-left: 0 !important }
 .loading-overlay{
   position: fixed;
