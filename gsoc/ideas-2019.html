@@ -64,6 +64,158 @@
           </a>
         </p>
 
+        <h2 id="docker">Dockerization of OpenWISP 2</h2>
+        <p><strong>Languages &amp; technologies used:</strong> Python, Bash, Docker, Docker Compose, OpenVPN.</p>
+
+        <p>
+        	The current automated <a href="https://github.com/openwisp/ansible-openwisp2">
+          deployment procedure for OpenWISP 2 is based on Ansible</a> and has served
+          us well until today but has some limitations that make it unsuited for
+          more complex deployments that need horizontal scaling, custom setups
+          and easily replicable deployments.
+        </p>
+
+        <p>
+        	This project idea aims to develop an automated deployment procedure
+          based on Docker and Docker Compose, mixing in also other technologies
+          like Python and Shell scripts to glue together all the pieces needed
+          to achieve it.
+        </p>
+
+        <p>
+          We also aim to provide a fully working OpenWISP instance that
+          includes a management VPN (based on OpenVPN) that works out
+          of the box and is pre-configured in OpenWISP.
+        </p>
+
+        <p>
+          Keep in mind that some parts of some OpenWISP may need to be changed
+          to make the dockerization easier, so if you want to work on this
+          project you must be familiar with changing the internals of OpenWISP modules.
+        </p>
+
+        <p><strong>Measurable outcomes:</strong></p>
+        <ul class="ui bulleted link list">
+            <li>
+                Create one or more set of images based on Alpine Linux and python 3.7
+                which have all the python packages needed for the different services.<br>
+                Find out the right balance between efficiency, configurability and
+                simplicity by leveraging the docker features like base images,
+                build arguments, multi stage builds and any other tool that may
+                be useful to create a good set of docker images.<br>
+            </li>
+            <li>
+                Create a docker-compose configuration that achieves the following goals:
+                <ul>
+                    <li>
+                        Provide the OpenWISP Admin interface and the views
+                        managing account information (password reset, email confirmation)
+                        in a dedicated container.
+                    </li>
+                    <li>
+                        Provide the OpenWISP Controller (<code>connections</code> branch)
+                        views and APIs in a dedicated container
+                    </li>
+                    <li>Provide the OpenWISP Network Topology views and APIs in a dedicated container</li>
+                    <li>Provide the websocket server of OpenWISP in a dedicated container</li>
+                    <li>Provide a celery worker, initially used only by OpenWISP Controller
+                        (<code>connections</code> branch), but which later will executes background
+                        tasks of other modules as well, in a dedicated container.
+                    </li>
+                    <li>Provide a dedicated container for celery-beat
+                        (used to automatically execute background tasks periodically)
+                    </li>
+                    <li>
+                        Provide a default management VPN based on OpenVPN in a dedicated container.
+                        The VPN shall be also pre-configured in OpenWISP, both as a VPN Server
+                        and a related VPN client template
+                        (ask questions to your mentors to know more about this),
+                        the OpenVPN configuration used in the container shall be kept in sync with the
+                        definition available in the VPN Server of OpenWISP.
+                    </li>
+                    <li>
+                        Provide mounted volumes that allow to store persistently
+                        files that are uploaded by users (eg: floor plan images).
+                    </li>
+                    <li>Provide the OpenWISP Radius views and APIs in a dedicated container</li>
+                    <li>
+                        Provide a configurable freeradius instance in a dedicated container
+                    </li>
+                    <li>
+                        Provide a dedicated container with an nginx instance which
+                        has HTTP 2, IPv6 and Gzip enabled by deafult
+                        (but can be turned off if needed)
+                        that dispatches HTTP requests to the different containers,
+                        depending on which domain is called
+                        (eg: dashboard.mydomain.com for the admin container,
+                         controller.mydomain.com for openwisp-controller container
+                         and so on);
+                        Allow to provide custom settings for each site.
+                    </li>
+                    <li>
+                        Ensure each OpenWISP module and its related services
+                        can be turned off if not needed
+                    </li>
+                    <li>
+                        Provide a PostgreSQL instance in a dedicated container,
+                        ensure all the other services point to this postgres
+                        instance, ensure the data is stored on persistent storage,
+                        allow using a PostgreSQL hosted elsewhere as an alternative
+                        (some users may want to use managed PostgreSQL services)
+                    </li>
+                    <li>
+                        Provide a redis instance in a dedicated container
+                        and ensure the django settings point to it
+                    </li>
+                    <li>
+                        Provide a deafult working postfix instance which is
+                        able to send emails but can also be turned off
+                        (users may want to use an external SMTP service)
+                    </li>
+                </ul>
+            </li>
+            <li>
+                The different containers may have very similar or some times
+                identical django settings but we need to absolutely avoid
+                having to manually maintain duplicated settings;
+                find a way to manage the django settings of OpenWISP efficiently
+                and in a way that allows to avoid duplication between the
+                different services
+            </li>
+            <li>
+                Customizability: it should be possible to use custom Docker images
+                and custom django settings for OpenWISP in order to ensure that
+                different users can deploy their tailored OpenWISP based
+                network automation solution
+            </li>
+            <li>
+                Allow users to easily configure some django settings:
+                <ul>
+                    <li>CORS settings</li>
+                    <li>Sentry logging (including the celery container)
+                        using the more recent <code>sentry_sdk</code>
+                        (in ansible-openwisp2 we use the old pyhon-raven module)
+                    </li>
+                    <li>DEFAULT_FROM_EMAIL</li>
+                    <li>SMTP settings</li>
+                    <li>language code</li>
+                    <li>timezone</li>
+                    <li>Leaflet settings</li>
+                    <li>default cert validity for django-x509</li>
+                    <li>default CA validity for django-x509</li>
+                </ul>
+            </li>
+            <li>
+                Implement automated testing with basic checks for each service,
+                eg: for the admin interface, send and HTTP request expecting to see the login page
+                (at least one similar checks should be implemented for each service)
+            </li>
+            <li>
+                Include installation, upgrade and usage information as well as
+                an explaination of configuration settings in the README.
+            </li>
+        </ul>
+
         <h2 id="netengine">netengine: pull monitoring info from network devices</h2>
         <p><strong>Languages &amp; technologies used:</strong> python, NetJSON, SNMP, HTTP, OpenWRT, Linux.</p>
 
@@ -97,14 +249,14 @@
         <p><strong>Measurable outcomes:</strong></p>
         <ul class="ui bulleted link list">
             <li>
-        			change the output format of the to_json method to
+        			change the output format of the <code>to_json</code> method to
         			<a href="http://netjson.org/docs/what.html#devicemonitoring">NetJSON DeviceMonitoring</a>
         		</li>
         		<li>
         			mock all external network calls during tests (SSH, HTTP, SNMP)
         		</li>
             <li>
-        			upgrade the OpenWRT backends to make it work well on OpenWRT Chaos Calmer and LEDE 17-01;
+        			upgrade the OpenWRT backends to make it work well on OpenWRT 18.06 and OpenWRT (LEDE) 17-01;
         			if there are incompatibilities, create different backends for each version, ensuring
         			the shared logic is stored in a common class
         		</li>
