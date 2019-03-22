@@ -216,6 +216,212 @@
             </li>
         </ul>
 
+        <h2 id="login-page">
+          React based WiFi Login Page with Auto-Login Feature
+        </h2>
+        <p>
+          WiFi services most often make use of a login page
+          (a.k.a captive page)
+          that is used to allow users to authenticate,
+          sign up and know more about the
+          WiFi service they are using.
+        </p>
+        <p>
+          A few years ago we developed a configurable login page
+          that is configured and built via ansible:
+          <a href="https://github.com/openwisp/ansible-freeitaliawifi-login-page">
+            ansible-freeitaliawifi-login-page
+          </a>
+        </p>
+        <p>
+          In this project idea we want to use that work as a base to improve
+          upon that concept and integrate the result in the official OpenWISP toolset.
+        </p>
+        <p>
+          While using the current login page we encountered limitations that
+          we aim to overcome with a different solution that will allow us to
+          achieve more advanced features and more maintenability.
+        </p>
+        <p>
+          To achieve the goals of this project some small modifications
+          to django-freeradius/openwisp-radius will be needed, so we
+          encourage students interested in this project idea to become
+          familiar with those two modules of OpenWISP.
+        </p>
+
+        <p><strong>Measurable outcomes:</strong></p>
+
+        <ul class="ui bulleted link list">
+          <li>
+            Implement a React.js based login page with a feature set that is similar
+            to <a href="https://github.com/openwisp/ansible-freeitaliawifi-login-page">
+              ansible-freeitaliawifi-login-page
+            </a>
+          </li>
+          <li>
+            The code shall be based on ES6 and transpiled with babel.js for old browsers
+          </li>
+          <li>
+            The software shall provide a backend part implemented in Node.js,
+            which also serves as a proxy for all asynchronous (a.k.a. Ajax)
+            HTTP requests that need to be made to external services
+            (obtaining auth token, sign up, etc.); a configurable time-out
+            should be set for all the external requests, defaulting to 2 seconds
+            and the failure scenarios should be handled by displaying a nice
+            error message to the user
+          </li>
+          <li>
+            Provide in-browser automated testing with a modern and widely used solution
+            based on javascript<br>
+            Waiting the end of the project to begin this task is not acceptable
+          </li>
+          <li>
+            Ensure automated tests, code coverage, code-quality checks
+            (JSHint, CSS linter, HTML linter) are executed automatically
+            in a travis-ci build that is run on each commit<br>
+            Waiting the end of the project to begin this task is not acceptable
+          </li>
+          <li>
+            Prepare a README with installation, upgrade and usage instructions<br>
+            Waiting the end of the project to begin this task is not acceptable
+          </li>
+          <li>
+            Provide support for multiple organizations: the look and feel of the page
+            must be configurable as follows
+            <ul>
+              <li>
+                Each organization shall be reachable at its own URL path,
+                eg: <code>https://&lt;domain&gt;/&lt;organization&gt;</code>
+              </li>
+              <li>
+                Only relative paths shall be used (to load CSS, JS, images, provide internal links),
+                so that it will be possible to use nginx to reverse proxy
+                specific domain names to a specific organization
+              </li>
+              <li>
+                Since different organizations have different needs, different logos,
+                different themes, different languages, different features,
+                most of the configuration options of this project must be
+                editable at organization level, but since some settings may be
+                identical for each organization it should also be possible
+                to define the default settings at a general level
+              </li>
+              <li>
+                An optional feature, disabled by default,
+                shall perform an asynchronous HTTP call to a specific URL
+                before the page is displayed to the user, depending on the
+                response returned by this URL the page may be displayed or not:<br>
+                <strong>case 1</strong>: if the response is positive,
+                the user can see the login page;<br>
+                <strong>case 2</strong>: if the response is negative,
+                the user cannot see the login page because they are not
+                directly connected to the public wifi service
+                (it means the login page is being accessed from a normal
+                internet connection, think about your house or your
+                4G connection);<br>
+                <strong>case 3</strong>: if the request times out, the
+                login page will not be displayed and an error message
+                will be shown;<br>
+                the URL for case 2 shall be implemented in the node.js backend
+                and it shall return a simple JSON response
+              </li>
+            </ul>
+          </li>
+          <li>
+            The login form of the page shall have
+            the features described below
+            <ul>
+              <li>
+                The login form shall authenticate users
+                using the openwisp-radius "obtain auth token" API endpoint
+                and use this token as a password that will be sent to the
+                captive portal, usually Coova-Chilli or PfSense
+                (a code sample will be provided)
+              </li>
+              <li>
+                If the authentication fails (eg: wrong password), the error
+                message provided by the API shall be shown in the login form
+                (a code sample will be provided)
+              </li>
+              <li>
+                If the authentication fails because the openwisp-radius API
+                is not reachable, an appropriate error message should be displayed
+              </li>
+              <li>
+                After successful login, the user shall be redirected to an internal
+                status page which displays a success message and informs the user
+                that now they can use the internet
+              </li>
+              <li>
+                At successful login, the backend code should obtain a new
+                user access token, encrypt it in a secure way
+                (eg: with a secret key that is different
+                for each organization and is accessible only by the backend, or
+                an equivalent secure way) and
+                the resulting encrypted token shall be stored in a signed cookie,
+                served via HTTPS only
+                (this feature shall be enabled by default and it should be
+                 possible to turn it off if needed)
+              </li>
+              <li>
+                When user comes back to the login page, if the cookie containing
+                the encrypted token is detected by the backend, the user token
+                shall be decrypted and used to check if it's
+                valid and if the user needs to be authenticated again
+                (this implies adding a new API endpoint in
+                django-freeradius/openwisp-radius);<br>
+                <strong>case 1</strong>: if the user token is valid and the user
+                does not have an already open session in freeradius,
+                perform automatic authenticatation<br>
+                <strong>case 2</strong>: if the user already has an open session
+                redirect to the status page;<br>
+                perform automatic authenticatation<br>
+                <strong>case 3</strong>: if the token is not valid, log a
+                warning and proceed to show the login page to the user;<br>
+                <strong>case 4</strong>: if the request to check the token
+                times out, the login page will not be displayed and an error message
+                will be shown;
+              </li>
+              <li>
+                Add an API endpoint to django-freeradius/openwisp-radius
+                that returns the following information:<br>
+                <b>1.</b> whether the user token is valid<br>
+                <b>2.</b> whether the user has a radius session open or not
+              </li>
+              <li>It shall be possible to turn off the auto-login feature</li>
+            </ul>
+          </li>
+          <li>
+            Provide a sign up page with the following features
+            <ul>
+              <li>
+                The page shall use the registration API of
+                OpenWISP Radius to sign up new users
+              </li>
+              <li>
+                If the sign up fails (eg: email already taken), the error
+                message provided by the API shall be shown in the sign up form
+              </li>
+              <li>
+                If the sign up fails because the openwisp-radius API
+                is not reachable, an appropriate error message should be displayed
+              </li>
+              <li>
+                The form should be automatically generated from a JSON-schema;
+                the JSON schema should be configurable but a default schema
+                that works out of the box with OpenWISP Radius shall be provided
+              </li>
+            </ul>
+          </li>
+          <li>
+            Provide support for multiple languages,
+            English shall be the default,
+            but we shall support also Italian and Spanish
+            (translations will be provided by us);
+            the available languages must be configurable
+          </li>
+        </ul>
+
         <h2 id="netengine">netengine: pull monitoring info from network devices</h2>
         <p><strong>Languages &amp; technologies used:</strong> python, NetJSON, SNMP, HTTP, OpenWRT, Linux.</p>
 
