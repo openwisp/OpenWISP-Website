@@ -64,7 +64,7 @@
           </a>
         </p>
 
-        <h2 id="docker">Dockerization of OpenWISP 2</h2>
+          <h2 id="docker">Dockerization of OpenWISP 2</h2>
         <p><strong>Languages &amp; technologies used:</strong> Python, Bash, Docker, Docker Compose, OpenVPN.</p>
 
         <p>
@@ -208,7 +208,8 @@
             <li>
                 Implement automated testing with basic checks for each service,
                 eg: for the admin interface, send and HTTP request expecting to see the login page
-                (at least one similar checks should be implemented for each service)
+                (at least one similar checks should be implemented for each service);
+                the tests shall be executed in a travis-ci build
             </li>
             <li>
                 Include installation, upgrade and usage information as well as
@@ -375,7 +376,6 @@
                 perform automatic authenticatation<br>
                 <strong>case 2</strong>: if the user already has an open session
                 redirect to the status page;<br>
-                perform automatic authenticatation<br>
                 <strong>case 3</strong>: if the token is not valid, log a
                 warning and proceed to show the login page to the user;<br>
                 <strong>case 4</strong>: if the request to check the token
@@ -384,7 +384,7 @@
               </li>
               <li>
                 Add an API endpoint to django-freeradius/openwisp-radius
-                that returns the following information:<br>
+                that given an user auth token, returns the following information:<br>
                 <b>1.</b> whether the user token is valid<br>
                 <b>2.</b> whether the user has a radius session open or not
               </li>
