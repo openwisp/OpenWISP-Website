@@ -444,6 +444,206 @@
           </li>
         </ul>
 
+        <h2 id="template-library">OpenWISP Template Sharing &amp; Template Library</h2>
+        <p>
+          <strong>Languages &amp; technologies used:</strong>
+          Python and Django on the OpenWISP side,
+          ReactJS, NodeJS, Javascript ES6, HTML5 and CSS for the template library.
+        </p>
+
+        <p>
+          The goal of this project idea is to implement features that will allow
+          templates to be shared across different OpenWISP instances, as well as
+          allow templates to be collected in a template library, one of which
+          will be published and linked from the openwisp website.
+        </p>
+
+        <p><strong>Measurable outcomes:</strong></p>
+        <ul class="ui bulleted link list">
+          <li>
+            Modify django-netjsonconfig and openwisp-controller to share templates:
+            <ul>
+              <li>the template can be flagged as private
+                  (it would work as it does now)</li>
+              <li>the template can be flagged as shared publicly</li>
+              <li>the template can be flagged as shared with a secret key that
+                  will used to build a link that is shared with only those who know it
+                  (like google docs link sharing)</li>
+              <li>the template can be flagged as taken from an external source,
+                  in that case additional fields should be provided to allow users
+                  to specify the URL and the settings of the template
+              </li>
+              <li>if the template is shared (publicly or link-sharing),
+                  its contents serialized to JSON will be available via an API endpoint;<br>
+                  <b>public template example:</b> <code>/api/v1/templates/&lt;uuid&gt;/</code><br>
+                  <b>private template example:</b> <code>/api/v1/templates/&lt;uuid&gt;/?key=&lt;key&gt;</code><br>
+              </li>
+              <li>
+                a <code>description</code> text field shall be added to the <code>Template</code> model;
+                this field shall be used for the public description of the shared templates
+                (explain this in the <code>help_text</code>)
+              </li>
+              <li>
+                a <code>notes</code> text field shall be added to the <code>Template</code> model;
+                this field shall be used only for internal notes for the administrators
+                (explain this in the <code>help_text</code>)
+              </li>
+              <li>
+                shared templates will likely contain mostly variables (for example,
+                imagine a coova-chilli captive portal configuration, the captive page URL,
+                interface name, radius ip and ports will always differ for each user
+                that wants to use the shared template), this may
+                cause the backend validation to fail because variables are not recognized;
+                find a way to overcome this problem, for example, sample values
+                for each variable may be provided by the designer of the template
+                and these values can be substituted to the variables so the
+                validation doesn't fail, this means the template designer user
+                should be allowed to fill these variables in some way
+              </li>
+              <li>
+                templates taken from external sources will likely contain
+                variables that have to be filled by the user which imports
+                that template from the external source, this means that
+                the admin UI of OpenWISP should allow the user to fill these
+                variables in some way; the list of variables may also be
+                provided by the instance which shares the template
+              </li>
+              <li>
+                add an API endpoint in django-netjsonconfig which lists all
+                the available public templates; include the possibility to
+                perform a search in the name and description
+              </li>
+              <li>
+                add an API endpoint to openwisp-controller which lists all
+                the available public templates for each organization,
+                using the API endpoint of django-netjsonconfig described in
+                the previous point as base class;
+                openwisp-controller should also provide an API endpoint
+                which lists all the available templates for all the
+              </li>
+              <li>
+                there are other objects in OpenWISP which provide a key field,
+                the same logic should be reused in this project,
+                <a href="https://github.com/openwisp/openwisp-utils/issues/40">look
+                at this github issue in openwisp-utils</a>
+                if you want to get warmed up
+                and demonstrate that you can work on this project
+              </li>
+              <li>
+                edit the Template model and admin to allow specifying a URL
+                from which the template contents should be taken from;<br>
+                remember to manage the failure case (eg: the URL is not reachable,
+                the retrieved content is unusable or there's a validation error);<br>
+                we shall add a switcher in the admin that explicitly asks the user
+                to choose whether the template contents will be defined by themselves
+                or be taken from an external source, the switcher logic shall be
+                similar to the switcher we already have in django-x509 for
+                new vs imported certificates, see the implementation:<br>
+                <a href="https://github.com/openwisp/django-x509/blob/master/django_x509/base/admin.py#L9-L15">
+                  Python part
+                </a><br>
+                <a href="https://github.com/openwisp/django-x509/blob/master/django_x509/static/django-x509/js/x509-admin.js">
+                  Javascript part
+                </a>
+              </li>
+              <li>
+                when a user adds an external template successfully, the application
+                shall start a background celery task that notifies the target
+                openwisp instance that someone has subscribed to that template
+              </li>
+              <li>
+                when a user deletes an external template, the application
+                shall start a background celery task that notifies the target
+                openwisp instance that someone has unsubscribed from that template
+              </li>
+              <li>
+                implement the necessary API endpoint and model changes needed
+                to receive notifications about subscriptions and unsubscriptions
+                so that we can keep some statistics; each subscription should
+                be stored in its own database record and should keep track of:
+                template id (<code>ForeignKey</code> pointing to <code>Template</code> model),
+                ip, subscription date, last sync date
+              </li>
+              <li>
+                add a Celery beat task to sync contents of external templates periodically;
+                keep in mind the instance which sends the API request to sync its contents
+                should do it in a way that lets the external source know that it should
+                update the last sync date
+              </li>
+              <li>
+                include the count of subscriptions of each external template in
+                its API endpoint and in its admin page (readonly field)
+              </li>
+              <li>Ensure test coverage remains high also while these changes are introduced</li>
+            </ul>
+          </li>
+          <li>
+            Implement a template library backend app in python and django with
+            the following features
+            <ul>
+              <li>
+                based on openwisp-users to implement users and organizations
+              </li>
+              <li>
+                based and django-allauth for social login
+              </li>
+              <li>
+                provides API endpoints for password forgotten, change password,
+                login, logout using django-rest-auth
+              </li>
+              <li>
+                based on openwisp-controller to provide external templates,
+                we should find a way to only use the template feature and only
+                allow to create external templates
+              </li>
+              <li>
+                we shall add an API endpoint which allows creating external templates,
+                we shall add this into openwisp-controller but keep it disabled by deafult
+                and enable it only in the template library app
+              </li>
+              <li>
+                when users sign up using social login,
+                they should proceed to create an organization,
+                only then they will be allowed to create templates,
+                this operation shall be performed via an API endpoint,
+                it shall be also possible to edit and delete owned organizations,
+                users should be also allowed to retrieve and edit their own user profile
+                information;<br>
+                it shall be possible to get the list of organizations as well as
+                their details;<br>
+                these API endpoints shall be included in openwisp-users and be
+                disabled by default (will be used explicitly enabled in the
+                template library website)
+              </li>
+            </ul>
+          </li>
+          <li>
+            Implement a template library web app based on ReactJS, which provides
+            the following features:
+            <ul>
+              <li>social sign up and login</li>
+              <li>log out</li>
+              <li>user profile page</li>
+              <li>create organization</li>
+              <li>edit owned organization</li>
+              <li>delete owned organization</li>
+              <li>list and search publicly shared templates</li>
+              <li>list and search publicly shared templates of a specific organization</li>
+              <li>template detail page which includes subscription count,
+                  URL which can be used to import the template in openwisp-controller,
+                  organization owining the template and a link to the organization details
+              </li>
+              <li>list organizations</li>
+              <li>organization detail page</li>
+              <li>provide autometed UI tests + test coverage,
+                  linter and quality checks executed in a travis build</li>
+              <li>
+                provide basic installation and usage documentation in the README
+              </li>
+            </ul>
+          </li>
+        </ul>
+
         <h2 id="netengine">netengine: pull monitoring info from network devices</h2>
         <p><strong>Languages &amp; technologies used:</strong> python, NetJSON, SNMP, HTTP, OpenWRT, Linux.</p>
 
