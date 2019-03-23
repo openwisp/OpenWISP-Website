@@ -64,7 +64,7 @@
           </a>
         </p>
 
-          <h2 id="docker">Dockerization of OpenWISP 2</h2>
+        <h2 id="docker">Dockerization of OpenWISP 2</h2>
         <p><strong>Languages &amp; technologies used:</strong> Python, Bash, Docker, Docker Compose, OpenVPN.</p>
 
         <p>
@@ -92,6 +92,13 @@
           Keep in mind that some parts of some OpenWISP may need to be changed
           to make the dockerization easier, so if you want to work on this
           project you must be familiar with changing the internals of OpenWISP modules.
+        </p>
+
+        <p>
+          <strong>Feel free to suggest some tools or technologies
+          to solve specific problems if you think it's appropriate
+          and would be beneficial, keeping in mind that
+          we want to keep things as simple as possible</strong>.
         </p>
 
         <p><strong>Measurable outcomes:</strong></p>
@@ -132,6 +139,9 @@
                         (ask questions to your mentors to know more about this),
                         the OpenVPN configuration used in the container shall be kept in sync with the
                         definition available in the VPN Server of OpenWISP.
+                        The Certificate Revocation List of the VPN shall be
+                        downloaded periodically from openwisp on the filesystem (a script run in a crontab)
+                        of the VPN server and the configuration of the VPN server
                     </li>
                     <li>
                         Provide mounted volumes that allow to store persistently
@@ -221,6 +231,11 @@
           React based WiFi Login Page with Auto-Login Feature
         </h2>
         <p>
+          <strong>Languages &amp; technologies used:</strong>
+          ReactJS, NodeJS, HTML5, CSS and Javascript ES6 for the login page app,
+          Python and Django to edit django-freeradius and openwisp-radius.
+        </p>
+        <p>
           WiFi services most often make use of a login page
           (a.k.a captive page)
           that is used to allow users to authenticate,
@@ -248,6 +263,13 @@
           to django-freeradius/openwisp-radius will be needed, so we
           encourage students interested in this project idea to become
           familiar with those two modules of OpenWISP.
+        </p>
+
+        <p>
+          <strong>Feel free to suggest some tools or technologies
+          to solve specific problems if you think it's appropriate
+          and would be beneficial, keeping in mind that
+          we want to keep things as simple as possible</strong>.
         </p>
 
         <p><strong>Measurable outcomes:</strong></p>
