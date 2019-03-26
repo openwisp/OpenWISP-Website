@@ -407,6 +407,12 @@
                 that now they can use the internet
               </li>
               <li>
+                The status page shall provide a link to where users can
+                change their own password
+                (<a href="https://github.com/openwisp/openwisp-radius/issues/44">will
+                  need a backend API endpoint described in this github issue</a>)
+              </li>
+              <li>
                 At successful login, the backend code should obtain a new
                 user access token, encrypt it in a secure way
                 (eg: with a secret key that is different
@@ -442,6 +448,14 @@
                 <b>2.</b> whether the user has a radius session open or not
               </li>
               <li>It shall be possible to turn off the auto-login feature</li>
+              <li>The login page shall provide a checkbox, checked by default,
+                  which allows the user to turn on or off the auto-login feature</li>
+              <li>The login page shall provie a link which when clicked shall allow
+                  users who forgot their password to reset it by providing their
+                  email address
+                  (<a href="https://github.com/openwisp/openwisp-radius/issues/44">will
+                    need a backend API endpoint described in this github issue</a>)
+              </li>
             </ul>
           </li>
           <li>
