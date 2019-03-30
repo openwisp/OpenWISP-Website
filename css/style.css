@@ -181,7 +181,9 @@ body.content #footer .container {
 body.content #main p,
 body.content #main li,
 body.content #main div,
-body.content #main blockquote{
+body.content #main blockquote,
+.feed p, .feed li, .feed blockquote
+{
   line-height: 1.8em
 }
 body.content #main h1,
@@ -251,8 +253,7 @@ body.content ul ul{
   margin-right: 5px;
   margin-bottom: -1px;
 }
-.feed .event pre,
-.feed .event p > code {
+.feed .event pre {
   max-width: 100%;
   overflow-x: auto;
   margin: 1em 0;
@@ -262,6 +263,14 @@ body.content ul ul{
   border: 1px solid #ccc;
   display: block;
   white-space: pre;
+}
+.feed p > code {
+  border: 1px solid #ccc;
+  padding: 4px;
+  margin: 0 2px;
+  background: rgba(0,0,0, 0.05);
+  color: #d12800;
+  font-weight: normal;
 }
 .feed .content{
   width: 100%;
