@@ -162,6 +162,10 @@ function createActivityFeed(options) {
       if (!eventType)
         return; // don't display if event not handled above
 
+      console.log($(".feed-container div").length);
+      if (!$(".feed-container div").length)
+        $(".feed-container").html('');
+
       $(".feed-container").append(
         $("<div/>", { "class": "event" }).append(
           $("<div/>", { "class": "label" }).append(

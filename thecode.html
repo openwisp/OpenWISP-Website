@@ -118,6 +118,13 @@
             Contribute with Code
           </a>
         </p>
+        <h2 class="center">Recent Project Activity</h2>
+        <div class="ui large feed feed-container">
+          Loading recent activity...
+        </div>
+        <a class="ui button big black"
+           href="activity.html"
+           id="load-more">See full activity</a>
       </article>
     </div>
     <div class="ui black inverted segment padding-vertical" id="footer">
@@ -149,5 +156,13 @@
   <script src="js/jquery-1.7.1.min.js"></script>
   <script src="js/semantic.min.js"></script>
   <script src="js/scripts.js"></script>
+  <script defer src="js/iconify.min.js"></script>
+  <script defer src="js/showdown.min.js"></script>
+  <script defer src="js/feed.js"></script>
+  <script>
+    $(document).ready(function() {
+      createActivityFeed({"posts": 5, "loadMore": false});
+    });
+  </script>
 </body>
 </html>

@@ -68,13 +68,13 @@
           a list of the most recent contributions in our
           <a href="activity.html">Activity Feed Page</a>.
         </p>
-        <p class="buttons center">
-          <a href="activity.html"
-             class="ui big inverted button red">
-            <i class="book users"></i>
-            See recent contributions
-          </a>
-        </p>
+
+        <div class="ui large feed feed-container">
+          Loading recent activity...
+        </div>
+        <a class="ui button big black"
+           href="activity.html"
+           id="load-more">See full activity</a>
 
         <h1>Core Development Team</h1>
 
@@ -197,5 +197,13 @@
   <script src="js/jquery-1.7.1.min.js"></script>
   <script src="js/semantic.min.js"></script>
   <script src="js/scripts.js"></script>
+  <script defer src="js/iconify.min.js"></script>
+  <script defer src="js/showdown.min.js"></script>
+  <script defer src="js/feed.js"></script>
+  <script>
+    $(document).ready(function() {
+      createActivityFeed({"posts": 3, "loadMore": false});
+    });
+  </script>
 </body>
 </html>
