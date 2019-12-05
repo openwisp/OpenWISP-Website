@@ -1,6 +1,5 @@
 language: python
 node_js: "stable"
-sudo: false
 cache: pip
 python:  3.6
 
