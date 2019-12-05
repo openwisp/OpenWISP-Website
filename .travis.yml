@@ -2,7 +2,6 @@ language: python
 node_js: "stable"
 cache: pip
 python:  3.6
-os: linux
 before_install:
   - npm install -g npm@latest
 
