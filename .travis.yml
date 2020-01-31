@@ -21,11 +21,5 @@ script:
   - sleep 5
   - pylinkvalidate.py http://localhost:8001/
   - kill "${pid}"
-  - |
-    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      # gets commit message of last commit before pull request merge
-      COMMIT_MESSAGE=$(git log $TRAVIS_PULL_REQUEST_SHA --format=%B -n 1)
-      printf "Checking commit message:\n\n"
-      printf "$COMMIT_MESSAGE\n\n"
-      checkcommit --message "$COMMIT_MESSAGE"
-    fi
+  - openwisp-utils-qa-checks --skip-checkmigrations --skip-isort --skip-flake8 --skip-checkmakemigrations
+
