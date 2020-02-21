@@ -128,29 +128,31 @@
         <p><strong>Measurable outcomes:</strong></p>
         <ul class="ui bulleted link list">
             <li>
-                    change the output format of the to_json method to
-                    <a href="http://netjson.org/docs/what.html#devicemonitoring">NetJSON DeviceMonitoring</a>
-                </li>
-                <li>
-                    mock all external network calls during tests (SSH, HTTP, SNMP)
-                </li>
+                change the output format of the to_json method to
+                <a href="http://netjson.org/docs/what.html#devicemonitoring">NetJSON DeviceMonitoring</a>
+            </li>
             <li>
-                    upgrade the OpenWRT backends to make it work well on OpenWRT Chaos Calmer and LEDE 17-01;
-                    if there are incompatibilities, create different backends for each version, ensuring
-                    the shared logic is stored in a common class
-                </li>
-                <li>
-                    upgrade the AirOS backends to make it work with the latest 2 version of AirOS;
-                    if there are incompatibilities, create different backends for each version, ensuring
-                    the shared logic is stored in a common class
-                </li>
+                mock all external network calls during tests (SSH, HTTP, SNMP)
+            </li>
+            <li>
+                upgrade the OpenWRT backends to make it work well on the latest two versions of OpenWRT;
+                if there are incompatibilities, create different backends for each version, ensuring
+                the shared logic is stored in a common class
+            </li>
+            <li>
+                upgrade the AirOS backends to make it work with the latest 2 version of AirOS;
+                if there are incompatibilities, create different backends for each version, ensuring
+                the shared logic is stored in a common class
+            </li>
             <li>achieve 95% test coverage</li>
             <li>
-                    improve documentation: at the moment the documentation is really scarce,
-                    we need the documentation to mention all the backends and all the important
-                    features, providing also a few examples of how to use the library
-                </li>
-                <li>set up a travis build that performs tests and checks test coverage</li>
+                improve documentation: at the moment the documentation is really scarce,
+                we need the documentation to mention all the backends and all the important
+                features, providing also a few examples of how to use the library
+            </li>
+            <li>set up a travis build that performs tests and checks test coverage</li>
+            <li>implement a check class in openwisp-monitoring
+                that makes use of netengine to collect metrics via SNMP TODO</li>
         </ul>
         <p><strong>NOTE</strong>: this is one of those projects that sounds easy but is not.</p>
 
@@ -172,7 +174,7 @@
         <li>Provide documentation using <a class="reference external" href="http://www.sphinx-doc.org/">python-sphinx</a></li>
         </ul>
 
-        <h2 id="netjson-ubus">Implement NetJSON output in ubus (OpenWRT/LEDE)</h2>
+        <h2 id="netjson-ubus">Implement NetJSON output in ubus (OpenWRT)</h2>
         <p><a href="http://netjson.org">NetJSON</a> is emerging as a common format to exchange configuration and monitoring information
         from network devices. Year after year it's becoming easier to achieve interoperability between different software packages
         for networking software. Now is time to start implementing NetJSON in a lower level of the stack and the next
@@ -190,7 +192,7 @@
             consider reusing part of the code used in <a href="https://github.com/wlanslovenija/nodewatcher-agent#ubus-api">nodewatcher-agent</a>
         </li>
         <li>Write tests and obtain test coverage of 95%</li>
-        <li>Write a Makefile to package the software for OpenWRT/LEDE</li>
+        <li>Write a Makefile to package the software for OpenWRT</li>
         <li>Document the compilation/install process and the usage of the module in the README</li>
         <li>Set up a build on travis that automatically compiles the modules and runs tests</li>
         </ul>
