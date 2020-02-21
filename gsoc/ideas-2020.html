@@ -95,11 +95,119 @@
           </li>
         </ul>
 
+        <h2 id="merging-openwisp-moodules">Merge OpenWISP django modules</h2>
+        <p><strong>Languages &amp; technologies used:</strong> python, django.</p>
+        <p>
+            OpenWISP 2 is composed of several python package, some of which are
+            decoupled from the rest of OpenWISP, this has been done for good reasons
+            which are described in the following section of our documentation:
+            <a href="http://openwisp.io/docs/general/values.html#software-reusability-means-long-term-sustainability">
+                OpenWISP values: software reusability means long term sustainability
+            </a>.
+        </p>
+        <p>
+            After some years in which OpenWISP 2 has been deployed and maintained
+            we came to the conclusion that in some cases we went a bit too far
+            with this practice, which has resulted counterproductive in some cases
+            because it increases maintenance overhead and complexity.
+        </p>
+        <p>
+            The goal of this project idea is to merge some modules which perform
+            identical operations (although with some distinction) in order to
+            bring down the complexity of OpenWISP, hence lowering maintenance costs
+            while keeping the extensibility and reusability of these key modules.
+        </p>
+        <p>
+            These modules are:
+        </p>
+        <ul class="ui bulleted link list">
+            <li>
+                <a href="https://github.com/openwisp/openwisp-controller">openwisp-controller</a> and
+                <a href="https://github.com/openwisp/django-netjsonconfig">django-netjsonconfig</a>
+            </li>
+            <li>
+                <a href="https://github.com/openwisp/openwisp-network-topology">openwisp-network-topology</a> and
+                <a href="https://github.com/openwisp/django-netjsongraph">django-netjsongraph</a>
+            </li>
+            <li>
+                <a href="https://github.com/openwisp/openwisp-radius">openwisp-radius</a> and
+                <a href="https://github.com/openwisp/django-freeradius">django-freeradius</a>
+            </li>
+            <li>
+                <a href="https://github.com/openwisp/openwisp-ipam">openwisp-ipam</a> and
+                <a href="https://github.com/openwisp/django-ipam">django-ipam</a>
+            </li>
+        </ul>
+        <p>
+            Each of this pair performs the same function, the package prefixed with "openwisp-",
+            for example "openwisp-ipam" extends a base package
+            (in the case of this example it's django-ipam)
+            and adds features that are specific to OpenWISP, like multitenancy
+            (different organization using the same application without interfering with one another).
+        </p>
+        <p>
+            This separation over time is brought more complexity than advantages to the project,
+            so it's now time to put a stop to it. We just have to make sure each OpenWISP
+            module is still extensible and reusable so other developers can use it as a base
+            for their custom applications.
+        </p>
+
+        <p><strong>Measurable outcomes:</strong></p>
+        <ul class="ui bulleted link list">
+            <li>Merge django-ipam into openwisp-ipam</li>
+            <li>Merge django-netjsonconfig into openwisp-controller</li>
+            <li>Merge django-netjsongraph into openwisp-network-topology</li>
+            <li>Merge django-freeradius into openwisp-radius</li>
+            <li>
+                Migrate the django settings of each module so that the naming is consistent.
+                For example, all settings of django netjsonconfig are prefixed as
+                <code>NETJSONCONFIG_[SETTING_NAME]</code> and have to be renamed as
+                <code>OPENWISP_CONTROLLER_[SETTING_NAME]</code> but backward compatibility
+                with the old name must be kept in order to facilitate migration:
+                the old name should be checked first, if a setting with the old naming is
+                present, the application should use it but also log a warning to
+                encourage the users to upgrade the name of the setting.
+            </li>
+            <li>
+                Ensure <a href="https://github.com/wq/django-swappable-models">django-swappable-models</a>
+                are implemented in each merged module and the naming of the swappable settings is consistent.
+            </li>
+            <li>
+                Provide ways to import, extend and override each key area of the application.
+                Examples:
+                <a href="https://github.com/openwisp/django-netjsongraph#extending-django-netjsongraph">extending django-netjsongraph</a>,
+                <a href="https://github.com/openwisp/django-netjsonconfig#id2">Extending django-netjsonconfig</a>.
+            </li>
+            <li>
+                Ensure tests of each merged module are reusable as it's currently done in
+                django-ipam and django-freeradius
+            </li>
+            <li>
+                Update the documentation of each merged module
+                (eg: documentation of django-netjsonconfig has to be merged in
+                openwisp-controller and adapted).
+            </li>
+            <li>
+                Ensure all tests pass and test coverage remains stable.
+            </li>
+            <li>
+                Create a branch on
+                <a href="https://github.com/openwisp/ansible-openwisp2">ansible-openwisp2</a>
+                which makes it work with the new merged modules.
+            </li>
+            <li>
+                Create a branch on
+                <a href="https://github.com/openwisp/docker-openwisp">docker-openwisp</a>
+                which makes it work with the new merged modules.
+            </li>
+        </ul>
+
         <h2 id="netengine">netengine: pull monitoring info from network devices</h2>
         <p><strong>Languages &amp; technologies used:</strong> python, NetJSON, SNMP, HTTP, OpenWRT, Linux.</p>
 
         <p>
-            Netengine is a python library that aims to provide a single API
+            <a href="https://github.com/openwisp/netengine">Netengine</a>
+            is a python library that aims to provide a single API
             to extract common information from network devices using different protocols
             (eg: SNMP, SSH, HTTP) and different firwmares (eg: OpenWRT, AirOS).
         </p>
@@ -118,7 +226,7 @@
 
         <p>
             <strong>WARNING</strong>: to work on this project you need an AirOS device;
-            OpenWRT/LEDE can be installed in a virtual box VM, but AirOS cannot (at least
+            OpenWRT can be installed in a virtual box VM, but AirOS cannot (at least
             not as easily). If you don't have an AirOS device compatible with the latest
             version and you do not indend to buy one you cannot work on this project.<br>
             If it ever happens that you get accepted but you fail to buy an AirOS device,
