@@ -183,6 +183,14 @@
                 django-ipam and django-freeradius
             </li>
             <li>
+                Each module shall have has a <code>sample_app</code> in its test suite that extends the main module,
+                adding some changes on top of it with the sole purpose of testing its extensibility.<br>
+                In order to better understand this concept take a look at how it's currently implemented in
+                <a href="https://github.com/openwisp/django-freeradius/search?q=sample_app&unscoped_q=sample_app">django-freeradius</a>. and
+                <a href="https://github.com/openwisp/django-ipam/search?q=sample_app&unscoped_q=sample_app">django-ipam</a>
+                (we must port the same concept into the merged modules).
+            </li>
+            <li>
                 Update the documentation of each merged module
                 (eg: documentation of django-netjsonconfig has to be merged in
                 openwisp-controller and adapted).
@@ -290,6 +298,7 @@
         which is included by default in <a href="https://openwrt.org/">OpenWRT</a>, the two linux distributions
         commonly used with OpenWISP.
         </p>
+
         <p>In this project the student will have to develop ubus API extensions that allow retrieving monitoring informatio in NetJSON format
         	(<a href="http://netjson.org/docs/what.html#devicemonitoring">NetJSON DeviceMonitoring</a>) from ubus.
         </p>
