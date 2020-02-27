@@ -297,15 +297,17 @@
                 allows to see what checks are available for a device and add new ones if needed.
             </li>
             <li>
-                Add a check, metric and a relative alert settings
-                (created automatically for every device, must take into account existing devices by using a data migration)
-                which shall be triggered when the status of a device configuration changes,
-                the check should send an alert if the configuration goes into "errored" state.<br>
-                It should also change the monitoring status of the device from "ok" to
-                either "critical" or "problem", depending on configuration (defaults to "critical").<br>
-                The check should not fail but skip if the device has no defined configuration.<br>
-                Data stored in the timeseries DB which is older than X days can be deleted, where
-                X is configurable with a django setting and defaults to 2 days.
+                Add possibility to collect memory (RAM), CPU and flash (disk space) usage
+                of devices via the API.<br>
+                The JSON data format supported by the API should follow the
+                <a href="http://netjson.org/rfc.html#resources2">NetJSON DeviceMonitoring</a> spec.
+                Automatically create different metrics and charts (one for memory usage, one for CPU usage, one for flash space usage)
+                whenever this data is received.<br>
+                Automatically create a related alert setting for each metric which creates an
+                alert (and sets the device monitoring status to "problem")
+                if the total value of each metric goes above X,
+                where X is configurable for each metric with a different setting and defaults to:
+                95% for RAM, 90% for CPU and 80% for flash usage.
             </li>
             <li>
                 Add a check, metric and a relative alert settings
@@ -333,12 +335,26 @@
                 Two charts should be created: one which shows the amount of links (one line for the up state and one line for the down state)
                 and another chart for the amount of nodes (one line for total nodes and one line for isolated nodes).
             </li>
-            <li>Prepare a travis-ci buld which tests with both timeseries DB supported</li>
+            <li>Prepare a travis-ci buld which runs tests
+                with both timeseries DB supported,
+                performs QA checks (like other equivalent openwisp modules)
+                and collects test coverage data.
+            </li>
             <li>Locate slow tests (tests taking longer than 0.3 secs)
-                and find out if mocking can be used to optimize them
+                and find out if mocking can be used to optimize them.
             </li>
             <li>
-                Add possibility of exporting data with istogram charts
+                Add possibility of exporting data with istogram charts.
+            </li>
+            <li>Ensure test coverage is above 95%.</li>
+            <li>
+                Ensure the README is up to date,
+                lists all the features available,
+                provides some screenshots and a detailed explaination of
+                the usage of the main features added in this project.
+            </li>
+        </ul>
+
             </li>
         </ul>
 
