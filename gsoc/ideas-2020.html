@@ -97,7 +97,12 @@
               <strong>students who have shown to have the required skills by contributing to OpenWISP
               have a lot more chances of being accepted</strong>.<br>
               In order to get started contributing refer to the
-              <a href="http://openwisp.io/docs/developer/contributing.html">OpenWISP Contributing Guidelines</a>.
+              <a href="http://openwisp.io/docs/developer/contributing.html">OpenWISP Contributing Guidelines</a>.<br>
+              Once applicants have completed some basic training, they may start to
+              work on some aspects of the project they are interested in applying:
+              all projects listed this year are improvements of existing modules so
+              it is already possible to start working and complete some of
+              the tasks listed in the project idea right now.
           </li>
         </ul>
 
@@ -471,7 +476,7 @@
             </li>
         </ul>
 
-        <h2 id="netengine">netengine: pull monitoring info from network devices</h2>
+        <h2 id="netengine">Netengine: pull monitoring info from network devices</h2>
         <p><strong>Languages &amp; technologies used:</strong> python, NetJSON, SNMP, HTTP, OpenWRT, Linux.</p>
 
         <p>
@@ -532,66 +537,6 @@
                 that makes use of netengine to collect metrics via SNMP</li>
         </ul>
         <p><strong>NOTE</strong>: this is one of those projects that sounds easy but is not.</p>
-
-        <h2 id="ansible-plugin-for-netjsonconfig">Ansible plugin for the netjsonconfig library</h2>
-        <p><strong>Languages &amp; technologies used:</strong> python, ansible.</p>
-        <p><a class="reference external" href="https://github.com/ansible/ansible">Ansible</a> is an IT automation tool that has been recently
-        gaining popularity also in the <a class="reference external" href="http://openwrt.org">OpenWRT</a> world.</p>
-        <p>We want to implement an ansible plugin that integrates <a class="reference external" href="http://netjsonconfig.openwisp.org">netjsonconfig</a>
-        and allows using its two most interesting features, that is templates and context, in ansible.</p>
-        <p>It should be possible to define configuration templates, assign them to specific playbooks and define
-        specific configurations for hosts.</p>
-        <p>The configuration format format used by netjsonconfig is <a class="reference external" href="http://netjson.org/docs/what.html#deviceconfiguration">NetJSON DeviceConfiguration</a>, but a <em>YAML</em>
-        conversion of <em>NetJSON</em> would be good as well. Support for both would be preferred.</p>
-        <p><strong>Measurable outcomes:</strong></p>
-        <ul class="ui bulleted link list">
-        <li>Implement an ansible module that integrates netjsonconfig in ansible and allows using
-        <a class="reference external" href="http://netjson.org/docs/what.html#deviceconfiguration">NetJSON DeviceConfiguration</a> (or its <em>YAML</em> equivalent) to configure OpenWRT devices</li>
-        <li>Achieve a test coverage higher than 80%</li>
-        <li>Provide documentation using <a class="reference external" href="http://www.sphinx-doc.org/">python-sphinx</a></li>
-        </ul>
-
-        <h2 id="netjson-ubus">Implement NetJSON output in ubus (OpenWRT)</h2>
-        <p><a href="http://netjson.org">NetJSON</a> is emerging as a common format to exchange configuration and monitoring information
-        from network devices. Year after year it's becoming easier to achieve interoperability between different software packages
-        for networking software. Now is time to start implementing NetJSON in a lower level of the stack and the next
-        natural step in that direction is to implement it in <a href="https://wiki.openwrt.org/doc/techref/ubus">ubus (OpenWrt micro bus architecture)</a>,
-        which is included by default in <a href="https://openwrt.org/">OpenWRT</a>, the two linux distributions
-        commonly used with OpenWISP.
-        </p>
-
-        <p>In this project the student will have to develop ubus API extensions that allow retrieving monitoring informatio in NetJSON format
-        	(<a href="http://netjson.org/docs/what.html#devicemonitoring">NetJSON DeviceMonitoring</a>) from ubus.
-        </p>
-        <p><strong>Measurable outcomes:</strong></p>
-        <ul class="ui bulleted link list">
-        <li>
-            Implement a way to retrieve <a href="http://netjson.org/docs/what.html#devicemonitoring">DeviceMonitoring</a> output in ubus,
-            consider reusing part of the code used in <a href="https://github.com/wlanslovenija/nodewatcher-agent#ubus-api">nodewatcher-agent</a>
-        </li>
-        <li>Write tests and obtain test coverage of 95%</li>
-        <li>Write a Makefile to package the software for OpenWRT</li>
-        <li>Document the compilation/install process and the usage of the module in the README</li>
-        <li>Set up a build on travis that automatically compiles the modules and runs tests</li>
-        </ul>
-
-        <h2 id="pfsense-backend-for-netjsonconfig">PfSense backend for OpenWISP 2</h2>
-        <p><strong>Languages &amp; technologies used:</strong> python, pfsense, json-schema, netjson.</p>
-        <p>Implement a <a class="reference external" href="https://pfsense.org/">PfSense</a> backend in <a class="reference external" href="http://netjsonconfig.openwisp.org">netjsonconfig</a>.</p>
-        <p><strong>Measurable outcomes:</strong></p>
-        <ul class="ui bulleted link list">
-        <li>The <code class="docutils literal"><span class="pre">PfSense</span></code> backend must generate a configuration archive compatible with PfSense 2.2.x</li>
-        <li>The <code class="docutils literal"><span class="pre">PfSense</span></code> backend must generate a configuration archive compatible with PfSense 2.3.x</li>
-        <li>The <code class="docutils literal"><span class="pre">PfSense</span></code> backend schema must cover at least 75% of the features offered by the PfSense
-        web interface, with particular attention to interfaces, wireless settings, vlans, firewall rules and VPNs</li>
-        <li>The general test coverage of the library must be kept higher than 95%</li>
-        <li>The backend must be to be documented inside the <a class="reference external" href="http://www.sphinx-doc.org/">python-sphinx</a> docs dir
-        contained in the <em>netjsonconfig</em> repo</li>
-        </ul>
-
-        <h2>More ideas coming soon</h2>
-
-        <p>More ideas will be added to this page during February 2020.</p>
 
         <h2>Apply with us</h2>
         <p>
