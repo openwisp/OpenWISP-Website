@@ -355,6 +355,119 @@
             </li>
         </ul>
 
+        <h2 id="openwisp-notifications">OpenWISP Notifications Module</h2>
+        <p><strong>Languages &amp; technologies used:</strong> python, django, javascript.</p>
+
+        <p>
+            This project idea consists of extracting the notification module
+            currently implemented in the alpha
+            <a href="https://gitlab.com/openwisp/openwisp-monitoring">openwisp-monitoring</a>
+            so that it lives on its own and can be more easily integrated with
+            other openwisp modules.
+        </p>
+
+        <p><strong>Measurable outcomes:</strong></p>
+        <ul class="ui bulleted link list">
+            <li>
+                Extract the notification module into its own module and
+                update the code of openwisp-monitoring to make use
+                of the new module.<br>
+                At some point early in the project we have to merge this change
+                into openwisp-monitoring so that the decoupling is completed
+                as soon as possible.
+            </li>
+
+            <li>
+                Add the concept of notification type, it may be a list with some default values
+                which can then be extended by each module.<br>
+                The first notification types implemented shoud be the ones used
+                by openwisp-monitoring. This logic shall reside in a sub app
+                of openwisp-monitoring.
+                Each notification type shall have a message which is generated from
+                a configurable text template, the text shall be markdown formatted,
+                the markdown text shall be expanded into HTML when the notification
+                is sent via email or viewed via the JS widget.
+            </li>
+
+            <li>
+                Allow users to disable notifications by notification types,
+                right now it's only possible to enable or disable the notifications globally.<br>
+                For each notification type and organization the user should be able
+                to disable either all notifications or only the email notification.<br>
+                Example: Receive notifications for organization "default"? <br>
+                Two checkboxes: Web and Email; if email is checked also web is checked automatically
+                (because the notification depends on the basic notification being created).<br>
+                Such a solution would give us the possibility to implement mobile push notifications
+                in the future by adding a new checkbox for mobile notifications.
+            </li>
+
+            <li>
+                Prepare a general email notification template which is configurable
+                (can be changed with a setting) and defaults to using the default
+                logo of OpenWISP (available in <code>openwisp_utils.admin_theme</code>).
+                Make the logo configurable and add a way to supply extra CSS if needed.
+            </li>
+
+            <li>
+                Create a javscript widget for the admin which allows
+                to view all notification and expand their details by clicking on it.<br>
+                This widget shall support infinite scrolling
+                (we have a nice implementation in
+                <a href="https://github.com/openwisp/django-ipam/blob/master/django_ipam/static/django-ipam/js/subnet.js">django-ipam</a>
+                which can be reused, either partially or totally) and expand the markdown
+                into HTML.<br>
+                The operation of opening a notification detail shall flag it as read.<br>
+                This feature will require adding API endpoints to get notification list and details.
+            </li>
+
+            <li>
+                Allow users to disable notifications for specific objects,
+                either permanently or until a specific date,
+                with predefined set of durations: permanently,
+                1 day, 3 days, 1 week, 1 month, custom date.
+                In the case the disabling is temporary, the setting should be deleted automatically after expiration
+                by a simple celery task which is run periodically with celery beat.
+            </li>
+
+            <li>
+                Add celery beat task to automatically delete notifications older than X days,
+                X defaulting to 90, configurable via setting.
+            </li>
+
+            <li>
+                Make the notifications module an
+                optional dependency of
+                <a href="https://github.com/openwisp/openwisp-controller">openwisp-controller</a>
+                (by creating a sub app in openwisp-controller)
+                 and create the following notification types in it:
+                 <ul>
+                    <li>new devices registered into the system;</li>
+                    <li>configuration errors and their recovery (has to be triggered when
+                    the configuration status of a device moves into the "errored state" or when it recovers).</li>
+                </ul>
+            </li>
+            <li>
+                Make the notifications module an optional
+                dependency of
+                <a href="https://github.com/openwisp/openwisp-network-topology">openwisp-network-topology</a>
+                (by creating a sub app in openwisp-network-topology)
+                and create the following notification types in it:
+                <ul>
+                    <li>link status changed</li>
+                    <li>new node in the topology</li>
+                </ul>
+            </li>
+            <li>
+                Prepare a travis-ci build which run tests,
+                performs QA checks (like other equivalent openwisp modules)
+                and collects test coverage data.
+            </li>
+            <li>Ensure test coverage is above 95%.</li>
+            <li>
+                Ensure the README is up to date,
+                lists all the features available,
+                provides some screenshots and a detailed explaination of
+                the usage of the main features of this module.
             </li>
         </ul>
 
