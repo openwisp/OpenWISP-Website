@@ -538,6 +538,175 @@
         </ul>
         <p><strong>NOTE</strong>: this is one of those projects that sounds easy but is not.</p>
 
+        <h2 id="helm-chart">Cloud Native OpenWISP 2 Helm Chart</h2>
+        <p><strong>Languages &amp; technologies used:</strong> Python, Bash, Docker, Kubernetes, Google Cloud, Helm, OpenVPN.</p>
+
+        <p>
+        	The current automated <a href="https://github.com/openwisp/ansible-openwisp2">
+          deployment procedure for OpenWISP 2 is based on Ansible</a> and has served
+          us well until today but has some limitations that make it unsuited for
+          more complex deployments that need horizontal scaling, custom setups
+          and easily replicable deployments.
+        </p>
+
+        <p>
+          In the GSOC2019 we have been working on <a href="https://github.com/openwisp/docker-openwisp">docker-openwisp</a>, the official docker images of OpenWISP.
+          Designed with horizontal scaling, easily replicable deployments and user customization in mind.
+        </p>
+        <p>
+          We already have some <a href="https://github.com/openwisp/docker-openwisp/tree/master/deployment-examples/kubernetes">deployment example on Kubernetes</a>.<br>
+          <img src="https://miro.medium.com/max/2714/1*5ds1GgxetxifpXid2t7A-g.jpeg" alt="OpenWISP Architecture on Kubernetes">
+        </p>
+
+        <p>
+          This project idea aims to develop an <a href="https://helm.sh/">Helm Chart</a> to deploy OpenWISP on a cloud native environment like Kubernetes.
+          With Helm we want provide an easy way to customize, install, and upgrade OpenWISP on Kubernetes.
+        </p>
+
+        <p>
+          Keep in mind the OpenWISP docker images are in alpha version and they may need to be fixed/changed
+          so if you want to work on this project you must be familiar with docker and the internals of OpenWISP modules.
+        </p>
+
+        <p>
+          <strong>Feel free to suggest some tools or technologies
+          to solve specific problems if you think it's appropriate
+          and would be beneficial, keeping in mind that
+          we want to keep things as simple as possible</strong>.
+        </p>
+
+        <p><strong>Measurable outcomes:</strong></p>
+        <ul class="ui bulleted link list">
+            <li>
+                Create an Helm Chart that achieves the following goals:
+                <ul>
+                    <li>
+                        Provide the OpenWISP Admin interface and the views
+                        managing account information (password reset, email confirmation)
+                        in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide the OpenWISP Controller (<code>connections</code> branch)
+                        views and APIs in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide the OpenWISP Network Topology views and APIs in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide the websocket server of OpenWISP in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide a celery worker, initially used only by OpenWISP Controller
+                        (<code>connections</code> branch), but which later will executes background
+                        tasks of other modules as well, in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide a dedicated pod for celery-beat
+                        (used to automatically execute background tasks periodically).
+                    </li>
+                    <li>
+                        Provide a default management VPN based on OpenVPN in a dedicated pod.
+                        The VPN shall be also pre-configured in OpenWISP, both as a VPN Server
+                        and a related VPN client template
+                        (ask questions to your mentors to know more about this),
+                        the OpenVPN configuration used in the container shall be kept in sync with the
+                        definition available in the VPN Server of OpenWISP.
+                        The Certificate Revocation List of the VPN shall be
+                        downloaded periodically from openwisp on the filesystem (a script run in a crontab)
+                        of the VPN server and the configuration of the VPN server.
+                    </li>
+                    <li>
+                        Provide an nfs-server pod with nfsshare available to other pods to create persistent volumes that allow to store persistently
+                        files that are uploaded by users (eg: floor plan images).
+                    </li>
+                    <li>
+                        Provide the OpenWISP Radius views and APIs in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide a configurable freeradius instance in a dedicated pod.
+                    </li>
+                    <li>
+                        Provide a dedicated pod with an nginx instance which
+                        has HTTP 2, IPv6 and Gzip enabled by deafult
+                        (but can be turned off if needed)
+                        that dispatches HTTP requests to the different pods,
+                        depending on which domain is called
+                        (eg: dashboard.mydomain.com for the admin pod,
+                         controller.mydomain.com for openwisp-controller pod
+                         and so on);
+                        Allow to provide custom settings for each site.
+                    </li>
+                    <li>
+                        Provide a ClusterIssuer for letsencrypt certificates via Cert-Manager 
+                    </li>
+                    <li>
+                        Ensure each OpenWISP module and its related services
+                        can be turned off if not needed
+                    </li>
+                    <li>
+                        Provide a PostgreSQL instance in a dedicated pod,
+                        ensure all the other services point to this postgres
+                        instance, ensure the data is stored on persistent storage,
+                        allow using a PostgreSQL hosted elsewhere as an alternative
+                        (some users may want to use managed PostgreSQL services)
+                    </li>
+                    <li>
+                        Provide a redis instance in a dedicated pod
+                        and ensure the django settings point to it
+                    </li>
+                    <li>
+                        Provide a deafult working postfix instance which is
+                        able to send emails but can also be turned off
+                        (users may want to use an external SMTP service)
+                    </li>
+                </ul>
+            </li>
+            <li>
+                The different pods may have very similar or some times
+                identical django settings but we need to absolutely avoid
+                having to manually maintain duplicated settings;
+                find a way to manage the django settings of OpenWISP efficiently
+                and in a way that allows to avoid duplication between the
+                different services
+            </li>
+            <li>
+                Customizability: it should be possible to use custom Docker images
+                and custom django settings for OpenWISP in order to ensure that
+                different users can deploy their tailored OpenWISP based
+                network automation solution
+            </li>
+            <li>
+                Allow users to easily configure some django settings:
+                <ul>
+                    <li>CORS settings</li>
+                    <li>Sentry logging (including the celery container)
+                        using the more recent <code>sentry_sdk</code>
+                        (in ansible-openwisp2 we use the old pyhon-raven module)
+                    </li>
+                    <li>DEFAULT_FROM_EMAIL</li>
+                    <li>SMTP settings</li>
+                    <li>language code</li>
+                    <li>timezone</li>
+                    <li>Leaflet settings</li>
+                    <li>default cert validity for django-x509</li>
+                    <li>default CA validity for django-x509</li>
+                </ul>
+            </li>
+            <li>
+                Implement automated testing with basic checks for each service,
+                eg: for the admin interface, send and HTTP request expecting to see the login page
+                (at least one similar checks should be implemented for each service);
+                the tests shall be executed in a travis-ci build
+            </li>
+            <li>
+                Include installation, upgrade and usage information as well as
+                an explaination of configuration settings in the README.
+            </li>
+            <li>
+                Publishing OpenWISP Helm Chart on <a href="https://hub.helm.sh/">Helm Hub</a>
+            </li>
+        </ul>
+        
         <h2>Apply with us</h2>
         <p>
           Do you want to apply with us?
