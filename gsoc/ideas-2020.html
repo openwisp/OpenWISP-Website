@@ -248,7 +248,7 @@
                 Add support for another timeseries DB, it could be
                 <a href="https://prometheus.io/">prometheus</a>,
                 <a href="http://opentsdb.net/">opentsdb</a> or another good option if there's any.<br>
-                The decision regarding which one to choose two must be backed up by convincing research.
+                The decision regarding which one to choose must be backed up by convincing research.
             </li>
             <li>
                 Right now the query parameter of a chart (now called <code>Graph</code>)
@@ -278,7 +278,7 @@
                 which is now called <code>Threshold</code> to <code>AlertSettings</code>,
                 in a backward compatible way
                 (eg: provide a data migration which creates the alert table first,
-                copies the data from the thershold table into alert and
+                copies the data from the threshold table into alert and
                 then remove the old threshold table, or an equivalently working alternative).
             </li>
             <li>
@@ -340,7 +340,7 @@
                 Two charts should be created: one which shows the amount of links (one line for the up state and one line for the down state)
                 and another chart for the amount of nodes (one line for total nodes and one line for isolated nodes).
             </li>
-            <li>Prepare a travis-ci buld which runs tests
+            <li>Prepare a travis-ci build which runs tests
                 with both timeseries DB supported,
                 performs QA checks (like other equivalent openwisp modules)
                 and collects test coverage data.
