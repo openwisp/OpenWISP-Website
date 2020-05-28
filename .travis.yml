@@ -11,14 +11,7 @@ install:
   - npm install -g jshint
   - npm install -g stylelint
   - pip install pylinkvalidator
-  - pip install openwisp-utils
+  - pip install -U https://github.com/openwisp/openwisp-utils/tarball/master#egg=openwisp_utils
 
 script:
-  - htmlhint **/*.html *.html --config htmlhint.conf
-  - jshint ./js/*.js --config .jshint
-  - stylelint "css/*.css" --config .stylelintrc.json
-  - python -m http.server 8001 &> /dev/null & pid=$!
-  - sleep 5
-  - pylinkvalidate.py http://localhost:8001/
-  - kill "${pid}"
-  - openwisp-utils-qa-checks --skip-checkmigrations --skip-isort --skip-flake8 --skip-checkmakemigrations
+  - ./run-qa-checks

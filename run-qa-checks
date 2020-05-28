@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# check HTML, JS, CSS
+htmlhint --config htmlhint.conf
+jshint ./js/*.js --config .jshint
+stylelint "css/*.css" --config .stylelintrc.json
+
+# check for broken link
+python -m http.server 8001 &> /dev/null & pid=$!
+sleep 4
+pylinkvalidate.py http://localhost:8001/
+kill "${pid}"
+
+# openwisp-utils checks
+openwisp-qa-check \
+    --skip-checkmigrations \
+    --skip-checkmakemigrations\
+    --skip-isort \
+    --skip-flake8 \
+    --skip-black
