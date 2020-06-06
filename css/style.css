@@ -330,3 +330,9 @@ body.content ul ul{
 #main #github p{
   font-size: 14px;
 }
+
+#main .feed>.event>.content .summary img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+}
