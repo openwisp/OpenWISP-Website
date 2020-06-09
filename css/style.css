@@ -1,12 +1,12 @@
 #top-bar.ui.grid{ padding: 0; margin: 0 }
 h1.logo{
   margin: 0;
-  padding: 10px 0 !important;
+  padding: 0 !important;
 }
 .logo a {
   display: block;
-  width: 161px;
-  height: 94px;
+  width: 200px;
+  height: 115px;
   background: url(../images/logo.svg) no-repeat scroll 0 50% / 100%;
   text-indent: -2000px;
   overflow: hidden;
