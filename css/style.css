@@ -272,9 +272,19 @@ body.content ul ul{
   color: #d12800;
   font-weight: normal;
 }
-.feed .content{
+.feed .content {
   width: 100%;
   overflow-x: hidden;
+}
+.feed h3 code {
+  background: rgba(0,0,0, 0.05);
+  padding: 4px;
+}
+.feed blockquote {
+  margin: .75em 0;
+  padding-left: 15px;
+  border-left: 3px solid #ddd;
+  color: rgba(0,0,0,.5);
 }
 #main .task-list-item input[type=checkbox]{ margin-left: 0 !important }
 .loading-overlay{
