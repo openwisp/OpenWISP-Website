@@ -11,7 +11,7 @@ install:
   - npm install -g jshint
   - npm install -g stylelint
   - pip install pylinkvalidator
-  - pip install -U https://github.com/openwisp/openwisp-utils/tarball/master#egg=openwisp_utils
+  - pip install openwisp-utils~=0.6
 
 script:
   - ./run-qa-checks
