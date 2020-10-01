@@ -11,7 +11,7 @@ function createActivityFeed(options) {
   function timeSince(date) {
     var seconds = Math.floor((Date.now() - date.getTime()) / 1000);
     var interval = intervals.find(i => i.seconds < seconds);
-    var count = Math.floor(seconds / interval.seconds);
+    var count =  (interval.seconds === 0 ? seconds : Math.floor(seconds / interval.seconds));
     return count + " " + interval.label + (count !== 1 ? "s" : "") + " ago";
   }
 
