@@ -171,14 +171,6 @@ body.content.readable #main article{
     padding-left: 0.5em !important;
     padding-right: 0 !important;
   }
-
-  #mailing-list-btn-container {
-    display: flex;
-  }
-
-  #mailing-list-btn-container > p {
-    margin: 0px 5px;
-  }
 }
 body.content .buttons { margin-bottom: -1em }
 body.content .buttons:last-child{ margin-bottom: 0 }
