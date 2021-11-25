@@ -345,3 +345,8 @@ body.content ul ul{
   height: auto;
   max-width: 100%;
 }
+.Chat_buttons{
+  display: flex;
+  margin: 0 3px 0 3px;
+  justify-content: center;
+}
