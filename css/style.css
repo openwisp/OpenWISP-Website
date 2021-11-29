@@ -345,3 +345,6 @@ body.content ul ul{
   height: auto;
   max-width: 100%;
 }
+.chat .buttons{
+  margin: 0 3px 0 3px;
+}
