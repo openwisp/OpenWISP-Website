@@ -1,0 +1,42 @@
+---
+name: OpenWISP Website CI Build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Python==3.7
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Upgrade npm 
+        run: npm install -g npm@latest
+
+      - name: Install test dependencies
+        run: |
+          npm install -g htmlhint
+          npm install -g jshint
+          npm install -g stylelint
+          pip install pylinkvalidator
+          pip install openwisp-utils[qa]
+
+      - name: QA checks
+        run: ./run-qa-checks
