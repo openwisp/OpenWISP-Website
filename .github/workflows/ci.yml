@@ -36,7 +36,7 @@ jobs:
           npm install -g jshint
           npm install -g stylelint
           pip install pylinkvalidator
-          pip install openwisp-utils[qa] @ https://github.com/openwisp/openwisp-utils/tarball/master/
+          pip install openwisp-utils[qa]
 
       - name: QA checks
         run: ./run-qa-checks
