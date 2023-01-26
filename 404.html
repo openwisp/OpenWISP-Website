@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>404 Error</title>
+    <style>
+      /* Add some CSS styles for the page */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        text-align: center;
+      }
+      h1 {
+        font-size: 3em;
+        margin-top: 50px;
+        color: #333;
+      }
+      p {
+        font-size: 1.5em;
+        margin-top: 20px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>404 Error</h1>
+    <p>Sorry, the page you are looking for could not be found.</p>
+    <script>
+      /* Add some JavaScript code to handle the error */
+      window.onload = function() {
+        // Log the error to the console
+        console.error("404 Error: Page not found");
+        // Redirect the user to the homepage after 5 seconds
+        setTimeout(function() {
+          window.location.href = "/OpenWISP-Website/";
+        }, 5000);
+      };
+    </script>
+  </body>
+</html>
