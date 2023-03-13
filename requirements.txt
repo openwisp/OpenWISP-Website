@@ -1,0 +1,2 @@
+pylinkvalidator
+openwisp-utils[qa]
