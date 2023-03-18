@@ -6,67 +6,39 @@
     <link rel="icon" type="image/png" href="images\favicon.png" />
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
     <link rel="stylesheet" href="css/semantic.min.css" type="text/css">
-    <title>Error 404</title>
+    <title>Page Not Found (404)</title>
 </head>
 <body>
-    <div class="ui sidebar vertical menu">
-        <a class="item" href="index.html">Home</a>
-        <a class="item" href="whatis.html">Features</a>
-        <a class="item" href="history.html">History</a>
-        <a class="item" href="https://openwisp.io/docs">Docs</a>
-        <a class="item" href="support.html">Support</a>
-        <a class="item" href="thecode.html">Code</a>
-        <a class="item" href="about.html">People</a>
-    </div>
     <div class="pusher">
         <div class="ui grid" id="top-bar">
             <div class="ui computer only column sixteen wide">
-                <div class="ui center aligned container secondary menu">
+                <div class="ui container">
                     <h1 class="item logo">
                         <a href="./">OpenWISP</a>
                     </h1>
-                    <div class="right menu">
-                        <a class="item" href="index.html">Home</a>
-                        <a class="item" href="whatis.html">Features</a>
-                        <a class="item" href="history.html">History</a>
-                        <a class="item" href="https://openwisp.io/docs">Docs</a>
-                        <a class="item" href="support.html">Support</a>
-                        <a class="item" href="thecode.html">Code</a>
-                        <a class="item" href="about.html">People</a>
-                    </div>
                 </div>
             </div>
             <div class="ui mobile tablet only sixteen wide column">
-                <div class="ui menu">
-                    <h1 class="item logo">
-                        <a href="./">OpenWISP</a>
-                    </h1>
-                    <div class="right menu">
-                        <div class="menu-open item">
-                            <i class="sidebar icon"></i>
-                        </div>
-                    </div>
-                </div>
+                <h1 class="item logo">
+                    <a href="./">OpenWISP</a>
+                </h1>
             </div>
         </div>
-        <div align="center">
-            <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
-            <h1>Error 404!<br></h1>
-            <h2>The page you are looking for doesn't exist.<br>
-                <br>
-                <br> 
+        <div class="ui center aligned text  container">
+            <h1>Page Not Found (404)</h1>
+            <h2>The page you're looking for can't be found.</h2>
         </div>
-            <p class="buttons center">
-                <a href="index.html" class="ui big primary inverted button">
-                    <i class="icon home"></i>
-                    Home
-                </a>
-                <a href="support.html" class="ui big secondary inverted button">
-                    <i class="mail icon"></i>
-                    Support
-                </a>
-            </p>
+        <div class="ui hidden divider"></div>
+        <p class="buttons center">
+            <a href="index.html" class="ui big primary inverted button">
+                <i class="icon home"></i>
+                Home
+            </a>
+            <a href="support.html" class="ui big secondary inverted button">
+                <i class="mail icon"></i>
+                Support
+            </a>
+        </p>
         <div class="ui black inverted segment padding-vertical" id="footer">
             <div class="ui container stackable two column grid">
                 <div class="column logo white">
@@ -90,7 +62,8 @@
                     </a>
                 </div>
                 <p>&copy; 2008-
-                    <script>document.write(new Date().getFullYear())</script> OpenWISP and individual contributors.
+                    <script>document.write(new Date().getFullYear())</script> OpenWISP and individual
+                    contributors.
                 </p>
             </div>
         </div>
@@ -101,10 +74,5 @@
     <script defer src="js/showdown.min.js"></script>
     <script src="js/scripts.js"></script>
     <script defer src="js/feed.js"></script>
-    <script>
-        $(document).ready(function () {
-            createActivityFeed({ "posts": 5, "loadMore": false });
-        });
-    </script>
 </body>
 </html>
