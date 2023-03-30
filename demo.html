@@ -55,8 +55,7 @@
       <article class="ui container">
         <h1>OpenWISP Demo Site Instructions</h1>
         <p>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfqep0ZfxhqQQC_ca9C5yfxCJHmUqyOhozTxPKLWKiUsGo_JA/viewform?usp=sf_link"
-             target="_blank">
+          <a href="https://openwisp.io/docs/tutorials/demo.html">
             <img src="images/demo.png"
                  alt="OpenWISP Demo"
                  width="100%">
@@ -69,27 +68,31 @@
           The password of the demo user is reset every minute.
         </p>
         <p>
-          <b>For security reasons, the demo user is not allowed
-          to use the following features</b>:
+          The demo user has other limitations which are
+          explained in the
+          <a href="https://openwisp.io/docs/tutorials/demo.html">
+            OpenWISP Cloud Demo Tutorial</a>.
         </p>
-        <ul class="ui bulleted link list">
-          <li>sending custom shell commands to devices</li>
-          <li>sending password change commands to devices</li>
-          <li>uploading new firmware builds</li>
-          <li>launch firmware upgrade operations</li>
-          <li>create new users or change the details of the demo organization</li>
-          <li>changing the details of RADIUS groups</li>
-        </ul>
+        <p class="center">
+          <b>Username</b>: demo<br>
+          <b>Password</b>: tester123<br>
+        </p>
         <p class="center buttons">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfqep0ZfxhqQQC_ca9C5yfxCJHmUqyOhozTxPKLWKiUsGo_JA/viewform?usp=sf_link"
+          <a href="https://demo.openwisp.io"
              class="ui big button inverted red"
              target="_blank">
             <i class="play icon"></i>
-            Try the OpenWISP Demo
+            Open the Demo System
+          </a>
+          <a href="https://openwisp.io/docs/tutorials/demo.html"
+             class="ui big button inverted red">
+            <i class="book icon"></i>
+            Demo Tutorial
           </a>
         </p>
         <p class="center" style="margin-top:10px">
-          <small>The OpenWISP Demo is a special organization (eg: tenant) in the OpenWISP Cloud Service.<br>
+          <small>The OpenWISP Demo is a special organization (eg: tenant)
+          in the OpenWISP Cloud Service.<br>
           For more information on how your data is processed during the usage of
           the demo service,
           consult our
@@ -99,42 +102,12 @@
         </p>
         <h2>Connecting your devices</h2>
         <p>You may be wondering: <i>I am logged into the demo system, now what?</i></p>
-        <p>
-          Once you are logged in the demo system,
-          other than taking a look around,
-          you may also want to try to
-          <a href="https://openwisp.io/docs/user/configure-device.html" target="_blank">
-            connect your own device</a>,
-          and make sure
-          <a href="https://openwisp.io/docs/user/monitoring.html" target="_blank">
-            OpenWISP Monitoring is installed and configured correctly</a>.
-        </p>
-        <p>
-          The <code>management_interface</code> option to use in
-          <code>/etc/config/openwisp</code> is <code>tun0</code>,
-          the <code>url</code> option must point to
-          <code>https://demo.openwisp.io/</code>
-          while the <code>shared_secret</code> can be found
-          by going to <i>USERS &amp; ORGANIZATIONS</i>, then <i>Organizations</i>,
-          then <i>demo</i>, then scroll down to
-          <i>CONFIGURATION MANAGEMENT SETTINGS</i> and copy
-          the value you can find where it says <i>Shared secret</i>.
-        </p>
-        <p>
-          Make sure you have OpenVPN installed on your device
-          (is it used for the management tunnel, the name of the package
-          is <code>openvpn-openssl</code>), if you also
-          want to try the Wireguard integration, make sure Wireguard
-          is installed too (the name of the packages
-          are <code>wireguard-tools</code> and <code>kmod-wireguard</code>).
-        </p>
-        <p>
-          For more information about how to use OpenWISP, it is recommended
-          to consult the
-          <a href="https://openwisp.io/docs/" target="_blank">
-            documentation</a>
-          and use the
-          <a href="support.html">support channels</a> to ask questions.
+        <p class="center buttons">
+          <a href="https://openwisp.io/docs/tutorials/demo.html"
+             class="ui big button inverted red">
+            <i class="book icon"></i>
+            Get started with the OpenWISP Demo
+          </a>
         </p>
       </article>
     </div>
