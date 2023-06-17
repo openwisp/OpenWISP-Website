@@ -144,17 +144,27 @@
     });
   });
 }());
-
+// v3
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-29417559-1']);
 _gaq.push(['_setDomainName', 'openwisp.org']);
 _gaq.push(['_setAllowLinker', true]);
 _gaq.push(['_trackPageview']);
+// v4
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BV5EEJD3CV');
 (function() {
   if (window.location.host === 'localhost') { return; }
+  // v3
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  // v4
+  var ga4 = document.createElement('script'); ga4.type = 'text/javascript'; ga4.async = true;
+  ga4.src = 'https://www.googletagmanager.com/gtag/js?id=G-BV5EEJD3CV';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga4, s);
 })();
 (function(h,o,t,j,a,r){
   if (window.location.host === 'localhost') { return; }
