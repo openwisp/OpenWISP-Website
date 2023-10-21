@@ -161,7 +161,18 @@ function createActivityFeed(options) {
 
       if (!eventType)
         return; // don't display if event not handled above
-
+      
+      // content sanitization
+      var convertedHtmlContent;
+      if (content) {
+        var sanitizedContent = content
+            .replace(/<br>(?!.*<br>)/g, "#####TEMPBR#####")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/#####TEMPBR#####/g, "<br>");
+        convertedHtmlContent = converter.makeHtml(sanitizedContent);
+      }
+      
       if (!$(".feed-container div").length)
         $(".feed-container").html('');
 
@@ -192,7 +203,7 @@ function createActivityFeed(options) {
                   )
                 )
               ).append(
-                content ? converter.makeHtml(content) : ""
+                content ? convertedHtmlContent : ""
               )
             )
           ))
