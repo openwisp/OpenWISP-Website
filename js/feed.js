@@ -165,14 +165,15 @@ function createActivityFeed(options) {
       // content sanitization
       var convertedHtmlContent;
       if (content) {
-        var sanitizedContent = content
-            .replace(/<br>(?!.*<br>)/g, "#####TEMPBR#####")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/#####TEMPBR#####/g, "<br>");
+        var sanitizedContent = content.replace(/<\/?[a-zA-Z]+>/g, (match) => {
+          if (match.toLowerCase() === '<br>' || match.toLowerCase() === '</br>') {
+            return match;
+          } else {
+            return match.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          }
+        });
         convertedHtmlContent = converter.makeHtml(sanitizedContent);
       }
-      
       if (!$(".feed-container div").length)
         $(".feed-container").html('');
 
