@@ -15,6 +15,18 @@ function createActivityFeed(options) {
     return count + " " + interval.label + (count !== 1 ? "s" : "") + " ago";
   }
 
+  function sanitizeAndConvertToHtml(content) {
+    var sanitizedContent = content.replace(/<\/?[a-zA-Z]+>/g, (match) => {
+      if (match.toLowerCase() === "<br>" || match.toLowerCase() === "</br>") {
+        return match;
+      } else {
+        return match.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+    });
+    var convertedHtmlContent = converter.makeHtml(sanitizedContent);
+    return convertedHtmlContent;
+  }
+
   var converter = new showdown.Converter();
   converter.setFlavor("github");
   converter.setOption({
@@ -161,19 +173,7 @@ function createActivityFeed(options) {
 
       if (!eventType)
         return; // don't display if event not handled above
-      
-      // content sanitization
-      var convertedHtmlContent;
-      if (content) {
-        var sanitizedContent = content.replace(/<\/?[a-zA-Z]+>/g, (match) => {
-          if (match.toLowerCase() === '<br>' || match.toLowerCase() === '</br>') {
-            return match;
-          } else {
-            return match.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          }
-        });
-        convertedHtmlContent = converter.makeHtml(sanitizedContent);
-      }
+
       if (!$(".feed-container div").length)
         $(".feed-container").html('');
 
@@ -204,7 +204,7 @@ function createActivityFeed(options) {
                   )
                 )
               ).append(
-                content ? convertedHtmlContent : ""
+                content ? sanitizeAndConvertToHtml(content) : ""
               )
             )
           ))
