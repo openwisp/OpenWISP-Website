@@ -15,6 +15,18 @@ function createActivityFeed(options) {
     return count + " " + interval.label + (count !== 1 ? "s" : "") + " ago";
   }
 
+  function sanitizeAndConvertToHtml(content) {
+    var sanitizedContent = content.replace(/<\/?[a-zA-Z]+>/g, (match) => {
+      if (match.toLowerCase() === "<br>" || match.toLowerCase() === "</br>") {
+        return match;
+      } else {
+        return match.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+    });
+    var convertedHtmlContent = converter.makeHtml(sanitizedContent);
+    return convertedHtmlContent;
+  }
+
   var converter = new showdown.Converter();
   converter.setFlavor("github");
   converter.setOption({
@@ -192,7 +204,7 @@ function createActivityFeed(options) {
                   )
                 )
               ).append(
-                content ? converter.makeHtml(content) : ""
+                content ? sanitizeAndConvertToHtml(content) : ""
               )
             )
           ))
