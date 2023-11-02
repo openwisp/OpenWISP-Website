@@ -107,6 +107,10 @@ function createActivityFeed(options) {
           iconColor = field.payload.pull_request.merged ? iconColorMap.merged : iconColorMap[field.payload.action];
           content = field.payload.pull_request.body;
           link = field.payload.pull_request.html_url;
+          // ignore dependabot merges
+          if (content && content.indexOf("<summary>Dependabot commands and options</summary>") > 1) {
+            content = "";
+          }
           break;
         case "PullRequestReviewEvent":
           actionMap = {
@@ -167,6 +171,13 @@ function createActivityFeed(options) {
           field.payload.commits.map(function (commit) {
             content += commit.message + "<br>";
           })
+          // take only first line from dependabots commit message
+          if (field.actor.login == "dependabot[bot]") {
+            var parts = content.split("\n");
+            if (parts) {
+              content = parts[0];
+            }
+          }
           link = field.payload.compare;
           break;
       }
