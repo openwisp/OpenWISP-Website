@@ -1,153 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Old version of OpenWISP</title>
-  <link rel="stylesheet" href="css/reset.css" type="text/css">
-  <link rel="stylesheet" href="css/semantic.min.css" type="text/css">
-  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
-  <link rel="icon" type="image/x-icon" href="images/favicon.png" />
-</head>
-<body class="content">
-  <div class="ui sidebar vertical menu">
-    <a class="item" href="index.html">Home</a>
-    <a class="item" href="whatis.html">Features</a>
-    <a class="item" href="history.html">History</a>
-    <a class="item" href="support.html">Support</a>
-    <a class="item" href="https://openwisp.io/docs">Docs</a>
-    <a class="item" href="thecode.html">Code</a>
-    <a class="item" href="about.html">People</a>
-  </div>
-  <div class="pusher">
-    <div class="ui grid" id="top-bar">
-      <div class="ui computer only column sixteen wide">
-        <div class="ui center aligned container secondary menu">
-          <h1 class="item logo">
-            <a href="./">OpenWISP</a>
-          </h1>
-          <div class="right menu">
-            <a class="item" href="index.html">Home</a>
-            <a class="item" href="whatis.html">Features</a>
-            <a class="item" href="history.html">History</a>
-            <a class="item" href="https://openwisp.io/docs">Docs</a>
-            <a class="item" href="support.html">Support</a>
-            <a class="item" href="thecode.html">Code</a>
-            <a class="item" href="about.html">People</a>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Old version of OpenWISP</title>
+    <link rel="stylesheet" href="css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="css/semantic.min.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="css/style.css"
+      type="text/css"
+      media="screen"
+    />
+    <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+  </head>
+  <body class="content">
+    <div class="ui sidebar vertical menu">
+      <a class="item" href="index.html">Home</a>
+      <a class="item" href="whatis.html">Features</a>
+      <a class="item" href="history.html">History</a>
+      <a class="item" href="support.html">Support</a>
+      <a class="item" href="https://openwisp.io/docs">Docs</a>
+      <a class="item" href="thecode.html">Code</a>
+      <a class="item" href="about.html">People</a>
+    </div>
+    <div class="pusher">
+      <div class="ui grid" id="top-bar">
+        <div class="ui computer only column sixteen wide">
+          <div class="ui center aligned container secondary menu">
+            <h1 class="item logo">
+              <a href="./">OpenWISP</a>
+            </h1>
+            <div class="right menu">
+              <a class="item" href="index.html">Home</a>
+              <a class="item" href="whatis.html">Features</a>
+              <a class="item" href="history.html">History</a>
+              <a class="item" href="https://openwisp.io/docs">Docs</a>
+              <a class="item" href="support.html">Support</a>
+              <a class="item" href="thecode.html">Code</a>
+              <a class="item" href="about.html">People</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="ui mobile tablet only sixteen wide column">
-        <div class="ui menu">
-          <h1 class="item logo">
-            <a href="./">OpenWISP</a>
-          </h1>
-          <div class="right menu">
-            <div class="menu-open item">
-              <i class="sidebar icon"></i>
+        <div class="ui mobile tablet only sixteen wide column">
+          <div class="ui menu">
+            <h1 class="item logo">
+              <a href="./">OpenWISP</a>
+            </h1>
+            <div class="right menu">
+              <div class="menu-open item">
+                <i class="sidebar icon"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="ui grid" id="main">
-      <article class="ui container">
-        <h1>Legacy OpenWISP 1 Software Modules</h1>
-        <h2 class="prev-indent-bot">OpenWUMS (OpenWISP User System Management)</h2>
-        <figure class="img-indent"><a class="lightboxed" href="images/owums.png" title="OpenWUMS (OpenWISP User System Management)"><img src="images/owums-thumbnail.png" alt="OpenWUMS (OpenWISP User System Management)"></a>
-        </figure>
-        <p class="img-indent-bot">The OpenWUMS allows a WISP to manage its user base. It provides self-provisioning of users credentials and self-management of account data.
-          With the OpenWUMS it is possible to create an account (and verify its underlying identity) just through a telephone call.
-          Last but not least users can consult their sessions history with fancy graphs and in a tabular form.
-        </p>
-        <h2 class="prev-indent-bot">OpenWM (OpenWISP Manager) and OpenWF (OpenWISP Firmware)</h2>
-        <figure class="img-indent"><a class="lightboxed" href="images/owm.png" title="OpenWM (OpenWISP Manager)"><img src="images/owm-thumbnail.png" alt="OpenWM (OpenWISP Manager)"></a>
-        </figure>
-        <p class="img-indent-bot">The OpenWISP Manager makes centralized management of a large number of access points easier.
-          With this tool it is possible to manage devices with a customized version of the OpenWRT firmware (i.e.the OpenWISP Firmware) that is also released with an open-source license.
-          For this reason OpenWM and OpenWF can be used with any access point containing an Atheros Wi-Fi card supported by OpenWRT (a list of supported devices is available on the OpenWRT official website).
-        </p>
-        <p>The OpenWISP Firmware is a bunch of shell (ash) scripts that sit on top of openWRT. Currently it supports any device supported by openWRT with an Atheros WiFi Radio interface (i.e. mac80211 or Madwifi-ng drivers).
-          Access points equipped with the OWF are extremely easy to install because our firmware provides a very easy-to-use web based
-          UI.
-          OWF has native support for multiple connectivity backhaul with automatic failover: OLSR mesh over a WPA WiFi ad-hoc network (i.e. IBSS WPA-None), UMTS/HSDPA connectivity for a limited number of UMTS USB
-          modem
-        </p>
-        <h2 class="prev-indent-bot">OpenWGM (OpenWISP Geographic Monitoring)</h2>
-        <figure class="img-indent"><a class="lightboxed" href="images/owgm.png" title="OpenWGM (OpenWISP Geographic Monitoring)"><img src="images/owgm-thumbnail.png" alt="OpenWGM (OpenWISP Geographic Monitoring)"></a>
-        </figure>
-        <p class="img-indent-bot">
-          The <a style="color: #555" href="http://openwisp.io">OpenWISP</a> Geographic Monitoring keeps track of the access points provisioned by a Wireless Internet Service Provider.
-          OpenWISP Geographic Monitoring continuously looks for a given number of access points in order to draw them on a Google Maps map and provide the up/down/unknown count.
-          In case the access points are actually reachable, OWGM will draw an average availability graph.
-        </p>
-        <h2 class="prev-indent-bot">OpenWCPM (OpenWISP Captive Portal Manager)</h2>
-        <figure class="img-indent"><a class="lightboxed" href="images/owcpm.png" title="OpenWCPM (OpenWISP Captive Portal Manager)"><img src="images/owcpm-thumbnail.png" alt="OpenWCPM (OpenWISP Captive Portal Manager)"></a>
-        </figure>
-        <p class="img-indent-bot">OpenWISP Captive Portal Manager is a full featured captive portal based on Linux's netfilter.
-        </p>
-          <h2 class="prev-indent-bot">OpenWMW (OpenWISP MiddleWare)</h2>
-          <p class="img-indent-bot">OpenWISP MiddleWare is the glue between OpenWISP applications and the component that permits 3rd party applications integration.
+      <div class="ui grid" id="main">
+        <article class="ui container">
+          <h1>Legacy OpenWISP 1 Software Modules</h1>
+          <h2 class="prev-indent-bot">
+            OpenWUMS (OpenWISP User System Management)
+          </h2>
+          <figure class="img-indent">
+            <a
+              class="lightboxed"
+              href="images/owums.png"
+              title="OpenWUMS (OpenWISP User System Management)"
+              ><img
+                src="images/owums-thumbnail.png"
+                alt="OpenWUMS (OpenWISP User System Management)"
+            /></a>
+          </figure>
+          <p class="img-indent-bot">
+            The OpenWUMS allows a WISP to manage its user base. It provides
+            self-provisioning of users credentials and self-management of
+            account data. With the OpenWUMS it is possible to create an account
+            (and verify its underlying identity) just through a telephone call.
+            Last but not least users can consult their sessions history with
+            fancy graphs and in a tabular form.
           </p>
-        <h3>OpenWISP sample architectures</h3>
-        <h3 class="prev-indent-bot">Typical OpenWISP installation: behind a firewall with NAT</h3>
-        <figure class="img-indent"><a class="lightboxed" href="images/openwisp-architecture-1.png" title="Typical OpenWISP installation: behind a firewall with NAT"><img src="images/openwisp-architecture-1-thumbnail.png" alt="Typical OpenWISP installation: behind a firewall with NAT"></a>
-        </figure>
-        <p class="img-indent-bot">
-        Click on the image to enlarge it.
-        <br />
-        The OpenWISP Firmware works even behind a firewall, even if NAT is used:
-        <br />
-        1. At boot time every OWF access point creates a setup VPN (openVPN) with the OWM server
-        <br />
-        2. OWF access point requests and downloads its configuration inside this setup VPN
-        <br />
-        3. The new configuration is deployed. For instance another VPN is created for WiFi users traffic encapsulation.
-        The setup VPN remains up, so it is possible the monitoring and the administration of the access point (even if it’s behind a firewall/NAT).
-        <br />
-        4. Periodically the access point asks the OWM server if its configuration is changed and, if so, restarts form the point number 2.
-        </p>
+          <h2 class="prev-indent-bot">
+            OpenWM (OpenWISP Manager) and OpenWF (OpenWISP Firmware)
+          </h2>
+          <figure class="img-indent">
+            <a
+              class="lightboxed"
+              href="images/owm.png"
+              title="OpenWM (OpenWISP Manager)"
+              ><img
+                src="images/owm-thumbnail.png"
+                alt="OpenWM (OpenWISP Manager)"
+            /></a>
+          </figure>
+          <p class="img-indent-bot">
+            The OpenWISP Manager makes centralized management of a large number
+            of access points easier. With this tool it is possible to manage
+            devices with a customized version of the OpenWRT firmware (i.e.the
+            OpenWISP Firmware) that is also released with an open-source
+            license. For this reason OpenWM and OpenWF can be used with any
+            access point containing an Atheros Wi-Fi card supported by OpenWRT
+            (a list of supported devices is available on the OpenWRT official
+            website).
+          </p>
+          <p>
+            The OpenWISP Firmware is a bunch of shell (ash) scripts that sit on
+            top of openWRT. Currently it supports any device supported by
+            openWRT with an Atheros WiFi Radio interface (i.e. mac80211 or
+            Madwifi-ng drivers). Access points equipped with the OWF are
+            extremely easy to install because our firmware provides a very
+            easy-to-use web based UI. OWF has native support for multiple
+            connectivity backhaul with automatic failover: OLSR mesh over a WPA
+            WiFi ad-hoc network (i.e. IBSS WPA-None), UMTS/HSDPA connectivity
+            for a limited number of UMTS USB modem
+          </p>
+          <h2 class="prev-indent-bot">
+            OpenWGM (OpenWISP Geographic Monitoring)
+          </h2>
+          <figure class="img-indent">
+            <a
+              class="lightboxed"
+              href="images/owgm.png"
+              title="OpenWGM (OpenWISP Geographic Monitoring)"
+              ><img
+                src="images/owgm-thumbnail.png"
+                alt="OpenWGM (OpenWISP Geographic Monitoring)"
+            /></a>
+          </figure>
+          <p class="img-indent-bot">
+            The
+            <a style="color: #555" href="http://openwisp.io">OpenWISP</a>
+            Geographic Monitoring keeps track of the access points provisioned
+            by a Wireless Internet Service Provider. OpenWISP Geographic
+            Monitoring continuously looks for a given number of access points in
+            order to draw them on a Google Maps map and provide the
+            up/down/unknown count. In case the access points are actually
+            reachable, OWGM will draw an average availability graph.
+          </p>
+          <h2 class="prev-indent-bot">
+            OpenWCPM (OpenWISP Captive Portal Manager)
+          </h2>
+          <figure class="img-indent">
+            <a
+              class="lightboxed"
+              href="images/owcpm.png"
+              title="OpenWCPM (OpenWISP Captive Portal Manager)"
+              ><img
+                src="images/owcpm-thumbnail.png"
+                alt="OpenWCPM (OpenWISP Captive Portal Manager)"
+            /></a>
+          </figure>
+          <p class="img-indent-bot">
+            OpenWISP Captive Portal Manager is a full featured captive portal
+            based on Linux's netfilter.
+          </p>
+          <h2 class="prev-indent-bot">OpenWMW (OpenWISP MiddleWare)</h2>
+          <p class="img-indent-bot">
+            OpenWISP MiddleWare is the glue between OpenWISP applications and
+            the component that permits 3rd party applications integration.
+          </p>
+          <h3>OpenWISP sample architectures</h3>
+          <h3 class="prev-indent-bot">
+            Typical OpenWISP installation: behind a firewall with NAT
+          </h3>
+          <figure class="img-indent">
+            <a
+              class="lightboxed"
+              href="images/openwisp-architecture-1.png"
+              title="Typical OpenWISP installation: behind a firewall with NAT"
+              ><img
+                src="images/openwisp-architecture-1-thumbnail.png"
+                alt="Typical OpenWISP installation: behind a firewall with NAT"
+            /></a>
+          </figure>
+          <p class="img-indent-bot">
+            Click on the image to enlarge it.
+            <br />
+            The OpenWISP Firmware works even behind a firewall, even if NAT is
+            used:
+            <br />
+            1. At boot time every OWF access point creates a setup VPN (openVPN)
+            with the OWM server
+            <br />
+            2. OWF access point requests and downloads its configuration inside
+            this setup VPN
+            <br />
+            3. The new configuration is deployed. For instance another VPN is
+            created for WiFi users traffic encapsulation. The setup VPN remains
+            up, so it is possible the monitoring and the administration of the
+            access point (even if it’s behind a firewall/NAT).
+            <br />
+            4. Periodically the access point asks the OWM server if its
+            configuration is changed and, if so, restarts form the point number
+            2.
+          </p>
 
-        <h3 class="prev-indent-bot">WPA/WPA2 Enterprise (802.1x)</h3>
-        <figure class="img-indent"><a class="lightboxed" href="images/openwisp-architecture-2.png" title="WPA/WPA2 Enterprise (802.1x)"><img src="images/openwisp-architecture-2-thumbnail.png" alt="WPA/WPA2 Enterprise (802.1x)"></a>
-        </figure>
-        <p class="img-indent-bot">
-        Here we use two 802.1Q VLAN incapsulated into a single (layer 2) openVPN tunnel. One of this VLAN is for authenticated user traffic the other one for RADIUS traffic between authenticator and authentication server.
-        <br />
-        Multiple networks with different policies can be incapsulated in the same VPN connection. For instance it's possible to configure OpenWISP Manager to instruct the OpenWISP firmware to broadcasts a 802.1x network and an open Wi-Fi network at the same time.
-        <br>
-        Click on the image to enlarge it.
-        </p>
-      </article>
-    </div>
-    <div class="ui black inverted segment padding-vertical" id="footer">
-      <div class="ui container stackable two column grid">
-        <div class="column logo white">
-          <a href="./">OpenWISP</a>
+          <h3 class="prev-indent-bot">WPA/WPA2 Enterprise (802.1x)</h3>
+          <figure class="img-indent">
+            <a
+              class="lightboxed"
+              href="images/openwisp-architecture-2.png"
+              title="WPA/WPA2 Enterprise (802.1x)"
+              ><img
+                src="images/openwisp-architecture-2-thumbnail.png"
+                alt="WPA/WPA2 Enterprise (802.1x)"
+            /></a>
+          </figure>
+          <p class="img-indent-bot">
+            Here we use two 802.1Q VLAN incapsulated into a single (layer 2)
+            openVPN tunnel. One of this VLAN is for authenticated user traffic
+            the other one for RADIUS traffic between authenticator and
+            authentication server.
+            <br />
+            Multiple networks with different policies can be incapsulated in the
+            same VPN connection. For instance it's possible to configure
+            OpenWISP Manager to instruct the OpenWISP firmware to broadcasts a
+            802.1x network and an open Wi-Fi network at the same time.
+            <br />
+            Click on the image to enlarge it.
+          </p>
+        </article>
+      </div>
+      <div class="ui black inverted segment padding-vertical" id="footer">
+        <div class="ui container stackable two column grid">
+          <div class="column logo white">
+            <a href="./">OpenWISP</a>
+          </div>
+          <div class="column social">
+            <a href="https://twitter.com/openwisp" class="ui twitter button">
+              <i class="twitter icon"></i>
+              Twitter
+            </a>
+            <a href="https://facebook.com/openwisp" class="ui facebook button">
+              <i class="facebook icon"></i>
+              Facebook
+            </a>
+            <a
+              href="https://www.linkedin.com/company/openwisp"
+              class="ui linkedin button"
+            >
+              <i class="linkedin icon"></i>
+              Linked In
+            </a>
+            <a href="https://github.com/openwisp" class="ui black button">
+              <i class="github icon"></i> Github
+            </a>
+          </div>
+          <p>
+            &copy; 2008-
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            OpenWISP and individual contributors.
+          </p>
         </div>
-        <div class="column social">
-          <a href="https://twitter.com/openwisp" class="ui twitter button">
-            <i class="twitter icon"></i>
-            Twitter
-          </a>
-          <a  href="https://facebook.com/openwisp" class="ui facebook button">
-            <i class="facebook icon"></i>
-            Facebook
-          </a>
-          <a href="https://www.linkedin.com/company/openwisp" class="ui linkedin button">
-            <i class="linkedin icon"></i>
-            Linked In
-          </a>
-          <a href="https://github.com/openwisp" class="ui black button">
-            <i class="github icon"></i> Github
-          </a>
-        </div>
-        <p>&copy; 2008-<script>document.write(new Date().getFullYear())</script> OpenWISP and individual contributors.</p>
       </div>
     </div>
-  </div>
-  <script src="js/jquery-1.7.1.min.js"></script>
-  <script src="js/semantic.min.js"></script>
-  <script src="js/scripts.js"></script>
-</body>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/scripts.js"></script>
+  </body>
 </html>
