@@ -175,3 +175,16 @@ gtag('config', 'G-BV5EEJD3CV');
   r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
   a.appendChild(r);
 })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+
+const backTopBtn = document.querySelector(".back-top-btn");
+window.onscroll = () => {
+  if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
+    backTopBtn.style.visibility = "visible";
+  } else {
+    backTopBtn.style.visibility = "hidden";
+  }
+}
+backTopBtn.addEventListener("click", () => {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+});
