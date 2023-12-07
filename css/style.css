@@ -215,6 +215,11 @@ body.content ul ul{
     max-height: 200px;
   }
 }
+@media  screen and (max-width:768px) {
+  .iframe-class{
+    width: 90vw;
+  }
+}
 #footer {
   background: rgba(0, 0, 0, 1) !important;
   padding-bottom: 2.5em !important;
