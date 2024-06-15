@@ -1,0 +1,30 @@
+{
+  "name": "v24-bulma",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "bulma": "^1.0.1"
+  },
+  "scripts": {
+    "build:sass": "sass --load-path=node_modules css/theme.scss css/theme.css --watch",
+    "build:postcss": "postcss css/theme.css --output css/theme.min.css --verbose --map --watch",
+    "serve": "http-server ./",
+    "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\""
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@fullhuman/postcss-purgecss": "^6.0.0",
+    "concurrently": "^8.2.2",
+    "cssnano": "^7.0.2",
+    "http-server": "^14.1.1",
+    "postcss-cli": "^11.0.0",
+    "postcss-prune-var": "^1.1.2",
+    "postcss-scss": "^4.0.9",
+    "postcss-variable-compress": "^3.0.0",
+    "sass": "^1.77.4"
+  },
+  "resolutions": {
+    "string-width": "4.2.3"
+  }
+}
