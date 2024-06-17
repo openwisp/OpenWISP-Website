@@ -10,7 +10,8 @@
     "build:sass": "sass --load-path=node_modules css/theme.scss css/theme.css --watch",
     "build:postcss": "postcss css/theme.css --output css/theme.min.css --verbose --map --watch",
     "serve": "http-server ./",
-    "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\""
+    "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\"",
+    "prettify": "prettier -w index.html css/theme.scss scripts/*"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",
@@ -22,6 +23,7 @@
     "postcss-prune-var": "^1.1.2",
     "postcss-scss": "^4.0.9",
     "postcss-variable-compress": "^3.0.0",
+    "prettier": "^3.3.2",
     "sass": "^1.77.4"
   },
   "resolutions": {
