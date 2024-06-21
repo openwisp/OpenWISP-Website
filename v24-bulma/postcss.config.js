@@ -6,10 +6,11 @@ const varCompress = require('postcss-variable-compress')
 module.exports = {
     // parser: 'postcss-scss',
     plugins: [
-        // purgecss({
-        //     // file paths to your contents to remove unused styles.
-        //     content: ['./**/*.html'],
-        // }),
+        purgecss({
+            // file paths to your contents to remove unused styles.
+            content: ['./**/*.html'],
+            safelist: ['is-active'],
+        }),
         pruneVar(), // remove unused css variables
         varCompress(), // compress css variables
         cssnano({

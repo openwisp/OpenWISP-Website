@@ -11,7 +11,7 @@
     "build:postcss": "postcss css/theme.css --output css/theme.min.css --verbose --map --watch",
     "serve": "http-server ./",
     "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\"",
-    "prettify": "prettier -w index.html css/theme.scss scripts/*"
+    "prettify": "prettier -w *.html css/theme.scss scripts/*"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",
