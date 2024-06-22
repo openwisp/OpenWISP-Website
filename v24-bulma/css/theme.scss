@@ -67,7 +67,7 @@ $weight-semibold: 600;
 $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
 @import "@fortawesome/fontawesome-free/scss/solid";
-// @import '@fortawesome/fontawesome-free/scss/brands';
+@import "@fortawesome/fontawesome-free/scss/brands";
 @import "@fortawesome/fontawesome-free/scss/regular";
 @import url("https://fonts.googleapis.com/css?family=Inter:400,500,600");
 
@@ -483,5 +483,21 @@ is-rounded {
   .points .column.last {
     display: flex;
     border: 0 none;
+  }
+}
+// team
+.profile {
+  margin: 0 1em;
+}
+.profile img {
+  min-width: 120px;
+  max-width: 200px;
+}
+.profile .team-role {
+  font-weight: $weight-medium;
+}
+@media only screen and (max-width: 1024px) {
+  .profile img {
+    max-width: 140px;
   }
 }
