@@ -139,8 +139,7 @@ body {
   cursor: default;
 }
 .navbar-dropdown {
-  margin-top: -25px;
-  margin-left: -50%;
+  margin-top: -28px;
 }
 .has-dropdown .navbar-link::after {
   border-width: 2px;
@@ -310,7 +309,7 @@ is-rounded {
 }
 .faq.menu a {
   padding: 1em 1.4em;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   font-weight: 500;
 }
 .faq.menu a:hover,
@@ -318,6 +317,30 @@ is-rounded {
 .faq.menu a:active,
 .faq.menu li:last-child a {
   border-bottom: 1px solid rgba(0, 0, 0, 0);
+}
+.faq .text {
+  // display: none;
+  text-align: justify;
+  font-size: 0.9em;
+  line-height: 1.5em;
+  padding: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  transition: opacity 1s ease-out;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+.faq li.is-active .text {
+  padding: 1em;
+  opacity: 1;
+  height: auto;
+}
+.faq a.is-active,
+.faq a.is-active:hover,
+.faq a.is-active:focus {
+  background: $alternative-bg;
+  font-weight: $weight-semibold;
+  border-bottom: 0 none;
 }
 
 .stats span {
@@ -495,6 +518,15 @@ is-rounded {
 }
 .profile .team-role {
   font-weight: $weight-medium;
+}
+.text p {
+  margin-bottom: 1em;
+}
+.text p:last-child {
+  margin-bottom: 0;
+}
+.profile.left {
+  min-width: 200px;
 }
 @media only screen and (max-width: 1024px) {
   .profile img {
