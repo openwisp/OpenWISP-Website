@@ -154,6 +154,9 @@ body {
 .button.is-orange.is-inverted {
   outline: 1px solid rgba($orange, 0.4);
 }
+p.button-container .button {
+  margin: 5px;
+}
 .rounded {
   padding: 0.6em 0.4em;
   border-radius: 20px;
@@ -351,12 +354,6 @@ is-rounded {
   margin: 0.5em 0;
 }
 
-@media only screen and (min-width: 400px) {
-  p.button-container .button {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-}
 @media only screen and (max-width: 400px) {
   .rounded,
   a.rounded:hover,
@@ -369,9 +366,6 @@ is-rounded {
   a.rounded:focus,
   a.rounded:active {
     color: $orange;
-  }
-  p.button-container .button {
-    margin: 5px;
   }
 }
 
