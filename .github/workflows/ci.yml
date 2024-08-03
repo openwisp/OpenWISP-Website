@@ -17,25 +17,22 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: 3.12
-
-      - name: Upgrade npm
-        run: npm install -g npm@latest
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
 
       - name: Install test dependencies
         run: |
-          npm install -g htmlhint
-          npm install -g jshint
-          npm install -g stylelint
-          pip install pylinkvalidator
-          pip install openwisp-utils[qa]
+          npm install -g htmlhint jshint stylelint
+          pip install -r requirements.txt
 
       - name: QA checks
         run: ./run-qa-checks
