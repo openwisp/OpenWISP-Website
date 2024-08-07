@@ -115,7 +115,7 @@ In these scenarios being able to collect and visualize topology information is c
 <h2 id="ansible-plugin-for-netjsonconfig">Ansible plugin for the netjsonconfig library</h2>
 <p><strong>Languages &amp; technologies used:</strong> python, ansible.</p>
 <p><a class="reference external" href="https://github.com/ansible/ansible">Ansible</a> is an IT automation tool that has been recently
-gaining popularity also in the <a class="reference external" href="http://openwrt.org">OpenWRT</a> world.</p>
+gaining popularity also in the <a class="reference external" href="http://openwrt.org">OpenWrt</a> world.</p>
 <p>We want to implement an ansible plugin that integrates <a class="reference external" href="http://netjsonconfig.openwisp.org">netjsonconfig</a>
 and allows using its two most interesting features, that is templates and context, in ansible.</p>
 <p>It should be possible to define configuration templates, assign them to specific playbooks and define
@@ -125,7 +125,7 @@ conversion of <em>NetJSON</em> would be good as well. Support for both would be 
 <p><strong>Measurable outcomes:</strong></p>
 <ul class="ui bulleted link list">
 <li>Implement an ansible module that integrates netjsonconfig in ansible and allows using
-<a class="reference external" href="http://netjson.org/docs/what.html#deviceconfiguration">NetJSON DeviceConfiguration</a> (or its <em>YAML</em> equivalent) to configure OpenWRT devices</li>
+<a class="reference external" href="http://netjson.org/docs/what.html#deviceconfiguration">NetJSON DeviceConfiguration</a> (or its <em>YAML</em> equivalent) to configure OpenWrt devices</li>
 <li>Achieve a test coverage higher than 80%</li>
 <li>Provide documentation using <a class="reference external" href="http://www.sphinx-doc.org/">python-sphinx</a></li>
 </ul>
@@ -144,12 +144,12 @@ We also need an optional mode in which the network is displayed on a map.</p>
 <li>Modernize javascript code organization: you may want to use some modern JS tool for building the library, you may rewrite the code in ES6, up to you</li>
 <li>Update documentation and examples in README</li></ul>
 
-<h2 id="netjson-ubus">Implement NetJSON output in ubus (OpenWRT/LEDE)</h2>
+<h2 id="netjson-ubus">Implement NetJSON output in ubus (OpenWrt/LEDE)</h2>
 <p><a href="http://netjson.org">NetJSON</a> is emerging as a common format to exchange configuration and monitoring information
 from network devices. Year after year it's becoming easier to achieve interoperability between different software packages
 for community networks. Now is time to start implementing NetJSON in a lower level of the stack and the next
 natural step in that direction is to implement it in <a href="https://wiki.openwrt.org/doc/techref/ubus">ubus (OpenWrt micro bus architecture)</a>,
-which is included by default in <a href="http://www.lede-project.org/">LEDE</a> and <a href="https://openwrt.org/">OpenWRT</a>, the two linux distributions
+which is included by default in <a href="http://www.lede-project.org/">LEDE</a> and <a href="https://openwrt.org/">OpenWrt</a>, the two linux distributions
 commonly used with OpenWISP.
 </p><p>In this project the student will have to develop ubus API extensions that allow retrieving two NetJSON object types:
 <a href="http://netjson.org/docs/what.html#deviceconfiguration">DeviceConfiguration</a> and <a href="http://netjson.org/docs/what.html#devicemonitoring">DeviceMonitoring</a>.
@@ -158,7 +158,7 @@ commonly used with OpenWISP.
 <ul class="ui bulleted link list">
 <li>Implement a way to retrieve <a href="http://netjson.org/docs/what.html#deviceconfiguration">DeviceConfiguration</a> output in ubus using <a href="https://github.com/prplfoundation/scal">scal (System Configuration Abstraction Layer)</a>, </li>
 <li>Implement a way to retrieve <a href="http://netjson.org/docs/what.html#devicemonitoring">DeviceMonitoring</a> output in ubus, consider reusing part of the code used in <a href="https://github.com/wlanslovenija/nodewatcher-agent#ubus-api">nodewatcher-agent</a></li>
-<li>Write a Makefile to package the software for OpenWRT/LEDE</li>
+<li>Write a Makefile to package the software for OpenWrt/LEDE</li>
 <li>Document the compilation/install process and the usage of the module in the README</li></ul>
 
 
@@ -226,7 +226,7 @@ contained in the <em>netjsonconfig</em> repo</li>
 <h2 id="netjsonconfig-backward-conversion">netjsonconfig backward conversion</h2>
 <p><strong>Languages &amp; technologies used:</strong> python, json-schema, netjson.</p>
 <p>As of today, <a class="reference external" href="http://netjsonconfig.openwisp.org">netjsonconfig</a> is only able to generate a native router
-configuration (eg: <a class="reference external" href="http://openwrt.org">OpenWRT</a>) from a
+configuration (eg: <a class="reference external" href="http://openwrt.org">OpenWrt</a>) from a
 <a class="reference external" href="http://netjson.org/docs/what.html#deviceconfiguration">NetJSON DeviceConfiguration</a> object and not vice versa.</p>
 <p>We want to add the backward conversion process into the library.</p>
 <p>This project will require a thoughtful design, probably involving some serialization and deserialization mechanism.</p>
@@ -234,7 +234,7 @@ configuration (eg: <a class="reference external" href="http://openwrt.org">OpenW
 <ul class="ui bulleted link list">
 <li>Backward <code class="docutils literal"><span class="pre">generate()</span></code> pocess: a configuration archive must be converted to
 <a class="reference external" href="http://netjson.org/docs/what.html#deviceconfiguration">NetJSON DeviceConfiguration</a> through the available backends</li>
-<li>Backward <code class="docutils literal"><span class="pre">render()</span></code> process: a configuration string (eg: uci export in OpenWRT) must be converted to NetJSON</li>
+<li>Backward <code class="docutils literal"><span class="pre">render()</span></code> process: a configuration string (eg: uci export in OpenWrt) must be converted to NetJSON</li>
 <li>The general test coverage of the library must be kept higher than 95%</li>
 <li>The feature must be documented in the documentation files contained in the netjsonconfig repo</li>
 </ul>

@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>OpenWISP: OpenWRT Controller, public wifi, RADIUS, mesh networks</title>
+  <title>OpenWISP: OpenWrt Controller, public wifi, RADIUS, mesh networks</title>
   <meta name="description" content="OpenWISP is a network management system that allows managing and automating several aspects of a computer network.">
   <link rel="stylesheet" href="css/reset.css" type="text/css">
   <link rel="stylesheet" href="css/semantic.min.css" type="text/css">
@@ -55,71 +55,81 @@
       <article class="ui container">
         <h1>OpenWISP Features</h1>
         <p>
-          OpenWISP is a modular network management system built on top of OpenWRT
+          OpenWISP is a modular network management system built on top of OpenWrt
           (but designed to allow supporting multiple embedded operating systems)
           that allows managing and automating several aspects of IT
           network deployment, monitoring and management:
         </p>
         <ul class="ui bulleted link list">
           <li>
-            <a href="https://github.com/openwisp/openwisp-config#automatic-registration" target="_blank">
-              registration/provisioning</a> of new nodes
+            <a href="https://openwisp.io/docs/dev/openwrt-config-agent/user/automatic-registration.html" target="_blank">
+              registration/provisioning</a> of new devices
           </li>
           <li>
-            creation of <a href="https://openwisp.io/docs/user/vpn.html" target="_blank">VPN tunnels</a>
+            automatic provisioning of <a href="https://openwisp.io/docs/dev/user/vpn.html" target="_blank">VPN tunnels</a>,
+            eg:
+            <a href="https://openwisp.io/docs/dev/controller/user/zerotier.html" target="_blank">
+              ZeroTier</a>,
+            <a href="https://openwisp.io/docs/dev/controller/user/wireguard.html" target="_blank">
+              Wireguard</a>,
+            <a href="https://openwisp.io/docs/dev/controller/user/openvpn.html" target="_blank">
+              OpenVPN</a>.
           </li>
           <li>
             possibility of defining
-            <a href="https://openwisp.io/docs/user/templates.html" target="_blank">
+            <a href="https://openwisp.io/docs/dev/user/templates.html" target="_blank">
               configuration templates</a>
             and
-            <a href="https://openwisp.io/docs/user/configuration-variables.html" target="_blank">
+            <a href="https://openwisp.io/docs/dev/user/configuration-variables.html" target="_blank">
               configuration variables</a>
             to make the maintenance of configurations easier and faster
           </li>
           <li>
             possibility of configuring
-            <a href="http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html#wireless-mesh-802-11s-example" target="_blank">
+            <a href="https://openwisp.io/docs/dev/tutorials/mesh.html" target="_blank">
               mesh networks
             </a> as well as
-            <a href="http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html#wireless-settings" target="_blank">
+            <a href="https://openwisp.io/docs/dev/tutorials/wifi-access-point.html" target="_blank">
               wireless access
             </a> points using WPA2, WPA3,
-            <a href="http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html#wpa2-enterprise-802-1x-ap" target="_blank">
+            <a href="https://openwisp.io/docs/dev/tutorials/wpa-enterprise-eap-ttls-pap.html" target="_blank">
               802.1x (WPA enterprise)
             </a>,
+            <a href="https://openwisp.io/docs/dev/tutorials/wifi-access-point.html#roaming-802-11r-fast-bss-transition" target="_blank">
+              Roaming/Fast Transition (802.11r)
+            </a>
             WPS, WEP, multiple SSIDs, etc.
           </li>
           <li>
             possibility of deploying
             <a href="http://netjsonconfig.openwisp.org/en/latest/backends/openwrt.html" target="_blank">
-              any network configuration supported by OpenWRT</a>
+              any network configuration supported by OpenWrt</a>
           </li>
           <li>
-            <a href="https://github.com/openwisp/openwisp-monitoring/#device-status" target="_blank">
+            <a href="https://openwisp.io/docs/dev/monitoring/user/metrics.html" target="_blank">
               monitoring</a>,
             collection of metrics, active checks, threshold definition and alerts
           </li>
           <li>
-            <a href="https://openwisp-radius.readthedocs.io/" target="_blank">
-              RADIUS</a> (for <a href="https://openwisp.io/docs/tutorials/hotspot.html">wifi hotspot systems</a> or ISPs)
+            <a href="https://openwisp.io/docs/dev/user/radius.html" target="_blank">
+              RADIUS</a> (for <a href="https://openwisp.io/docs/tutorials/hotspot.html">WiFi Hotspot Systems</a> or ISPs)
           </li>
           <li>
             responsive captive page with features like
-            <a href="https://github.com/openwisp/openwisp-wifi-login-pages#openwisp-wifi-login-pages" target="_blank">
+            <a href="https://openwisp.io/docs/dev/wifi-login-pages/index.html" target="_blank">
               user registration, SMS verification, social login</a>
           </li>
           <li>
-            <a href="https://github.com/openwisp/openwisp-firmware-upgrader#openwisp-firmware-upgrader" target="_blank">
+            <a href="https://openwisp.io/docs/dev/firmware-upgrader/index.html" target="_blank">
               firmware upgrades</a>
           </li>
           <li>
-            <a href="https://github.com/openwisp/openwisp-notifications#openwisp-notifications" target="_blank">
+            <a href="https://openwisp.io/docs/dev/notifications/index.html" target="_blank">
               web and email notifications</a>
             for important events happening in the network
           </li>
           <li>
-            <a href="https://github.com/openwisp/openwisp-network-topology#openwisp-network-topology" target="_blank">
+            <a href="https://openwisp.io/docs/dev/network-topology/index.html" target="_blank">
               network topology visualization</a>
             for mesh networks and VPN networks
           </li>
@@ -151,7 +161,7 @@
           written in <a target="_blank" href="https://www.python.org/">Python</a>
           and based on <a target="_blank" href="http://netjson.org/">NetJSON</a>.
           <br>
-          At the moment only OpenWRT is supported for production usage,
+          At the moment only OpenWrt is supported for production usage,
           but an experimental
           <a target="_blank" href="https://github.com/edoput/netjsonconfig-airos">
             configuration backend for Ubiquiti AirOS
@@ -228,8 +238,8 @@
         <h2>Monitoring, Charts, Alerts</h2>
 
         <p>
-            <a href="https://github.com/openwisp/openwisp-monitoring#openwisp-monitoring" target="_blank">
-                <img src="https://drive.google.com/uc?export=view&id=1GuB5HsyiZejBzXKZJnM8QJCUJt1Z5IkJ"
+            <a href="https://openwisp.io/docs/dev/monitoring/index.html" target="_blank">
+                <img src="https://github.com/openwisp/openwisp-monitoring/raw/docs/docs/monitoring-demo.gif"
                      alt="openwisp-monitoring"
                      width="100%">
             </a>
@@ -246,7 +256,7 @@
 
         <h2>RADIUS management system (AAA)</h2>
         <p class="center">
-            <a href="https://openwisp-radius.readthedocs.io/" target="_blank">
+            <a href="https://openwisp.io/docs/dev/user/radius.html" target="_blank">
                 <img src="https://openwisp.io/docs/_images/openwrt-coova-chilli-firmware.png"
                      alt="openwrt coova.org freeradius openwisp">
             </a>
@@ -262,7 +272,7 @@
 
         <h2>IP &amp; subnet administration (IPAM)</h2>
         <p>
-          <a href="https://github.com/openwisp/openwisp-ipam#openwisp-ipam"
+          <a href="https://openwisp.io/docs/dev/ipam/index.html"
              target="_blank">
             <img src="https://raw.githubusercontent.com/openwisp/openwisp-ipam/docs/docs/subnet_demo.gif"
                  alt="OpenWISP IPAM"
@@ -272,11 +282,11 @@
         <h2>Other notable modules</h2>
         <ul class="ui bulleted link list">
           <li>
-              <a href="https://github.com/openwisp/openwisp-firmware-upgrader#openwisp-firmware-upgrader"
+              <a href="https://openwisp.io/docs/dev/firmware-upgrader/index.html"
                  target="_blank">Firmware upgrader</a>
           </li>
           <li>
-              <a href="https://github.com/openwisp/openwisp-wifi-login-pages#openwisp-wifi-login-pages"
+              <a href="https://openwisp.io/docs/dev/wifi-login-pages/index.html"
                  target="_blank">
                  OpenWISP WiFi Login Pages</a>
                  (frontend application for hotspot services that provides
@@ -291,7 +301,7 @@
             <i class="download icon"></i>
             Get OpenWISP
           </a>
-          <a href="https://openwisp.io/docs/general/help-us.html"
+          <a href="https://openwisp.io/docs/dev/general/help-us.html"
              class="ui big inverted button grey" target="_blank">
             <i class="users icon"></i> Join the Community
           </a>
