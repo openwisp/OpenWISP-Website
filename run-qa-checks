@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # check HTML, JS, CSS
 htmlhint --config htmlhint.conf
