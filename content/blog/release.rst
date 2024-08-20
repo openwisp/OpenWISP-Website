@@ -13,6 +13,8 @@ However, this functionality does not include translations of themes or the
 site name, something many have asked for. The new I18N Subsites plugin
 makes it simple to:
 
+- `test link <{filename}test.rst>`_
+- `features <{filename}../pages/features.html>`_
 - override settings for each language, e.g. ``SITENAME`` or ``MENUITEMS``
 - translate and localize themes using ``jinja2.ext.i18n``
 - automatically create translated subsites such as http://example.com/fr/

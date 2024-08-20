@@ -64,12 +64,12 @@ $weight-semibold: 600;
   $media-spacing-large: 1.1rem
 );
 
-$fa-font-path: "fontawesome-free-webfonts";
+$fa-font-path: "../webfonts";
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
 @import "@fortawesome/fontawesome-free/scss/solid";
 @import "@fortawesome/fontawesome-free/scss/brands";
 @import "@fortawesome/fontawesome-free/scss/regular";
-@import url("../fonts/Inter.css");
+@import url("../webfonts/Inter.css");
 
 // general
 .text a:not(.button, .rounded)[href] {

@@ -8,35 +8,35 @@
     <div class="container is-max-widescreen has-text-centered">
       <p class="has-text-weight-medium">{{ text }}</p>
       <p>
-        <a href="{{ SITEURL }}/partners/">
+        <a href="{filename}partners.html">
           {% if customers %}
             <img
-              src="{{ SITEURL }}/theme/images/partners/ubisoft.svg"
+              src="{static}/images/partners/ubisoft.svg"
               class="ubisoft"
               alt="Ubisoft"
               title="Ubisoft"
             />
             <img
-              src="{{ SITEURL }}/theme/images/partners/csi-piemonte.png"
+              src="{static}/images/partners/csi-piemonte.png"
               class="csi"
               alt="CSI Piemonte, Your Digital Partner"
               ,
               title="CSI Piemonte, Your Digital Partner"
             />
             <img
-              src="{{ SITEURL }}/theme/images/partners/insiel.png"
+              src="{static}/images/partners/insiel.png"
               class="insiel"
               alt="Insiel"
               title="Insiel"
             />
             <img
-              src="{{ SITEURL }}/theme/images/partners/uniurb.svg"
+              src="{static}/images/partners/uniurb.svg"
               class="uniurb"
               alt="Università degli Studi di Urbino CarloBo"
               title="Università degli Studi di Urbino CarloBo"
             />
             <img
-              src="{{ SITEURL }}/theme/images/partners/wayru.svg"
+              src="{static}/images/partners/wayru.svg"
               class="wayru"
               alt="Wayru"
               title="Wayru"
@@ -46,19 +46,19 @@
           {% endif %}
           {% if oss_funding %}
             <img
-              src="{{ SITEURL }}/theme/images/partners/gsoc.png"
+              src="{static}/images/partners/gsoc.png"
               class="gsoc"
               alt="Google Summer of Code"
               title="Google Summer of Code"
             />
             <img
-              src="{{ SITEURL }}/theme/images/partners/internews.svg"
+              src="{static}/images/partners/internews.svg"
               class="internews"
               alt="Internews"
               title="Internews"
             />
             <img
-              src="{{ SITEURL }}/theme/images/partners/ura.svg"
+              src="{static}/images/partners/ura.svg"
               class="ura"
               alt="Ura"
               title="Ura Design"
@@ -68,7 +68,7 @@
       </p>
       {% if more_button %}
         <p class="button-container">
-          <a class="button with-text" href="{{ SITEURL }}/partners/">
+          <a class="button with-text" href="{filename}partners.html">
             <span class="fas fa-solid fa-plus"></span>
             <span>{{ more_button_text }}</span>
           </a>

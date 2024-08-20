@@ -2,6 +2,7 @@
   <head>
     <title>FAQ</title>
     <meta name="slug" content="faq" />
+    <meta name="template" content="page-faq" />
   </head>
   <body>
     <section class="section has-text-centered pt-4">
@@ -259,13 +260,13 @@
           Still need help?
         </h2>
         <p class="button-container">
-          <a class="button is-orange with-text" href="{{ SITEURL }}/support/">
+          <a class="button is-orange with-text" href="{filename}support.html">
             <span class="fas fa-regular fa-comments"></span>
             <span>Community Support</span>
           </a>
           <a
             class="button with-text is-white"
-            href="{{ SITEURL }}/commercial-support/"
+            href="{filename}commercial-support.html"
           >
             <span class="fas fa-solid fa-headset"></span>
             <span>Professional Support</span>
@@ -273,7 +274,5 @@
         </p>
       </div>
     </section>
-
-    <script src="{{ SITEURL }}/theme/js/faq.min.js" defer></script>
   </body>
 </html>

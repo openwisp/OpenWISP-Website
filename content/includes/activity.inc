@@ -70,7 +70,7 @@
         <p class="has-text-centered">
           <a
             class="button with-text is-orange is-inverted"
-            href="{{ SITEURL }}/activity/"
+            href="{filename}activity.html"
           >
             <span class="fas fa-solid fa-plus"></span>
             <span>More Recent Activity</span>
@@ -79,22 +79,22 @@
       {% endif %}
     </div>
   </section>
-
-  <script src="{{ SITEURL }}/theme/js/activity.min.js?v=1"></script>
   <!-- prettier-ignore-start -->
   <script>
-    $(document).ready(function () {
-      createActivityFeed({
-        posts: {{ posts }},
-        loadMore: {{ load_more|lower }},
-        addPage: {{ add_page|lower }},
-        callback: closeLoading
+    window.addEventListener('load', function() {
+      $(document).ready(function () {
+        createActivityFeed({
+          posts: {{ posts }},
+          loadMore: {{ load_more|lower }},
+          addPage: {{ add_page|lower }},
+          callback: closeLoading
+        });
       });
+      {% if load_more %}
+        $(document).ajaxStart(showLoading);
+        $(document).ajaxStop(closeLoading);
+      {% endif %}
     });
-    {% if load_more %}
-      $(document).ajaxStart(showLoading);
-      $(document).ajaxStop(closeLoading);
-    {% endif %}
   </script>
   <!-- prettier-ignore-end -->
 {%- endmacro %}
