@@ -38,6 +38,7 @@ jobs:
       - name: Install test dependencies
         run: |
           yarn install
+          pip install -U pip setuptools wheel
           pip install -r requirements.txt
 
       - name: QA checks
@@ -47,7 +48,7 @@ jobs:
         run: make publish
 
       - name: Setup Google Cloud
-        if: ${{ github.event_name=='push' }}
+        # if: ${{ github.event_name=='push' }}
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: ${{ secrets.GCS_DOWNLOADS_SERVICE_ACCOUNT_JSON }}
@@ -55,7 +56,7 @@ jobs:
           export_environment_variables: true
 
       - name: 'Set up Cloud SDK'
-        if: ${{ github.event_name=='push' }}
+        # if: ${{ github.event_name=='push' }}
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: Deploy pages to openwisp.org
