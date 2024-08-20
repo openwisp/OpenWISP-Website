@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - master
+      - new
 
 jobs:
   build:
@@ -29,13 +30,21 @@ jobs:
           cache-dependency-path: |
             **/requirements*.txt
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
       - name: Install test dependencies
         run: |
-          npm install -g htmlhint jshint stylelint
+          yarn install
           pip install -r requirements.txt
 
       - name: QA checks
         run: ./run-qa-checks
+
+      - name: Build
+        run: make publish
 
       - name: Setup Google Cloud
         if: ${{ github.event_name=='push' }}
@@ -50,8 +59,8 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: Deploy pages to openwisp.org
-        if: ${{ github.event_name=='push' }}
+        # if: ${{ github.event_name=='push' }}
         run: gsutil -m rsync -r ${{ env.SRC_URL }} ${{ env.DST_URL }}
         env:
-          SRC_URL: /home/runner/work/OpenWISP-Website/OpenWISP-Website
-          DST_URL: gs://${{ secrets.GCS_WEBSITE_BUCKET_NAME }}
+          SRC_URL: /home/runner/work/OpenWISP-Website/OpenWISP-Website/output/
+          DST_URL: gs://${{ secrets.GCS_WEBSITE_BUCKET_NAME }}/preview/

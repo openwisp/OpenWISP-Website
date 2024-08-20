@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block html_lang %}{{ article.lang }}{% endblock %}
+{% block title %}{{ article.title|striptags }} - {{ SITENAME|striptags }} Blog{% endblock %}
+{% block head %}
+  {{ super() }}
+  {%
+    import 'translations.html' as
+    translations with context
+  %}
+  {% if translations.entry_hreflang(article) %}{{ translations.entry_hreflang(article) }}{% endif %}
+  {% if article.description %}
+    <meta name="description" content="{{ article.description }}" />
+  {% endif %}
+  {% for tag in article.tags %}
+    <meta name="tags" content="{{ tag }}" />
+  {% endfor %}
+{% endblock %}
+{% block content %}
+  <article class="section pt-4 pb-4 blog">
+    <div class="container is-max-widescreen text content">
+      <header>
+        <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+          <a
+            href="{{ SITEURL }}/{{ article.url }}"
+            rel="bookmark"
+            title='Permalink to "{{ article.title|striptags }}"'
+          >
+            {{ article.title }}
+          </a>
+        </h2>
+        {% import 'translations.html' as translations with context %}
+        {{ translations.translations_for(article) }}
+        <p class="mb-4">
+          Published on
+          <time datetime="{{ article.date.isoformat() }}">
+            {{ article.locale_date }}
+          </time>
+          {% if article.authors %}
+            by
+            {% for author in article.authors %}
+              <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
+            {% endfor %}
+          {% endif %}
+        </p>
+        {% if article.modified %}
+          <p class="mb-4">
+            Last updated:
+            <time datetime="{{ article.modified.isoformat() }}">
+              {{ article.locale_modified }}
+            </time>
+          </p>
+        {% endif %}
+        {% if article.category %}
+          <p class="mb-4">
+            Category:
+            <a href="{{ SITEURL }}/{{ article.category.url }}"
+              >{{ article.category }}</a
+            >
+          </p>
+        {% endif %}
+        {% if article.tags %}
+          <p class="mb-4">
+            Tags:
+            {% for tag in article.tags %}
+              <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+            {% endfor %}
+          </p>
+        {% endif %}
+      </header>
+      <section>{{ article.content }}</section>
+      <footer>
+        <p class="has-text-centered mt-5">
+          <a
+            class="button is-orange is-inverted with-text"
+            href="{{ SITEURL }}/blog/"
+          >
+            <span class="fas fa-house"></span>
+            <span>Blog Home</span>
+          </a>
+        </p>
+      </footer>
+    </div>
+  </article>
+{% endblock %}

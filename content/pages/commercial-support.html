@@ -1,0 +1,342 @@
+<html>
+  <head>
+    <title>Commercial Support</title>
+    <meta name="slug" content="commercial-support" />
+  </head>
+  <body>
+    <section class="section pt-0 pb-0 has-text-centered">
+      <div class="container is-max-widescreen">
+        <h1 class="title is-spaced is-size-3-mobile">
+          <span class="has-text-primary">Commercial</span> Support
+        </h1>
+        <p class="subtitle is-size-5">
+          Unlock the full potential of OpenWISP with our tailored commercial
+          support designed to streamline your deployment and enhance your user
+          experience. Whether you're just starting out or managing a large-scale
+          network, we've got you covered.
+        </p>
+
+        <div
+          class="fixed-grid has-3-cols-desktop
+                 has-2-cols-tablet has-1-cols-mobile"
+        >
+          <div class="grid text bordered features">
+            <div class="cell">
+              <h2 class="title is-size-5">
+                <a class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-bullseye"></i>
+                  </span>
+                </a>
+                <span>Focus on your Core Business</span>
+              </h2>
+              <p>
+                Delegate your network management to us and free up your
+                resources to focus on what you do best. Let our specialists
+                handle your network infrastructure efficiently and expertly.
+              </p>
+            </div>
+            <div class="cell">
+              <h2 class="title is-size-5">
+                <a class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </a>
+                <span>Turnkey Solutions</span>
+              </h2>
+              <p>
+                Rely on us for a complete end-to-end network management service.
+                From deployment to maintenance, we provide a hassle-free
+                experience, so you don't have to worry about the details.
+              </p>
+            </div>
+            <div class="cell">
+              <h2 class="title is-size-5">
+                <a class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-triangle-exclamation"></i>
+                  </span>
+                </a>
+                <span>Proactive Monitoring</span>
+              </h2>
+              <p>
+                We go beyond deployment by monitoring all installations and
+                support systems. Our team can identify and address potential
+                issues before they cause interruptions to your services.
+              </p>
+            </div>
+            <div class="cell">
+              <h2 class="title is-size-5">
+                <a class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-clock"></i>
+                  </span>
+                </a>
+                <span>Timely Assistance</span>
+              </h2>
+              <p>
+                Enjoy peace of mind with our fast response times for critical
+                issues, ensuring minimal disruption to your services
+              </p>
+            </div>
+            <div class="cell">
+              <h2 class="title is-size-5">
+                <a class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-people-carry-box"></i>
+                  </span>
+                </a>
+                <span>Expert Guidance</span>
+              </h2>
+              <p>
+                Benefit from our team's deep expertise to navigate through
+                configuration challenges, usage queries, and network issues
+                effortlessly
+              </p>
+            </div>
+            <div class="cell">
+              <h2 class="title is-size-5">
+                <a class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-dollar-sign"></i>
+                  </span>
+                </a>
+                <span>Transparent Pricing</span>
+              </h2>
+              <p>
+                Our straightforward pricing structure offers clear visibility
+                into costs, with no hidden fees or surprises.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% from 'partners.inc' import partners %}
+    {{
+      partners(
+        text="Outstanding customer success stories",
+        customers=True,
+        oss_funding=False,
+        contributors=False,
+        more_button=True
+      )
+    }}
+
+    <section class="section has-text-centered alternative-bg">
+      <div class="container">
+        <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+          Our <span class="has-text-primary">Deployments</span>
+        </h2>
+        <div class="fixed-grid has-2-cols-desktop has-1-cols-tablet">
+          <div class="grid text bordered">
+            <div class="cell">
+              <h2 class="title is-size-5 mb-3">On-Premise Deployment</h2>
+              <p>
+                Get up and running with our support for on-premise setups
+                catering to small and high capacity deployments.
+              </p>
+            </div>
+            <div class="cell">
+              <h2 class="title is-size-5 mb-3">Cloud Managed Service</h2>
+              <p>
+                Ideal for hassle-free deployment with low investment, perfect
+                for those who prefer not to manage hosting themselves.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p class="button-container">
+          {% from 'contact.inc' import contact_button %}
+          {{
+            contact_button(
+              text="Inquire"
+            )
+          }}
+        </p>
+      </div>
+    </section>
+
+    <div class="is-fullhd">
+      <section class="has-text-centered">
+        <div class="container is-max-widescreen mt-5 pb-6">
+          <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+            Our <span class="has-text-primary">Services</span>
+          </h2>
+          <p class="subtitle is-size-5">
+            Here's a non exhaustive list of common services we offer to our
+            customers.
+          </p>
+
+          <div
+            class="fixed-grid has-3-cols-desktop has-2-cols-tablet has-1-cols-mobile"
+          >
+            <div class="grid text bordered">
+              <div class="cell">
+                <h2 class="title is-size-5 mb-3">Hotspots / Municipal WiFi</h2>
+                <p>
+                  Expert setup and management of reliable public WiFi and
+                  hotspots for seamless connectivity
+                </p>
+              </div>
+              <div class="cell">
+                <h2 class="title is-size-5 mb-3">Mesh Networks</h2>
+                <p>
+                  Designing and deploying resilient mesh networks for robust and
+                  flexible wireless coverage
+                </p>
+              </div>
+              <div class="cell">
+                <h2 class="title is-size-5 mb-3">RADIUS deployments</h2>
+                <p>
+                  Tailored FreeRADIUS configurations to meet your specific
+                  security needs.
+                </p>
+              </div>
+              <div class="cell">
+                <h2 class="title is-size-5 mb-3">
+                  OpenWrt Firmware Development
+                </h2>
+                <p>
+                  Custom development of OpenWrt firmware with specialized
+                  features or packages. Adding OpenWrt support to specific
+                  hardware models.
+                </p>
+              </div>
+              <div class="cell">
+                <h2 class="title is-size-5 mb-3">
+                  Assistance in Open Source Networking
+                </h2>
+                <p>
+                  Offer help in deployment, configuration and customization of
+                  any open source networking tool related to OpenWISP.
+                </p>
+              </div>
+              <div class="cell">
+                <h2 class="title is-size-5 mb-3">
+                  Open Source Software Integration
+                </h2>
+                <p>
+                  We assist in seamless integration of various open source
+                  networking tools.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section has-text-centered alternative-bg">
+      <div class="container">
+        <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+          Get <span class="has-text-primary">Started</span> Today
+        </h2>
+        <div class="text subtitle is-size-5">
+          <p>
+            Elevate your OpenWISP experience with our commercial support
+            offerings.<br class="is-hidden-mobile" />
+            Choose the package that fits your needs, and let us handle the rest.
+          </p>
+          <p>
+            Maximize the potential of your network infrastructure while focusing
+            on your core business objectives.<br class="is-hidden-mobile" />
+            Reach out to us today to discuss your requirements and get started
+            with commercial support.
+          </p>
+        </div>
+
+        <p class="button-container">
+          <a
+            class="button is-orange with-text"
+            href="https://calendly.com/openwisp/intro-call"
+          >
+            <span class="fas fa-solid fa-headset"></span>
+            <span>Book Support Call</span>
+          </a>
+
+          <a
+            class="button with-text"
+            target="_blank"
+            href="https://wa.me/37259361689"
+          >
+            <span class="fas fa-brands fa-whatsapp"></span>
+            <span>Chat with us</span>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section has-text-centered">
+      <div class="container is-max-desktop">
+        <h2 class="title is-size-3 is-size-4-mobile is-spaced">
+          Commercial Support
+          <span class="has-text-primary">Frequently</span>
+          Asked Questions
+        </h2>
+
+        <aside class="faq menu">
+          <p class="menu-label is-size-6">General Questions</p>
+          <ul class="menu-list">
+            <li>
+              <a href="#">Are you a real company?</a>
+            </li>
+            <li>
+              <a href="{{ SITEURL }}/faq/#suitable"
+                >Can you train and support us to implement our own OpenWISP
+                customizations?</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                >Can you deploy the first OpenWISP instance for us and train us
+                to replicate the same setup for other customers??</a
+              >
+            </li>
+            <li>
+              <a href="#">Can OpenWISP fix any mess or errors we have made?</a>
+            </li>
+          </ul>
+          <p class="menu-label is-size-6">Pricing Questions</p>
+          <ul class="menu-list">
+            <li>
+              <a href="#">What currencies do you accept?</a>
+            </li>
+            <li>
+              <a href="#">Can you give us a discount?</a>
+            </li>
+            <li>
+              <a href="#"
+                >We want to partner with you on a project and share the profits,
+                are you interested?</a
+              >
+            </li>
+          </ul>
+        </aside>
+      </div>
+
+      <div
+        class="container is-max-desktop alternative-bg pt-6 pb-6 mt-5 is-rounded"
+      >
+        <p>
+          <span class="circle">
+            <i class="fa-regular fa-circle-question"></i>
+          </span>
+        </p>
+        <h3 class="title is-size-6 mt-4">
+          Can't find the answer you're looking for?
+        </h3>
+        <a
+          class="button with-text is-orange is-inverted is-small"
+          href="https://wa.me/37259361689"
+        >
+          <span class="fas fa-brands fa-whatsapp"></span>
+          <span>Chat with us</span>
+        </a>
+      </div>
+    </section>
+  </body>
+</html>

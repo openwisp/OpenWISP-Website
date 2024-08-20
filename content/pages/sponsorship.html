@@ -1,0 +1,209 @@
+<html>
+  <head>
+    <title>Become a Sponsor</title>
+    <meta name="slug" content="sponsorship" />
+  </head>
+  <body>
+    <section class="section pt-0 pb-0 has-text-centered">
+      <div class="container is-max-fullhd">
+        <h1 class="title is-spaced is-size-3-mobile">
+          Become a <span class="has-text-primary">Sponsor</span>
+        </h1>
+        <p class="subtitle is-size-5">
+          Join us in advancing open-source networking by becoming an OpenWISP
+          sponsor. Support innovation and gain prime visibility while
+          contributing to a vibrant community.
+        </p>
+      </div>
+    </section>
+
+    <section class="section has-text-centered">
+      <div
+        class="container is-max-fullhd
+                  fixed-grid has-3-cols-desktop
+                  has-2-cols-tablet has-1-cols-mobile"
+      >
+        <div class="features grid">
+          <div class="cell">
+            <h4>
+              <a class="open-modal" href="#visibility">
+                <button class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                </button>
+                <span>Prime Visibility</span>
+              </a>
+            </h4>
+            <p>
+              Your logo prominently displayed on our homepage and highlighted in
+              a dedicated sponsor section, driving traffic to your website.
+            </p>
+            <div class="modal fullscreen">
+              <div class="modal-background"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">Prime Visibility</p>
+                  <button class="delete close" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                  <p>
+                    Your logo will be prominently displayed on the OpenWISP
+                    homepage, viewed by thousands of visitors each month.
+                    Additionally, you'll have a dedicated section that
+                    highlights our esteemed sponsors, ensuring maximum exposure
+                    and brand recognition.
+                  </p>
+                </section>
+                <footer class="modal-card-foot">
+                  <div class="buttons">
+                    <a
+                      class="button with-text is-orange"
+                      target="_blank"
+                      href="https://openwisp.io/docs/dev/"
+                    >
+                      <span class="fas fa-plus"></span>
+                      <span>Find out more</span>
+                    </a>
+                    <button class="button with-text close">
+                      <span class="fas fa-close"></span>
+                      <span>Close</span>
+                    </button>
+                  </div>
+                </footer>
+              </div>
+            </div>
+          </div>
+
+          <div class="cell">
+            <h4>
+              <a href="#acknowledgment">
+                <button class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-bullhorn"></i>
+                  </span>
+                </button>
+                <span>Community Acknowledgment</span>
+              </a>
+            </h4>
+            <p>
+              Receive public acknowledgment across our community channels,
+              social media, newsletters, and more.
+            </p>
+          </div>
+
+          <div class="cell">
+            <h4>
+              <a href="#badge">
+                <button class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-award"></i>
+                  </span>
+                </button>
+                <span>Exclusive Sponsorship Badge</span>
+              </a>
+            </h4>
+            <p>
+              Showcase your support with a special "OpenWISP Sponsor" badge for
+              your website and marketing materials.
+            </p>
+          </div>
+
+          <div class="cell">
+            <h4>
+              <a href="#insights">
+                <button class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-chart-bar"></i>
+                  </span>
+                </button>
+                <span>Access to Insights & Analytics</span>
+              </a>
+            </h4>
+            <p>
+              Get quarterly reports on the visibility and impact of your
+              sponsorship, along with community growth insights.
+            </p>
+          </div>
+
+          <div class="cell">
+            <h4>
+              <a href="#support">
+                <button class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-life-ring"></i>
+                  </span>
+                </button>
+                <span>8 Hours of Support Included</span>
+              </a>
+            </h4>
+            <p>
+              Enjoy 8 hours of support for technical queries or custom software
+              development.
+            </p>
+          </div>
+
+          <div class="cell">
+            <h4>
+              <a href="#why-sponsor">
+                <button class="button is-small is-orange is-inverted">
+                  <span class="icon is-small">
+                    <i class="fas fa-hands-helping"></i>
+                  </span>
+                </button>
+                <span>Why Sponsor OpenWISP?</span>
+              </a>
+            </h4>
+            <p>
+              Align with innovation, gain global exposure, and contribute to a
+              thriving open-source community.
+            </p>
+          </div>
+        </div>
+
+        <div class="text">
+          <p class="subtitle is-size-5 mt-0 pt-0 mb-4">
+            <strong>Pricing: €700.00 per year.</strong>
+          </p>
+
+          <p>
+            Thank you for considering a partnership with OpenWISP.<br />Together,
+            we can achieve greater heights in open-source network automation.
+          </p>
+
+          <p class="button-container">
+            {% from 'contact.inc' import contact_button %}
+            {{
+              contact_button(
+                text="Become a sponsor",
+                icon="fa-hand-holding-heart"
+              )
+            }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section has-text-centered alternative-bg">
+      <div class="container">
+        <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+          <span class="has-text-primary">Commercial</span>
+          Support Options
+        </h2>
+        <p class="subtitle is-size-5 is-size-6-mobile">
+          Are you looking for ongoing professional support? Don't worry, we got
+          you covered!
+        </p>
+        <p class="button-container">
+          <a
+            class="button is-orange is-inverted with-text"
+            href="{{ SITEURL }}/commercial-support/"
+          >
+            <span class="fas fa-solid fa-headset"></span>
+            <span>Commercial Support</span>
+          </a>
+        </p>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,2 +1,7 @@
+pelican~=4.9.1
+pelican-jinja2content~=1.0.1
+pelican-minify~=2.0.0
+pelican-sitemap~=1.1.0
+typogrify~=2.0.7
 pylinkvalidator
 openwisp-utils[qa]

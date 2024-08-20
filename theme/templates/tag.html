@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+{% block title %}{{ tag|capitalize }} tag - {{ SITENAME|striptags }} Blog{% endblock %}
+{% block content_title %}
+  Articles tagged with
+  <span class="has-text-primary">{{ tag }}</span>
+{% endblock %}
+{% block content_header_subtitle %}
+{% endblock %}
+{%
+  block
+  content_header_social
+%}
+{% endblock %}

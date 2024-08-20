@@ -1,0 +1,35 @@
+{% if DEFAULT_PAGINATION %}
+  {% set first_page = articles_paginator.page(1) %}
+  {% set last_page = articles_paginator.page(articles_paginator.num_pages) %}
+  <nav class="pagination" role="navigation" aria-label="pagination">
+    {% if articles_page.has_previous() %}
+      <a class="pagination-previous" href="{{ SITEURL }}/{{ first_page.url }}"
+        >First</a
+      >
+      <a
+        class="pagination-previous"
+        href="{{ SITEURL }}/{{ articles_previous_page.url }}"
+        >Prev</a
+      >
+    {% endif %}
+
+    <ul class="pagination-list">
+      <li>
+        <span class="pagination-ellipsis">
+          Page {{ articles_page.number }} / {{ articles_paginator.num_pages }}
+        </span>
+      </li>
+    </ul>
+
+    {% if articles_page.has_next() %}
+      <a
+        class="pagination-next"
+        href="{{ SITEURL }}/{{ articles_next_page.url }}"
+        >Next</a
+      >
+      <a class="pagination-next" href="{{ SITEURL }}/{{ last_page.url }}"
+        >Last</a
+      >
+    {% endif %}
+  </nav>
+{% endif %}

@@ -1,0 +1,14 @@
+{
+  "compress": {
+    "drop_console": true,
+    "unused": true,
+    "dead_code": true
+  },
+  "mangle": {
+    "toplevel": false
+  },
+  "output": {
+    "comments": false,
+    "beautify": false
+  }
+}

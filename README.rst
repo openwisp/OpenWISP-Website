@@ -1,10 +1,7 @@
 OpenWISP-Website
 ================
 
-OpenWISP Project's website.
-
-.. figure:: https://user-images.githubusercontent.com/56113566/224700419-13f2276d-d19d-4ec0-b58a-4968acb5da95.png
-    :align: center
+The source code of the OpenWISP Website, all rights reserved.
 
 Development
 -----------
@@ -13,10 +10,7 @@ Install Node and Python dependencies required for QA checks:
 
 ::
 
-    npm install -g htmlhint jshint stylelint
-
-::
-
+    yarn install
     pip install -r requirements.txt
 
 Now, run quality assurance checks with:
@@ -24,6 +18,14 @@ Now, run quality assurance checks with:
 ::
 
     ./run-qa-checks
+
+Build:
+
+    make html
+
+Serve:
+
+    make serve
 
 To open a html file in the browser:
 

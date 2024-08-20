@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+{% block title %}Articles by {{ author }} - {{ SITENAME|striptags }} Blog{% endblock %}
+{% block content_title %}
+  Articles by
+  <span class="has-text-primary">{{ author }}</span>
+{% endblock %}
+{% block content_header_subtitle %}
+{% endblock %}
+{%
+  block
+  content_header_social
+%}
+{% endblock %}
