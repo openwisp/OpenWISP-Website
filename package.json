@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "main": "Makefile",
   "license": "UNLICENSED",
-  "dependencies": {
-    "bulma": "^1.0.2"
-  },
   "scripts": {
     "build:fontawesome": "cp -r node_modules/@fortawesome/fontawesome-free/webfonts theme/static/css/fontawesome-free-webfonts",
     "build:sass": "sass --load-path=node_modules css/theme.scss theme/static/css/theme.css",
@@ -23,13 +20,14 @@
     "prettify": "prettier -w *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/*.html",
     "prettier:check": "prettier -c *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/*.html"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/cli": "^7.24.8",
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@fullhuman/postcss-purgecss": "^6.0.0",
     "babel-plugin-remove-template-literals-whitespace": "^1.0.4",
+    "bulma": "^1.0.2",
     "concat-cli": "^4.0.0",
     "concurrently": "^8.2.2",
     "cssnano": "^7.0.2",
