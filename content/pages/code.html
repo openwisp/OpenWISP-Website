@@ -2,6 +2,7 @@
   <head>
     <title>Source Code</title>
     <meta name="slug" content="code" />
+    <meta name="template" content="page-activity" />
   </head>
   <body>
     <section class="section has-text-centered pt-3">
@@ -13,10 +14,7 @@
           <div class="column">
             <div class="text has-text-justified mt-5">
               <p class="is-hidden-desktop has-text-centered">
-                <img
-                  src="{{ SITEURL }}/theme/images/source-code.png"
-                  alt="source code"
-                />
+                <img src="{static}/images/source-code.png" alt="source code" />
               </p>
               <p>
                 OpenWISP is a modular platform consisting of various modules and
@@ -56,7 +54,7 @@
           </div>
           <div class="column is-hidden-touch">
             <img
-              src="{{ SITEURL }}/theme/images/source-code.png"
+              src="{static}/images/source-code.png"
               style="width: 450px"
               class="mt-4"
               alt="source code"
@@ -83,7 +81,7 @@
             <span class="fas fa-solid fa-book"></span>
             <span>Quick Start</span>
           </a>
-          <a class="button with-text is-white" href="{{ SITEURL }}/demo/">
+          <a class="button with-text is-white" href="{filename}demo.html">
             <span class="fas fa-regular fa-circle-play"></span>
             <span>Demo</span>
           </a>

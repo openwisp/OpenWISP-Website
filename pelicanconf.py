@@ -84,7 +84,7 @@ CSS_MIN = False
 JS_MIN = False
 HTML_MIN = True
 INLINE_CSS_MIN = False
-INLINE_JS_MIN = True
+INLINE_JS_MIN = False
 
 SITEMAP = {
     'format': 'xml',

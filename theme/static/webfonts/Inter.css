@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../webfonts/Inter/Inter-normal-400);
+  src: local('Inter'), url(../webfonts/Inter/Inter-normal-400.ttf) format('truetype'), url(../webfonts/Inter/Inter-normal-400.woff2) format('woff2'), url(../webfonts/Inter/Inter-normal-400.woff) format('woff'), url(../webfonts/Inter/Inter-normal-400.svg#Inter) format('svg'), url(../webfonts/Inter/Inter-normal-400?#iefix) format('embedded-opentype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  src: url(../webfonts/Inter/Inter-normal-500.ttf) format('truetype'), url(../webfonts/Inter/Inter-normal-500.woff2) format('woff2'), url(../webfonts/Inter/Inter-normal-500.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  src: url(../webfonts/Inter/Inter-normal-600.ttf) format('truetype'), url(../webfonts/Inter/Inter-normal-600.woff2) format('woff2'), url(../webfonts/Inter/Inter-normal-600.woff) format('woff');
+}
