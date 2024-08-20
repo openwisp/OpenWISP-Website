@@ -4,7 +4,7 @@
   "main": "Makefile",
   "license": "UNLICENSED",
   "scripts": {
-    "build:fontawesome": "cp -r node_modules/@fortawesome/fontawesome-free/webfonts theme/static/css/fontawesome-free-webfonts",
+    "build:fontawesome": "mkdir -p theme/static/css/fontawesome-free-webfonts && cp -r node_modules/@fortawesome/fontawesome-free/webfonts theme/static/css/fontawesome-free-webfonts",
     "build:sass": "sass --load-path=node_modules css/theme.scss theme/static/css/theme.css",
     "build:postcss": "postcss theme/static/css/theme.css --output theme/static/css/theme.min.css --map",
     "build:css": "npm run build:fontawesome && npm run build:sass && npm run build:postcss",
