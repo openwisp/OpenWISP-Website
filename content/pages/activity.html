@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Recent Activity</title>
+    <meta name="slug" content="activity" />
+  </head>
+  <body>
+    {% from 'activity.inc' import github_activity %}
+    {{
+      github_activity(
+        posts=30,
+        load_more=True,
+        add_page=True,
+        top_spacing=0,
+        title_classes="is-size-3-mobile"
+      )
+    }}
+  </body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Blog - {{ SITENAME|striptags }}{% endblock %}
+{% block content %}
+  {% block content_header %}
+    <section class="section pt-4 pb-4">
+      <div class="container is-max-widescreen">
+        <h1 class="title is-spaced is-size-3-mobile">
+          {% block content_title %}
+            The OpenWISP
+            <span class="has-text-primary">Web Log</span>
+          {% endblock %}
+        </h1>
+        {% block content_header_subtitle %}
+          <p class="subtitle is-size-5">
+            Insights, stories, and the journey behind OpenWISP.<br />
+          </p>
+        {% endblock %}
+        {% block content_header_social %}
+          <p class="is-size-6">
+            Stay up to date by following our social media profiles!
+          </p>
+          <p class="button-container">
+            <a
+              href="https://www.linkedin.com/company/openwisp"
+              title="OpenWISP On LinkedIn"
+              target="_blank"
+              class="button is-white"
+            >
+              <span class="fas fa-brands fa-linkedin"></span>
+            </a>
+            <a
+              href="https://x.com/openwisp"
+              title="@OpenWISP on X.com"
+              target="_blank"
+              class="button is-white"
+            >
+              <span class="fas fa-brands fa-x-twitter"></span>
+            </a>
+            <a
+              href="https://facebook.com/openwisp"
+              title="OpenWISP on Facebook"
+              target="_blank"
+              class="button is-white"
+            >
+              <span class="fas fa-brands fa-facebook"></span>
+            </a>
+            <a
+              href="https://github.com/openwisp"
+              title="OpenWISP on Github"
+              target="_blank"
+              class="button is-white"
+            >
+              <span class="fas fa-brands fa-github"></span>
+            </a>
+          </p>
+        {% endblock %}
+        {% block content_header_extra %}
+        {% endblock %}
+      </div>
+    </section>
+  {% endblock %}
+  {% for article in articles_page.object_list %}
+    <article class="section pt-4 pb-4 blog">
+      <div class="container is-max-widescreen text content">
+        <header>
+          <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+            <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark">
+              {{ article.title }}
+            </a>
+          </h2>
+          <p class="mb-4">
+            Published on
+            <time datetime="{{ article.date.isoformat() }}">
+              {{ article.locale_date }}
+            </time>
+            {% if article.authors %}
+              by
+              {% for author in article.authors %}
+                <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
+              {% endfor %}
+            {% endif %}
+          </p>
+        </header>
+        <section>{{ article.summary }}</section>
+        <footer class="mt-4">
+          <p class="has-text-centered">
+            <a
+              class="button is-orange is-inverted with-text"
+              href="{{ SITEURL }}/{{ article.url }}"
+              title='Continue reading "{{ article.title }}"'
+            >
+              <span class="fas fa-plus"></span>
+              <span>Read More</span>
+            </a>
+          </p>
+        </footer>
+      </div>
+    </article>
+  {% endfor %}
+  {% if articles_page.has_other_pages() %}
+    <section class="section pt-4 pb-4 blog">
+      <div class="container is-max-widescreen">
+        {% include 'pagination.html' %}
+      </div>
+    </section>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block title %}
+  {{ category|capitalize }}
+  category - {{ SITENAME|striptags }} Blog
+{% endblock %}
+{% block content_title %}
+  Articles in the
+  <span class="has-text-primary">{{ category }}</span>
+  category
+{% endblock %}
+{% block content_header_subtitle %}
+{% endblock %}
+{% block content_header_social %}
+{% endblock %}

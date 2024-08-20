@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Archives - {{ SITENAME|striptags }} Blog{% endblock %}
+{% block content %}
+  <section class="section pt-4 pb-4">
+    <div class="container is-max-widescreen">
+      <h1 class="title is-spaced is-size-3-mobile">
+        <span class="has-text-primary"> Archives </span>
+        for {{ SITENAME }} Blog
+      </h1>
+      <div class="text content">
+        <dl>
+          {% for article in dates %}
+            <dt>{{ article.locale_date }}</dt>
+            <dd>
+              <a href="{{ SITEURL }}/{{ article.url }}">
+                {{ article.title }}
+              </a>
+            </dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </section>
+{% endblock %}

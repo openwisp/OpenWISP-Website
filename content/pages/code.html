@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <title>Source Code</title>
+    <meta name="slug" content="code" />
+  </head>
+  <body>
+    <section class="section has-text-centered pt-3">
+      <div class="container is-max-widescreen">
+        <h1 class="title is-spaced is-size-3-mobile">
+          Explore the <span class="has-text-primary">OpenWISP</span> Source Code
+        </h1>
+        <div class="columns is-desktop">
+          <div class="column">
+            <div class="text has-text-justified mt-5">
+              <p class="is-hidden-desktop has-text-centered">
+                <img
+                  src="{{ SITEURL }}/theme/images/source-code.png"
+                  alt="source code"
+                />
+              </p>
+              <p>
+                OpenWISP is a modular platform consisting of various modules and
+                libraries, each with its own code repository on GitHub.
+              </p>
+              <p>
+                Visit
+                <a href="https://github.com/openwisp" target="_blank"
+                  >github.com/openwisp</a
+                >
+                to explore the source code of individual modules and their
+                documentation.
+              </p>
+              <p>
+                Additionally, whether you are a user or a developer, our
+                comprehensive documentation website, continually improved by the
+                community, offers valuable insights into using, customizing and
+                extending OpenWISP effectively.
+              </p>
+              <p class="button-container has-text-centered">
+                <a
+                  class="button is-orange with-text"
+                  href="https://github.com/openwisp"
+                >
+                  <span class="fas fa-brands fa-github"></span>
+                  <span>Source Code</span>
+                </a>
+                <a
+                  class="button with-text is-white"
+                  href="https://openwisp.io/docs/dev/"
+                >
+                  <span class="fas fa-solid fa-book"></span>
+                  <span>Documentation</span>
+                </a>
+              </p>
+            </div>
+          </div>
+          <div class="column is-hidden-touch">
+            <img
+              src="{{ SITEURL }}/theme/images/source-code.png"
+              style="width: 450px"
+              class="mt-4"
+              alt="source code"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section has-text-centered pt-0">
+      <div class="container is-max-fullhd">
+        <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+          Install <span class="has-text-primary">OpenWISP</span>
+        </h2>
+        <p class="subtitle is-size-5 is-spaced">
+          Get started with OpenWISP by following our quickstart guide, which
+          provides step-by-step instructions on installation and setup.
+        </p>
+        <p class="button-container">
+          <a
+            class="button is-orange with-text"
+            href="https://openwisp.io/docs/dev/user/quickstart.html"
+          >
+            <span class="fas fa-solid fa-book"></span>
+            <span>Quick Start</span>
+          </a>
+          <a class="button with-text is-white" href="{{ SITEURL }}/demo/">
+            <span class="fas fa-regular fa-circle-play"></span>
+            <span>Demo</span>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section has-text-centered alternative-bg">
+      <div class="container">
+        <h2 class="title is-spaced is-size-3 is-size-4-mobile">
+          Join the Community
+        </h2>
+        <div class="text">
+          <p class="subtitle is-size-5 is-spaced">
+            Become part of the vibrant OpenWISP community, where members
+            contribute through module creation, feature development, bug
+            reporting, and more. You don't have to be a programmer to
+            contribute!
+          </p>
+          <p class="button-container">
+            <a
+              class="button is-orange with-text"
+              href="https://openwisp.io/docs/general/help-us.html"
+            >
+              <span class="fas fa-solid fa-hand-holding-hand"></span>
+              <span>Help us to grow</span>
+            </a>
+            <a
+              class="button with-text"
+              href="https://openwisp.io/docs/developer/contributing.html"
+            >
+              <span class="fas fa-solid fa-code"></span>
+              <span>Contribute</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {% from 'activity.inc' import github_activity %}
+    {{ github_activity() }}
+  </body>
+</html>
