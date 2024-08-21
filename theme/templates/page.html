@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}{{ page.title|striptags }} - {{ SITENAME|striptags }}{% endblock %}
+{% block extra_meta %}
+  {% if page.description %}
+    <meta name="description" content="{{ page.description }}" />
+  {% endif %}
+{% endblock %}
 {% block content %}
   {{ page.content }}
 {% endblock %}

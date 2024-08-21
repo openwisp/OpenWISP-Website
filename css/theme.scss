@@ -183,27 +183,23 @@ a.rounded:hover {
 .features.grid .button {
   margin-bottom: 0.3em;
 }
-.features.grid h4,
 .features.grid h2 {
   margin-bottom: 0.3em;
 }
-.features.grid h4 span,
-.features.grid h2 span {
-  display: block;
-}
-.features.grid h4 a {
+.features.grid h2 > span,
+.features.grid h2 a > span:not(.icon, .button) {
   display: block;
 }
 h3,
 h4,
-.features h4 a > span,
-.features h2 > span {
+.features h2 > span,
+.features h2 a > span:not(.icon, .button) {
   font-weight: $weight-semibold;
   color: $grey-dark;
 }
-.features.grid h4 a:hover span,
-.features.grid h4 a:focus span,
-.features.grid h4 a:active span {
+.features.grid h2 a:hover span,
+.features.grid h2 a:focus span,
+.features.grid h2 a:active span {
   color: $orange;
   text-decoration: none;
 }
