@@ -17,14 +17,14 @@
               title="Ubisoft"
             />
             <img
-              src="{static}/images/partners/csi-piemonte.png"
+              src="{static}/images/partners/csi-piemonte.webp"
               class="csi"
               alt="CSI Piemonte, Your Digital Partner"
               ,
               title="CSI Piemonte, Your Digital Partner"
             />
             <img
-              src="{static}/images/partners/insiel.png"
+              src="{static}/images/partners/insiel.webp"
               class="insiel"
               alt="Insiel"
               title="Insiel"
@@ -43,10 +43,16 @@
             />
           {% endif %}
           {% if contributors %}
+            <img
+              src="{static}/images/partners/tdt.svg"
+              class="tdt"
+              alt="TDT Your Experts in Telecommunication"
+              title="TDT"
+            />
           {% endif %}
           {% if oss_funding %}
             <img
-              src="{static}/images/partners/gsoc.png"
+              src="{static}/images/partners/gsoc.webp"
               class="gsoc"
               alt="Google Summer of Code"
               title="Google Summer of Code"
