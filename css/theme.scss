@@ -113,15 +113,20 @@ body {
 .navbar-brand a:active {
   filter: brightness(105%) contrast(105%) saturate(105%) opacity(95%);
 }
-#main-menu .navbar-center a {
+#main-menu .navbar-center a,
+#main-menu .navbar-center span.navbar-link {
   font-size: 15px;
   font-weight: $weight-semibold;
   color: $grey-light;
 }
 #main-menu .navbar-center a:hover,
 #main-menu .navbar-center a:focus,
-#main-menu .navbar-center a:active {
+#main-menu .navbar-center a:active,
+#main-menu .navbar-center span.navbar-link:hover,
+#main-menu .navbar-center span.navbar-link:focus,
+#main-menu .navbar-center span.navbar-link:active {
   color: $orange;
+  background: transparent;
 }
 #main-menu .has-dropdown .navbar-link:hover::after,
 #main-menu .has-dropdown .navbar-link:focus::after,

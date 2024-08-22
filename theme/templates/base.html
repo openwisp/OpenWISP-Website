@@ -122,9 +122,11 @@
                 </a>
               {% else %}
                 <div class="navbar-item has-dropdown is-hoverable">
-                  <a
+                  <span
+                    tabindex="0"
+                    role="button"
                     class="navbar-link {% if output_file in item.values() %}is-active{% endif %}"
-                    >{{ text }}</a
+                    >{{ text }}</span
                   >
                   <div class="navbar-dropdown is-boxed">
                     {% for subtext, sublink in item.items() %}
