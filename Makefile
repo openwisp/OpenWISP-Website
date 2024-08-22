@@ -70,7 +70,8 @@ publish:
 
 post_build_cleanup:
 	mv $(OUTPUTDIR)/index/index.html $(OUTPUTDIR)/index.html
-	rmdir $(OUTPUTDIR)/index
+	sed -i 's/\.\.\///g' $(OUTPUTDIR)/index.html
+	cp $(BASEDIR)/theme/templates/redirect.html $(OUTPUTDIR)/index/index.html
 	cp $(OUTPUTDIR)/theme/images/favicon.png $(OUTPUTDIR)/favicon.ico
 	cp $(OUTPUTDIR)/theme/robots.txt $(OUTPUTDIR)/robots.txt
 
