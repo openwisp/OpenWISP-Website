@@ -15,31 +15,40 @@
               class="ubisoft"
               alt="Ubisoft"
               title="Ubisoft"
+              width="172"
+              height="55"
             />
             <img
               src="{static}/images/partners/csi-piemonte.webp"
               class="csi"
               alt="CSI Piemonte, Your Digital Partner"
-              ,
               title="CSI Piemonte, Your Digital Partner"
+              width="183"
+              height="60"
             />
             <img
               src="{static}/images/partners/insiel.webp"
               class="insiel"
               alt="Insiel"
               title="Insiel"
+              width="194"
+              height="40"
             />
             <img
               src="{static}/images/partners/uniurb.svg"
               class="uniurb"
               alt="Università degli Studi di Urbino CarloBo"
               title="Università degli Studi di Urbino CarloBo"
+              width="167"
+              height="80"
             />
             <img
               src="{static}/images/partners/wayru.svg"
               class="wayru"
               alt="Wayru"
               title="Wayru"
+              width="171"
+              height="55"
             />
           {% endif %}
           {% if contributors %}
@@ -48,6 +57,8 @@
               class="tdt"
               alt="TDT Your Experts in Telecommunication"
               title="TDT"
+              width="218"
+              height="42"
             />
           {% endif %}
           {% if oss_funding %}
@@ -56,18 +67,24 @@
               class="gsoc"
               alt="Google Summer of Code"
               title="Google Summer of Code"
+              width="376"
+              height="60"
             />
             <img
               src="{static}/images/partners/internews.svg"
               class="internews"
               alt="Internews"
               title="Internews"
+              width="200"
+              height="60"
             />
             <img
               src="{static}/images/partners/ura.svg"
               class="ura"
               alt="Ura"
               title="Ura Design"
+              width="152"
+              height="54"
             />
           {% endif %}
         </a>
