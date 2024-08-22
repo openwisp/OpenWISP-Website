@@ -407,6 +407,7 @@ body main {
 @media only screen and (max-width: 600px) {
   body .partners img {
     max-height: 40px !important;
+    max-width: fit-content;
     position: static !important;
     margin: 0.9em;
   }
