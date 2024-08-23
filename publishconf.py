@@ -17,4 +17,4 @@ DELETE_OUTPUT_DIRECTORY = True
 DEFAULT_PAGINATION = 10
 
 # Following items are often useful when publishing
-# GOOGLE_ANALYTICS = ''
+GOOGLE_ANALYTICS = 'G-BV5EEJD3CV'

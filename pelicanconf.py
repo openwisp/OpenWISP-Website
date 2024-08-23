@@ -96,3 +96,5 @@ SITEMAP = {
     'changefreqs': {'articles': 'monthly', 'indexes': 'monthly', 'pages': 'monthly'},
     "exclude": ["404/", "blog/tag/", "blog/archive/"],
 }
+
+GOOGLE_ANALYTICS = None
