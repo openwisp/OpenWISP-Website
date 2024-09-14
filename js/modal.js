@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return modalContainer.querySelector(".modal.is-active");
   };
 
+  var hideScrollbar = () => {
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+  };
+
+  var showScrollbar = () => {
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+  };
+
   // bind click event on open-modal links
   // clones modal content to bottom of the page
   // fades in with CSS transition
@@ -20,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
           modalContainer.appendChild(clonedModal);
           setTimeout(() => {
             getActiveModal().classList.add("visible");
+            hideScrollbar();
           }, 10);
           bindClose();
         }
@@ -38,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
           modal.classList.remove("visible");
           setTimeout(() => {
             modal.remove();
+            showScrollbar();
             history.pushState(
               "",
               document.title,
