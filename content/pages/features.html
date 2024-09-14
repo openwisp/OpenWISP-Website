@@ -11,8 +11,8 @@
           OpenWISP <span class="has-text-primary">Features</span>
         </h1>
         <p class="subtitle is-size-5">
-          OpenWISP offers seamless network configuration and real-time
-          monitoring. Point out this is a summary.
+          OpenWISP offers a wealth of features, modules, and reusable code to
+          help you meet all your network management needs.
         </p>
 
         <section
@@ -21,18 +21,311 @@
           <div class="features grid has-text-centered">
             <div class="cell">
               <h2>
-                <a class="open-modal" href="#node-management">
+                <a class="open-modal" href="#templates-and-variables">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
-                      <i class="fas fa-circle-nodes"></i>
+                      <i class="fas fa-solid fa-copy"></i>
                     </span>
                   </span>
-                  <span>Node management</span>
+                  <span>Configuration Templates</span>
                 </a>
               </h2>
               <p>
-                Whether you have a team of 2 or 200, our shared team inboxes
-                keep everyone on the same page and in the loop.
+                Effortlessly manage device settings by defining reusable
+                configuration templates that apply updates system-wide with a
+                single change.
+              </p>
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">
+                      Configuration Templates and Variables
+                    </p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Once defined, templates can be applied in the desired
+                      order either manually, as shown below, or automatically
+                      using
+                      <span class="has-text-weight-medium"
+                        >default templates</span
+                      >, <span class="has-text-weight-medium">tags</span>, or
+                      <span class="has-text-weight-medium">group templates</span
+                      >.
+                    </p>
+
+                    <img
+                      src="https://openwisp.io/docs/dev/_images/template-ordering.gif"
+                      alt="Templates"
+                    />
+                    <p>
+                      Variables can be used to define configuration segments
+                      that can be customized for each
+                      <span class="has-text-weight-medium">device</span>,
+                      <span class="has-text-weight-medium">group</span>, or
+                      <span class="has-text-weight-medium">organization</span>.
+                    </p>
+
+                    <img
+                      src="https://raw.githubusercontent.com/openwisp/openwisp-controller/docs/docs/device-context.png"
+                      alt="Variables"
+                    />
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/dev/controller/user/templates.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about templates</span>
+                      </a>
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/dev/controller/user/variables.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about variables</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a
+                  href="https://openwisp.io/docs/dev/openwrt-config-agent/user/automatic-registration.html"
+                  target="_blank"
+                >
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-gear"></i>
+                    </span>
+                  </span>
+                  <span>Automatic Provisioning</span>
+                </a>
+              </h2>
+              <p>
+                Seamlessly connect and configure new devices with zero-touch
+                auto registration, enabling rapid deployments with minimal
+                manual effort.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-shield"></i>
+                    </span>
+                  </span>
+                  <span>Automatic VPN Tunnels</span>
+                </a>
+              </h2>
+              <p>
+                Automatically provision secure VPN tunnels with all required
+                configurations, keys, and certificates, reducing errors and
+                speeding up node deployment.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a class="open-modal" href="#network-monitoring">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-chart-simple"></i>
+                    </span>
+                  </span>
+                  <span>Network Monitoring</span>
+                </a>
+              </h2>
+              <p>
+                Monitor network performance with insights into latency,
+                reachability, hardware usage, traffic patterns, and Wi-Fi
+                clients for proactive management.
+              </p>
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Network Monitoring</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Here's some of the metrics collected and visualized by the
+                      <a
+                        href="https://openwisp.io/docs/dev/monitoring/index.html"
+                        target="_blank"
+                        >Monitoring module</a
+                      >
+                      of OpenWISP.
+                    </p>
+
+                    <p class="has-text-centered">
+                      <img
+                        src="https://github.com/openwisp/openwisp-monitoring/raw/docs/docs/1.1/ping-success-rate.png"
+                        alt="Ping Success Rate"
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/rtt.png"
+                        alt="Round Trip Time"
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/wifi-clients.png"
+                        alt="WiFi Clients"
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/signal-quality.png"
+                        alt="Mobile Signal Quality"
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/1.1/traffic.png"
+                        alt="Traffic"
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/access-technology.png"
+                        alt="Access Technology"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/dev/monitoring/user/metrics.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about metrics</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-bell"></i>
+                    </span>
+                  </span>
+                  <span>Alerts & Notifications</span>
+                </a>
+              </h2>
+              <p>
+                Receive timely notifications thanks to configurable alerts,
+                tailored to your network's needs for fast issue detection and
+                response.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-solid fa-users"></i>
+                    </span>
+                  </span>
+                  <span>Multi-tenancy</span>
+                </a>
+              </h2>
+              <p>
+                Isolate tenants within separate organizations, ensuring each has
+                access only to their own data and configurations, while super
+                administrators maintain full oversight.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-solid fa-cloud-arrow-up"></i>
+                    </span>
+                  </span>
+                  <span>Firmware Upgrades</span>
+                </a>
+              </h2>
+              <p>
+                Efficiently manage firmware upgrades with options for individual
+                or batch updates, keeping your devices current with the latest
+                features and security patches.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-diagram-project"></i>
+                    </span>
+                  </span>
+                  <span>Network Topology</span>
+                </a>
+              </h2>
+              <p>
+                Visualize and manage your network’s layout with comprehensive
+                topology maps, offering clear insights into device connections
+                and network structure.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-house-signal"></i>
+                    </span>
+                  </span>
+                  <span>WiFi & Roaming</span>
+                </a>
+              </h2>
+              <p>
+                Optimize network performance with seamless WiFi roaming and
+                intelligent access point management, ensuring consistent
+                connectivity and broad coverage.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a class="open-modal" href="#node-management">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-wifi"></i>
+                    </span>
+                  </span>
+                  <span>Hotspots & Public WiFi</span>
+                </a>
+              </h2>
+              <p>
+                Deploy hotspots and public WiFi with captive portal integration
+                for registration, authentication, social login, mobile phone
+                number verification and paid subscriptions.
               </p>
               <div class="modal fullscreen">
                 <div class="modal-background"></div>
@@ -70,20 +363,22 @@
                 </div>
               </div>
             </div>
+
             <div class="cell">
               <h2>
                 <a href="#">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
-                      <i class="fas fa-circle-exclamation"></i>
+                      <i class="fas fa-circle-nodes"></i>
                     </span>
                   </span>
-                  <span>Monitoring & Alerts</span>
+                  <span>Mesh networks</span>
                 </a>
               </h2>
               <p>
-                An all-in-one customer service platform that helps you balance
-                everything your customers need to be happy.
+                Enhance network reliability with mesh networks, providing
+                robust, self-healing connections that ensure seamless coverage
+                and optimal performance.
               </p>
             </div>
 
@@ -92,49 +387,22 @@
                 <a href="#">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
-                      <i class="fas fa-shield"></i>
+                      <i class="fas fa-user-shield"></i>
                     </span>
                   </span>
-                  <span>Authentication</span>
+                  <span>
+                    <abbr title="Remote Authentication Dial-In User Service"
+                      >RADIUS</abbr
+                    >
+                    &
+                    <abbr title="Extensible Authentication Protocol">EAP</abbr>
+                  </span>
                 </a>
               </h2>
               <p>
-                Use NetJSON configuration templates and automatic registration
-                to fully automate the deployment of new nodes in your network.
-              </p>
-            </div>
-
-            <div class="cell">
-              <h2>
-                <a href="#">
-                  <span class="button is-small is-orange is-inverted">
-                    <span class="icon is-small">
-                      <i class="fas fa-bell"></i>
-                    </span>
-                  </span>
-                  <span>Notifications</span>
-                </a>
-              </h2>
-              <p>
-                OpenWISP stays out of your way and lets you set up any type of
-                configuration supported by OpenWRT thanks to its advanced mode.
-              </p>
-            </div>
-
-            <div class="cell">
-              <h2>
-                <a href="#">
-                  <span class="button is-small is-orange is-inverted">
-                    <span class="icon is-small">
-                      <i class="fas fa-chart-simple"></i>
-                    </span>
-                  </span>
-                  <span>Visualization</span>
-                </a>
-              </h2>
-              <p>
-                No more hacking unflexible software. Leverage Python and Django
-                to configure, extend and program what OpenWISP can do.
+                Adopt RADIUS to handle authentication, authorization, and
+                accounting, ensuring secure and efficient access control across
+                your network.
               </p>
             </div>
 
@@ -146,149 +414,64 @@
                       <i class="fas fa-cubes"></i>
                     </span>
                   </span>
-                  <span>Modularity</span>
+                  <span
+                    ><abbr title="IP Address Administration">IPAM</abbr></span
+                  >
                 </a>
               </h2>
               <p>
-                We’re an extension of your customer service team, and all of our
-                resources are free. Chat to our friendly team 24/7 when you need
-                help.
+                The IPAM module automatically provisions subnets and IP
+                addresses based on allocation rules set by network
+                administrators.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-cubes"></i>
+                    </span>
+                  </span>
+                  <span>Modular, Programable, Extensible</span>
+                </a>
+              </h2>
+              <p>
+                Experience the power of modularity, flexibility, and
+                customizability of OpenWISP: tailor it to perfectly fit your
+                needs and workflows.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-book"></i>
+                    </span>
+                  </span>
+                  <span>Great Docs</span>
+                </a>
+              </h2>
+              <p>
+                Explore our unified documentation website with over 500 pages
+                offering comprehensive guidance on deploying, configuring, and
+                using OpenWISP.
               </p>
             </div>
           </div>
         </section>
-
-        <div
-          class="fixed-grid has-3-cols-desktop has-2-cols-tablet has-1-cols-mobile"
-        >
-          <div class="grid text bordered">
-            <div class="cell">
-              <h2 class="title is-size-5 mb-3">Mailing List</h2>
-              <p>
-                Our mailing list is a great place to discuss ideas, and ask
-                questions to the most active users and contributors.
-              </p>
-              <p class="button-container">
-                <a
-                  class="button with-text is-orange is-inverted"
-                  target="_blank"
-                  href="https://groups.google.com/d/forum/openwisp"
-                >
-                  <span class="fas fa-regular fa-envelope"></span>
-                  <span>Mailing List</span>
-                </a>
-              </p>
-            </div>
-            <div class="cell">
-              <h2 class="title is-size-5 mb-3">Discussions</h2>
-              <p>
-                The Github Discussions Forum is an alternative to the mailing
-                list for those who prefer forum style discussions.
-              </p>
-              <p class="button-container">
-                <a
-                  class="button with-text is-orange is-inverted"
-                  target="_blank"
-                  href="https://github.com/orgs/openwisp/discussions"
-                >
-                  <span class="fas fa-brands fa-github"></span>
-                  <span>Discussions</span>
-                </a>
-              </p>
-            </div>
-            <div class="cell">
-              <h2 class="title is-size-5 mb-3">General Chat</h2>
-              <p>
-                For those who want to connect with other community members and
-                chat in real time, this is the ideal space to do it.
-              </p>
-              <p class="button-container">
-                <a
-                  class="button with-text is-orange is-inverted"
-                  target="_blank"
-                  href="https://matrix.to/#/#openwisp_general:gitter.im"
-                >
-                  <span class="fas fa-solid fa-comment-dots"></span>
-                  <span>General Chat</span>
-                </a>
-              </p>
-            </div>
-            <div class="cell">
-              <h2 class="title is-size-5 mb-3">Development Chat</h2>
-              <p>
-                Developers and contributors coordinate here. While we strive to
-                respond promptly, please note that response times may vary due
-                to different time zones.
-              </p>
-              <a
-                class="button with-text is-orange is-inverted"
-                target="_blank"
-                href="https://matrix.to/#/#openwisp_general:gitter.im"
-              >
-                <span class="fas fa-solid fa-code"></span>
-                <span>Dev Chat</span>
-              </a>
-            </div>
-            <div class="cell">
-              <h2 class="title is-size-5 mb-3">Google Summer of Code</h2>
-              <p>
-                For those considering to participate in the
-                <a
-                  href="https://openwisp.io/docs/preview/dev/developer/google-summer-of-code.html"
-                  target="_blank"
-                  >Google Summer of Code with OpenWISP</a
-                >, we have a dedicated mailing list packed with valuable
-                information.
-              </p>
-              <p class="button-container">
-                <a
-                  class="button with-text is-orange is-inverted"
-                  target="_blank"
-                  href="https://groups.google.com/g/openwisp-gsoc"
-                >
-                  <span class="fas fa-brands fa-google"></span>
-                  <span>GSoC Mailing List</span>
-                </a>
-              </p>
-            </div>
-            <div class="cell">
-              <h2 class="title is-size-5 mb-3">Reporting Security Issues</h2>
-              <p>
-                If you discover a security vulnerability in OpenWISP, please
-                report it promptly to
-                <a
-                  href="mailto:&#115;&#101;&#099;&#117;&#114;&#105;&#116;&#121;&#064;&#111;&#112;&#101;&#110;&#119;&#105;&#115;&#112;&#046;&#105;&#111;"
-                  >&#115;&#101;&#099;&#117;&#114;&#105;&#116;&#121;&#064;&#111;&#112;&#101;&#110;&#119;&#105;&#115;&#112;&#046;&#105;&#111;</a
-                >. We appreciate your cooperation in keeping our community safe.
-              </p>
-              <p class="button-container">
-                <a
-                  class="button with-text is-orange is-inverted"
-                  target="_blank"
-                  href="mailto:&#115;&#101;&#099;&#117;&#114;&#105;&#116;&#121;&#064;&#111;&#112;&#101;&#110;&#119;&#105;&#115;&#112;&#046;&#105;&#111;"
-                >
-                  <span class="fas fa-solid fa-shield-halved"></span>
-                  <span>Security Report</span>
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <p class="subtitle is-size-5 mt-6 text">
-          For more information on how to get involved, contribute, or seek
-          assistance, please explore
-          <a href="https://openwisp.io/docs/preview/dev/">our documentation</a>
-          or reach out to us via the channels mentioned above.<br />
-          We look forward to hearing from you and collaborating together to make
-          OpenWISP even better!
-        </p>
       </div>
     </section>
 
     <section class="section has-text-centered alternative-bg">
       <div class="container">
         <h2 class="title is-size-3 is-size-4-mobile is-spaced">Learn More</h2>
+        <p class="subtitle is-size-5">
+          Get started exploring what OpenWISP has to offer!
+        </p>
         <p class="button-container">
           <a
             class="button is-orange with-text"
