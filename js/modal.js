@@ -2,23 +2,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Bind click event to all elements with class 'open-modal'
   const openModalLinks = document.querySelectorAll("a.open-modal");
   const modalContainer = document.getElementById("modal-container");
-  const getActiveModal = () => {
-    return modalContainer.querySelector(".modal.is-active");
-  };
+  const getActiveModal = () => modalContainer.querySelector(".modal.is-active");
 
-  var hideScrollbar = () => {
+  const hideScrollbar = () => {
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
   };
 
-  var showScrollbar = () => {
+  const showScrollbar = () => {
     document.body.style.overflow = "";
     document.documentElement.style.overflow = "";
   };
 
-  // bind click event on open-modal links
-  // clones modal content to bottom of the page
-  // fades in with CSS transition
+  // Bind click event on open-modal links
+  // Clone modal content to bottom of the page
+  // Fade in with CSS transition
   openModalLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       const cell = link.closest(".cell");
@@ -38,14 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // binds close button
+  // Bind close button
   const bindClose = () => {
     getActiveModal()
       .querySelectorAll(".close")
       .forEach((close) => {
         close.addEventListener("click", (e) => {
           e.preventDefault();
-          let modal = getActiveModal();
+          const modal = getActiveModal();
           modal.classList.remove("visible");
           setTimeout(() => {
             modal.remove();
@@ -59,6 +57,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
   };
+
+  // Handle ESC key press to close the modal
+  document.addEventListener("keydown", (e) => {
+    if (e.keyCode === 27) {
+      const activeModal = getActiveModal();
+      if (activeModal) {
+        const closeBtn = activeModal.querySelector(".close");
+        if (closeBtn) {
+          closeBtn.click();
+        }
+      }
+    }
+  });
 
   // Open modal if related fragment is open
   if (window.location.hash) {
