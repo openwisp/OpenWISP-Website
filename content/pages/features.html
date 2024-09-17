@@ -46,31 +46,42 @@
                   </header>
                   <section class="modal-card-body text content mb-0 pb-2">
                     <p>
-                      Once defined, templates can be applied in the desired
-                      order either manually, as shown below, or automatically
-                      using
+                      Easily manage and apply configuration settings with the
+                      <span class="has-text-weight-medium"
+                        >Configuration Templates</span
+                      >
+                      feature in OpenWISP. Define and order templates manually
+                      or use
                       <span class="has-text-weight-medium"
                         >default templates</span
-                      >, <span class="has-text-weight-medium">tags</span>, or
-                      <span class="has-text-weight-medium">group templates</span
-                      >.
+                      >, <span class="has-text-weight-medium">tags</span>, and
+                      <span class="has-text-weight-medium"
+                        >group templates</span
+                      >
+                      for automated application.
                     </p>
 
                     <img
                       src="https://openwisp.io/docs/dev/_images/template-ordering.gif"
-                      alt="Templates"
+                      alt="Template Ordering"
+                      title="Template Ordering"
                     />
+
                     <p>
-                      Variables can be used to define configuration segments
-                      that can be customized for each
+                      Customize configurations for each
                       <span class="has-text-weight-medium">device</span>,
                       <span class="has-text-weight-medium">group</span>, or
-                      <span class="has-text-weight-medium">organization</span>.
+                      <span class="has-text-weight-medium">organization</span>
+                      using dynamic
+                      <span class="has-text-weight-medium">variables</span>.
+                      This flexibility ensures precise and adaptable
+                      configuration management.
                     </p>
 
                     <img
                       src="https://raw.githubusercontent.com/openwisp/openwisp-controller/docs/docs/device-context.png"
-                      alt="Variables"
+                      alt="Configuration Variables"
+                      title="Configuration Variables"
                     />
                   </section>
                   <footer class="modal-card-foot">
@@ -78,18 +89,18 @@
                       <a
                         class="button with-text is-orange"
                         target="_blank"
-                        href="https://openwisp.io/docs/dev/controller/user/templates.html"
+                        href="https://openwisp.io/docs/preview/dev/controller/user/templates.html"
                       >
                         <span class="fas fa-plus"></span>
-                        <span>Read more about templates</span>
+                        <span>Read more about Templates</span>
                       </a>
                       <a
                         class="button with-text is-orange"
                         target="_blank"
-                        href="https://openwisp.io/docs/dev/controller/user/variables.html"
+                        href="https://openwisp.io/docs/preview/dev/controller/user/variables.html"
                       >
                         <span class="fas fa-plus"></span>
-                        <span>Read more about variables</span>
+                        <span>Read more about Variables</span>
                       </a>
                       <button class="button with-text close">
                         <span class="fas fa-close"></span>
@@ -104,7 +115,7 @@
             <div class="cell">
               <h2>
                 <a
-                  href="https://openwisp.io/docs/dev/openwrt-config-agent/user/automatic-registration.html"
+                  href="https://openwisp.io/docs/preview/dev/openwrt-config-agent/user/automatic-registration.html"
                   target="_blank"
                 >
                   <span class="button is-small is-orange is-inverted">
@@ -124,7 +135,7 @@
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="#automatic-vpn-tunnels" class="open-modal">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-shield"></i>
@@ -138,6 +149,71 @@
                 configurations, keys, and certificates, reducing errors and
                 speeding up node deployment.
               </p>
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Automatic VPN Tunnels</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      OpenWISP supports automatically generating configuration
+                      and cryptographic keys and/or x509 certificates for VPN
+                      technologies like
+                      <span class="has-text-weight-medium">Wireguard</span>,
+                      <span class="has-text-weight-medium">OpenVPN</span>
+                      and
+                      <span class="has-text-weight-medium">Zerotier</span>.
+                    </p>
+
+                    <p class="has-text-centered">
+                      <iframe
+                        style="width:100%; height:700px;"
+                        src="https://www.youtube.com/embed/VThvUHi-4l4?si=MI6Koda404IqPldw&vq=hd1080&autoplay=1&mute=1"
+                        title="OpenWISP ZeroTier"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                      >
+                      </iframe>
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/controller/user/wireguard.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Wireguard</span>
+                      </a>
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/controller/user/openvpn.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>OpenVPN</span>
+                      </a>
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/controller/user/zerotier.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>ZeroTier</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
             </div>
 
             <div class="cell">
@@ -165,39 +241,56 @@
                   </header>
                   <section class="modal-card-body text content mb-0 pb-2">
                     <p>
-                      Here's some of the metrics collected and visualized by the
+                      The
                       <a
-                        href="https://openwisp.io/docs/dev/monitoring/index.html"
+                        href="https://openwisp.io/docs/preview/dev/monitoring/index.html"
                         target="_blank"
-                        >Monitoring module</a
+                        ><span class="has-text-weight-medium"
+                          >Monitoring module</span
+                        ></a
                       >
-                      of OpenWISP.
+                      in OpenWISP provides a comprehensive view of your
+                      network's performance with real-time metrics and
+                      visualizations.
+                    </p>
+
+                    <p>
+                      Track key metrics such as ping success rate, round trip
+                      time, WiFi client connections, mobile signal quality,
+                      traffic patterns, and access technology to ensure optimal
+                      performance and proactive management of your network.
                     </p>
 
                     <p class="has-text-centered">
                       <img
                         src="https://github.com/openwisp/openwisp-monitoring/raw/docs/docs/1.1/ping-success-rate.png"
                         alt="Ping Success Rate"
+                        title="Ping Success Rate"
                       />
                       <img
                         src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/rtt.png"
                         alt="Round Trip Time"
+                        title="Round Trip Time"
                       />
                       <img
                         src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/wifi-clients.png"
                         alt="WiFi Clients"
+                        title="WiFi Clients"
                       />
                       <img
                         src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/signal-quality.png"
                         alt="Mobile Signal Quality"
+                        title="Mobile Signal Quality"
                       />
                       <img
                         src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/1.1/traffic.png"
                         alt="Traffic"
+                        title="Traffic"
                       />
                       <img
                         src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/access-technology.png"
                         alt="Access Technology"
+                        title="Access Technology"
                       />
                     </p>
                   </section>
@@ -206,10 +299,10 @@
                       <a
                         class="button with-text is-orange"
                         target="_blank"
-                        href="https://openwisp.io/docs/dev/monitoring/user/metrics.html"
+                        href="https://openwisp.io/docs/preview/dev/monitoring/user/metrics.html"
                       >
                         <span class="fas fa-plus"></span>
-                        <span>Read more about metrics</span>
+                        <span>Read more about Metrics</span>
                       </a>
                       <button class="button with-text close">
                         <span class="fas fa-close"></span>
@@ -223,13 +316,13 @@
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="#notifications" class="open-modal">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-bell"></i>
                     </span>
                   </span>
-                  <span>Alerts & Notifications</span>
+                  <span>Alerts &amp; Notifications</span>
                 </a>
               </h2>
               <p>
@@ -237,11 +330,75 @@
                 tailored to your network's needs for fast issue detection and
                 response.
               </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Alerts &amp; Notifications</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Stay informed about important events in your network with
+                      real-time notifications.
+                    </p>
+                    <img
+                      src="https://raw.githubusercontent.com/openwisp/openwisp-notifications/docs/docs/images/notification-widget.gif"
+                      alt="Notifications"
+                    />
+                    <p>Receive important notifications via email.</p>
+                    <p>
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-notifications/docs/docs/images/email-template.png"
+                        alt="Email notifications"
+                      />
+                    </p>
+                    <p>
+                      Adjustable alert settings allow you to fine-tune the
+                      sensitivity of your monitoring system, ensuring timely and
+                      relevant alerts.
+                    </p>
+                    <p>
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-monitoring/docs/docs/1.1/device-inline-alertsettings.png"
+                        alt="Alert Settings"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/notifications/user/web-email-notifications.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about Notifications</span>
+                      </a>
+
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/monitoring/user/device-checks-and-alert-settings.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about Alert Settings</span>
+                      </a>
+
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
             </div>
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="#multi-tenancy" class="open-modal">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-solid fa-users"></i>
@@ -255,93 +412,39 @@
                 access only to their own data and configurations, while super
                 administrators maintain full oversight.
               </p>
-            </div>
 
-            <div class="cell">
-              <h2>
-                <a href="#">
-                  <span class="button is-small is-orange is-inverted">
-                    <span class="icon is-small">
-                      <i class="fas fa-solid fa-cloud-arrow-up"></i>
-                    </span>
-                  </span>
-                  <span>Firmware Upgrades</span>
-                </a>
-              </h2>
-              <p>
-                Efficiently manage firmware upgrades with options for individual
-                or batch updates, keeping your devices current with the latest
-                features and security patches.
-              </p>
-            </div>
-
-            <div class="cell">
-              <h2>
-                <a href="#">
-                  <span class="button is-small is-orange is-inverted">
-                    <span class="icon is-small">
-                      <i class="fas fa-diagram-project"></i>
-                    </span>
-                  </span>
-                  <span>Network Topology</span>
-                </a>
-              </h2>
-              <p>
-                Visualize and manage your network’s layout with comprehensive
-                topology maps, offering clear insights into device connections
-                and network structure.
-              </p>
-            </div>
-
-            <div class="cell">
-              <h2>
-                <a href="#">
-                  <span class="button is-small is-orange is-inverted">
-                    <span class="icon is-small">
-                      <i class="fas fa-house-signal"></i>
-                    </span>
-                  </span>
-                  <span>WiFi & Roaming</span>
-                </a>
-              </h2>
-              <p>
-                Optimize network performance with seamless WiFi roaming and
-                intelligent access point management, ensuring consistent
-                connectivity and broad coverage.
-              </p>
-            </div>
-
-            <div class="cell">
-              <h2>
-                <a class="open-modal" href="#node-management">
-                  <span class="button is-small is-orange is-inverted">
-                    <span class="icon is-small">
-                      <i class="fas fa-wifi"></i>
-                    </span>
-                  </span>
-                  <span>Hotspots & Public WiFi</span>
-                </a>
-              </h2>
-              <p>
-                Deploy hotspots and public WiFi with captive portal integration
-                for registration, authentication, social login, mobile phone
-                number verification and paid subscriptions.
-              </p>
               <div class="modal fullscreen">
                 <div class="modal-background"></div>
                 <div class="modal-card">
                   <header class="modal-card-head">
-                    <p class="modal-card-title">Node management</p>
+                    <p class="modal-card-title">Multi-tenancy</p>
                     <button class="delete close" aria-label="close"></button>
                   </header>
-                  <section class="modal-card-body">
-                    <img
-                      src="https://raw.githubusercontent.com/openwisp/openwisp-controller/docs/docs/1.1/device-groups.png"
-                      alt="TODO"
-                    />
+                  <section class="modal-card-body text content mb-0 pb-2">
                     <p>
-                      Whether you have a team of 2 or 200, our shared team
-                      inboxes keep everyone on the same page and in the loop.
+                      Manage diverse organizational needs with isolated access
+                      for each tenant, while allowing resource sharing through
+                      configurable shared objects.
+                    </p>
+                    <p>
+                      For instance, a user can belong to multiple organizations,
+                      each with different roles.
+                    </p>
+                    <p>
+                      <img
+                        src="https://github.com/openwisp/openwisp-users/raw/docs/docs/images/org-manager.png"
+                        alt="Organization Manager"
+                      />
+                    </p>
+                    <p>
+                      Shared objects are resources accessible to multiple
+                      organizations or tenants within the system.
+                    </p>
+                    <p>
+                      <img
+                        src="https://github.com/openwisp/openwisp-users/raw/docs/docs/images/shared-object.png"
+                        alt="Shared Objects"
+                      />
                     </p>
                   </section>
                   <footer class="modal-card-foot">
@@ -349,10 +452,10 @@
                       <a
                         class="button with-text is-orange"
                         target="_blank"
-                        href="https://openwisp.io/docs/preview/dev/controller/user/device-groups.html"
+                        href="https://openwisp.io/docs/preview/dev/users/user/basic-concepts.html#organizations-multi-tenancy"
                       >
                         <span class="fas fa-plus"></span>
-                        <span>Find out more</span>
+                        <span>Read more about Multi-tenancy</span>
                       </a>
                       <button class="button with-text close">
                         <span class="fas fa-close"></span>
@@ -366,7 +469,328 @@
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="#firmware-upgrades" class="open-modal">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-solid fa-cloud-arrow-up"></i>
+                    </span>
+                  </span>
+                  <span>Firmware Upgrades</span>
+                </a>
+              </h2>
+              <p>
+                Efficiently manage firmware upgrades with options for individual
+                or batch updates, keeping your devices current with the latest
+                features and security patches.
+              </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Firmware Upgrades</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      The
+                      <a
+                        href="https://openwisp.io/docs/preview/dev/firmware-upgrader/index.html"
+                        target="_blank"
+                        ><span class="has-text-weight-medium"
+                          >Firmware Upgrader module</span
+                        ></a
+                      >
+                      streamlines the process of keeping your devices
+                      up-to-date.
+                    </p>
+                    <p>
+                      Upload firmware images directly to the system with just a
+                      few clicks.
+                    </p>
+                    <p>
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-firmware-upgrader/docs/docs/images/quickstart-firmwareimage.gif"
+                        alt="Upload Firmware"
+                      />
+                    </p>
+                    <p>
+                      Once the firmware is uploaded, you can easily initiate
+                      firmware upgrades on individual devices for precision
+                      updates.
+                    </p>
+                    <p>
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-firmware-upgrader/docs/docs/images/quickstart-devicefirmware.gif"
+                        alt="Single Upgrade"
+                      />
+                    </p>
+                    <p>
+                      For larger networks, the firmware upgrader supports batch
+                      upgrades, allowing you to update multiple devices
+                      simultaneously, ensuring network consistency with minimal
+                      effort.
+                    </p>
+                    <p>
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-firmware-upgrader/docs/docs/images/quickstart-batch-upgrade.gif"
+                        alt="Batch Upgrades"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/firmware-upgrader/index.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about Firmware Upgrades</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#network-topology" class="open-modal">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-diagram-project"></i>
+                    </span>
+                  </span>
+                  <span>Network Topology</span>
+                </a>
+              </h2>
+              <p>
+                Visualize and manage your network's layout with comprehensive
+                topology maps, offering clear insights into device connections
+                and network structure.
+              </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Network Topology</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Explore the powerful
+                      <a
+                        href="https://openwisp.io/docs/preview/dev/network-topology/index.html"
+                        target="_blank"
+                        >Network Topology module</a
+                      >
+                      OpenWISP to gain detailed insights into your network’s
+                      layout. The module offers dynamic visualization of network
+                      devices, connections, and status, allowing you to manage
+                      and optimize your network efficiently.
+                    </p>
+                    <p>
+                      Access and update network topology data effortlessly
+                      through our HTTP API.
+                    </p>
+
+                    <p>Key features include:</p>
+                    <ul>
+                      <li>
+                        <strong>Real-time Visualization:</strong> Visualize
+                        network devices and their interconnections in real-time.
+                      </li>
+                      <li>
+                        <strong>Dynamic Updates:</strong> Automatically update
+                        the topology view as network changes occur.
+                      </li>
+                      <li>
+                        <strong>Detailed Insights:</strong> Access detailed
+                        information about each device and connection.
+                      </li>
+                      <li>
+                        <strong>API Integration:</strong> Fetch and update
+                        network topology data via HTTP API requests.
+                      </li>
+                    </ul>
+
+                    <p>
+                      <img
+                        src="https://raw.githubusercontent.com/openwisp/openwisp-network-topology/docs/docs/quickstart-receive.gif"
+                        alt="Receive Network Topology Data"
+                        title="Network Topology Data Fetching"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/network-topology/index.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about Network Topology</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#wifi-and-roaming" class="open-modal">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-house-signal"></i>
+                    </span>
+                  </span>
+                  <span>WiFi &amp; Roaming</span>
+                </a>
+              </h2>
+              <p>
+                Optimize network performance with seamless WiFi roaming and
+                intelligent access point management, ensuring consistent
+                connectivity and broad coverage.
+              </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">TODO</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Various
+                      <span class="has-text-weight-medium">WiFi networks</span>
+                      can be configured and managed effortlessly through
+                      OpenWISP.
+                    </p>
+
+                    <p>
+                      <img
+                        src="https://openwisp.io/docs/preview/dev/_images/open-ap-wifi-ui.gif"
+                        alt="Setting up an open WiFi AP"
+                      />
+                    </p>
+
+                    <p>
+                      WiFi client data is periodically collected and presented
+                      in a clear, easy-to-read format.
+                    </p>
+
+                    <p>
+                      <img
+                        src="https://openwisp.io/docs/preview/dev/_images/ap-wifi-sessions.png"
+                        alt="WiFi Sessions"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/tutorials/wifi-access-point.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about WiFi &amp; Roaming</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a class="open-modal" href="#hotspot-and-public-wifi">
+                  <span class="button is-small is-orange is-inverted">
+                    <span class="icon is-small">
+                      <i class="fas fa-wifi"></i>
+                    </span>
+                  </span>
+                  <span>Hotspots &amp; Public WiFi</span>
+                </a>
+              </h2>
+              <p>
+                Deploy hotspots and public WiFi with captive portal integration
+                for registration, authentication, social login, mobile phone
+                number verification and paid subscriptions.
+              </p>
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Hotspots &amp; Public WiFi</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Deploy and manage
+                      <span class="has-text-weight-medium"
+                        >public WiFi hotspots</span
+                      >
+                      with flexible authentication options, including
+                      <span class="has-text-weight-medium">social login</span>,
+                      <span class="has-text-weight-medium">paid access</span>,
+                      and
+                      <span class="has-text-weight-medium"
+                        >SMS verification</span
+                      >.
+                    </p>
+                    <p>
+                      <iframe
+                        style="width:100%; height:700px;"
+                        src="https://www.youtube.com/embed/wUTFte2at7o"
+                        title="Captive Portal Auto Login Feature of OpenWISP"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                      ></iframe>
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/tutorials/hotspot.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about Hotspot &amp Public WiFi</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <h2>
+                <a href="#mesh-networks" class="open-modal">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-circle-nodes"></i>
@@ -380,11 +804,59 @@
                 robust, self-healing connections that ensure seamless coverage
                 and optimal performance.
               </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">Mesh networks</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Deploy and manage dynamic
+                      <span class="has-text-weight-medium"
+                        >wireless mesh networks</span
+                      >
+                      that automatically adapt to changing conditions, ensuring
+                      reliable connectivity across multiple nodes.
+                    </p>
+                    <p>
+                      <img
+                        src="https://openwisp.io/docs/preview/dev/_images/mesh-network-topology.gif"
+                        alt="Mesh Topology Collection and Visualization"
+                      />
+                    </p>
+                    <p>
+                      <img
+                        src="https://openwisp.io/docs/preview/dev/_images/status-mesh0.png"
+                        alt="Mesh SSID"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/tutorials/mesh.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about Mesh Networks</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
             </div>
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="#radius-eap" class="open-modal">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-user-shield"></i>
@@ -394,7 +866,7 @@
                     <abbr title="Remote Authentication Dial-In User Service"
                       >RADIUS</abbr
                     >
-                    &
+                    &amp;
                     <abbr title="Extensible Authentication Protocol">EAP</abbr>
                   </span>
                 </a>
@@ -404,14 +876,85 @@
                 accounting, ensuring secure and efficient access control across
                 your network.
               </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">
+                      RADIUS and Extensible Authentication Protocol
+                    </p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Manage user authentication effortlessly with features like
+                      <span class="has-text-weight-medium"
+                        >SMS verification</span
+                      >, user import and generation,
+                      <span class="has-text-weight-medium">social login</span>,
+                      and
+                      <span class="has-text-weight-medium"
+                        >Single Sign-On (SAML)</span
+                      >.
+                    </p>
+                    <p>
+                      Enforce session limits, perform real-time changes with
+                      <span class="has-text-weight-medium"
+                        >Change of Authorization (CoA)</span
+                      >, and integrate seamlessly with your systems using the
+                      REST API.
+                    </p>
+                    <p>
+                      You can use the
+                      <span class="has-text-weight-medium">RADIUS</span>
+                      module to implement common scenarios like
+                      <span class="has-text-weight-medium"
+                        >WPA Enterprise EAP</span
+                      >
+                      or <span class="has-text-weight-medium">PPPoE</span>.
+                    </p>
+                    <p>
+                      <img
+                        src="https://openwisp.io/docs/preview/dev/_images/enable-wpa-enterprise-template.png"
+                        alt="WPA Enterprise EAP-TTLS-PAP"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/radius/index.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about RADIUS</span>
+                      </a>
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/tutorials/wpa-enterprise-eap-ttls-pap.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about WPA Enterprise EAP</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
             </div>
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="#ipam" class="open-modal">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
-                      <i class="fas fa-cubes"></i>
+                      <i class="fas fa-database"></i>
                     </span>
                   </span>
                   <span
@@ -424,17 +967,62 @@
                 addresses based on allocation rules set by network
                 administrators.
               </p>
+
+              <div class="modal fullscreen">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">IP Address Administration</p>
+                    <button class="delete close" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body text content mb-0 pb-2">
+                    <p>
+                      Efficiently manage your network's
+                      <span class="has-text-weight-medium"
+                        >IPv4/IPv6 subnets</span
+                      >, import/export IP data, and visualize subnet usage, all
+                      while automating IP allocation and utilizing a robust REST
+                      API for complete control.
+                    </p>
+                    <p>
+                      <img
+                        src="https://github.com/openwisp/openwisp-ipam/raw/docs/docs/subnet_demo.gif"
+                        alt="IPAM demo"
+                      />
+                    </p>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <a
+                        class="button with-text is-orange"
+                        target="_blank"
+                        href="https://openwisp.io/docs/preview/dev/ipam/index.html"
+                      >
+                        <span class="fas fa-plus"></span>
+                        <span>Read more about IPAM</span>
+                      </a>
+                      <button class="button with-text close">
+                        <span class="fas fa-close"></span>
+                        <span>Close</span>
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
             </div>
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a
+                  href="https://openwisp.io/docs/preview/dev/general/values.html#software-reusability-for-long-term-sustainability"
+                  target="_blank"
+                >
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-cubes"></i>
                     </span>
                   </span>
-                  <span>Modular, Programable, Extensible</span>
+                  <span>Modular, Programmable, Extensible</span>
                 </a>
               </h2>
               <p>
@@ -446,7 +1034,7 @@
 
             <div class="cell">
               <h2>
-                <a href="#">
+                <a href="https://openwisp.io/docs/preview/dev/">
                   <span class="button is-small is-orange is-inverted">
                     <span class="icon is-small">
                       <i class="fas fa-book"></i>
