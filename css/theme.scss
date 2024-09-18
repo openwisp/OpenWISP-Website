@@ -345,16 +345,23 @@ body main {
   max-width: 768px;
   margin: 0 auto;
 }
-.faq.menu a {
+.faq.menu li > a {
   padding: 1em 1.4em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   font-weight: 500;
 }
-.faq.menu a:hover,
-.faq.menu a:focus,
-.faq.menu a:active,
-.faq.menu li:last-child a {
+.faq.menu li > a:hover,
+.faq.menu li > a:focus,
+.faq.menu li > a:active,
+.faq.menu li:last-child > a {
   border-bottom: 1px solid rgba(0, 0, 0, 0);
+}
+.faq.menu li .text a {
+  background: transparent;
+  border-radius: 0;
+  color: inherit;
+  display: inline;
+  padding: 0;
 }
 .faq .text {
   text-align: justify;
