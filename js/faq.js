@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
       `.menu-list li > a[href="${fragment}"]:not(.is-active)`,
     );
     if (link) {
+      link.scrollIntoView({ behavior: "smooth", block: "start" });
       link.click();
     }
   };
