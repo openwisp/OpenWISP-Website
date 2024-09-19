@@ -1,13 +1,13 @@
 Improve UX of the Notifications Module: GSoC’24 Project Report
 ==============================================================
 
-:date: 2024-09-16
+:date: 2024-09-19
 :author: Dhanus
-:tags: gsoc
-:category: blog
+:tags: gsoc, notifications, new-features
+:category: gsoc
 :lang: en
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/gsoc_2024.jpeg
+.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/gsoc_2024.svg
     :alt: GSOC 2024
     :align: center
 
@@ -69,18 +69,8 @@ Key aspects of the batch email notification feature include:
 - The sending of individual emails is paused for a specified batch
   interval when batching is enabled.
 
-.. list-table::
-    :header-rows: 1
-    :align: center
-
-    - - PR
-      - Issue
-      - Status
-    - - `[feature] Batch email notifications #276
-        <https://github.com/openwisp/openwisp-notifications/pull/276>`_
-      - `#132
-        <https://github.com/openwisp/openwisp-notifications/issues/132>`_
-      - Merged
+**Pull Request:-** `Batch email notifications #276
+<https://github.com/openwisp/openwisp-notifications/pull/276>`_
 
 Notification Preferences Page
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,22 +96,8 @@ Key aspects of the notification preference feature include:
 - **Dedicated View:** A user-friendly UI to manage all notification
   preferences in one place.
 
-.. list-table::
-    :header-rows: 1
-    :align: center
-
-    - - PR
-      - Issues
-      - Status
-    - - `[feat] Notification Preferences Page #290
-        <https://github.com/openwisp/openwisp-notifications/pull/290>`_
-      - `#148
-        <https://github.com/openwisp/openwisp-notifications/issues/148>`_,
-        `#255
-        <https://github.com/openwisp/openwisp-notifications/issues/255>`_,
-        `#110
-        <https://github.com/openwisp/openwisp-notifications/issues/110>`_
-      - Not Merged
+**Pull Request:-** `Notification Preferences Page #290
+<https://github.com/openwisp/openwisp-notifications/pull/290>`_
 
 Add Unsubscribe Link to Email Notifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -146,18 +122,8 @@ Key aspects of the unsubscribe link feature include:
 - **List-Unsubscribe Header:** Implement the ``List-Unsubscribe-Header``
   to facilitate the unsubscribe button functionality in email clients.
 
-.. list-table::
-    :header-rows: 1
-    :align: center
-
-    - - PR
-      - Issue
-      - Status
-    - - `[feat] Add unsubscribe link to email notifications #307
-        <https://github.com/openwisp/openwisp-notifications/pull/307>`_
-      - `#256
-        <https://github.com/openwisp/openwisp-notifications/issues/256>`_
-      - Not Merged
+**Pull Request:-** `Add unsubscribe link to email notifications #307
+<https://github.com/openwisp/openwisp-notifications/pull/307>`_
 
 Other Contributions
 -------------------
@@ -167,60 +133,28 @@ organization, improving various features, fixing bugs, and enhancing the
 overall functionality of the modules. Here are some of the additional PRs
 I worked on:
 
-.. list-table::
-    :header-rows: 1
-    :align: center
+**OpenWISP Notifications**
 
-    - - PR
-      - Issue
-      - Status
-    - - **OpenWISP Notifications**
-      -
-      -
-    - - `[chore] relative url for notification links #266
-        <https://github.com/openwisp/openwisp-notifications/pull/266>`_
-      - `#249
-        <https://github.com/openwisp/openwisp-notifications/issues/249>`_
-      - Merged
-    - - `[change] Do Not Send Email Notifications if User Email is Not
-        Verified #274
-        <https://github.com/openwisp/openwisp-notifications/pull/274>`_
-      - `#270
-        <https://github.com/openwisp/openwisp-notifications/issues/270>`_
-      - Merged
-    - - `[feature] Added generic message notification type (shown in
-        dialog box) #275
-        <https://github.com/openwisp/openwisp-notifications/pull/275>`_
-      - `#254
-        <https://github.com/openwisp/openwisp-notifications/issues/254>`_
-      - Merged
-    - - **OpenWISP Monitoring**
-      -
-      -
-    - - `[change] Random pause for every 10 successful sent requests #131
-        <https://github.com/openwisp/openwrt-openwisp-monitoring/pull/131>`_
-      - `#128
-        <https://github.com/openwisp/openwrt-openwisp-monitoring/issues/128>`_
-      - Merged
-    - - **OpenWISP Controller**
-      -
-      -
-    - - `[fix] Unsaved changes alert disable on preview view #857
-        <https://github.com/openwisp/openwisp-controller/pull/857>`_
-      - `#824
-        <https://github.com/openwisp/openwisp-controller/issues/824>`_
-      - Merged
-    - - `[fix] Dark table preview when using django-import-export #858
-        <https://github.com/openwisp/openwisp-controller/pull/858>`_
-      - `#851
-        <https://github.com/openwisp/openwisp-controller/issues/851>`_
-      - Merged
-    - - `[fix] deviceconnection_unique_together fails due to duplicate
-        objects #861
-        <https://github.com/openwisp/openwisp-controller/pull/861>`_
-      - `#846
-        <https://github.com/openwisp/openwisp-controller/issues/846>`_
-      - Merged
+- `Relative URL for notification links #266
+  <https://github.com/openwisp/openwisp-notifications/pull/266>`_
+- `Do Not Send Email Notifications if User Email is Not Verified #274
+  <https://github.com/openwisp/openwisp-notifications/pull/274>`_
+- `Added generic message notification type (shown in dialog box) #275
+  <https://github.com/openwisp/openwisp-notifications/pull/275>`_
+
+**OpenWISP Controller**
+
+- `Unsaved changes alert disable on preview view #857
+  <https://github.com/openwisp/openwisp-controller/pull/857>`_
+- `Dark table preview when using django-import-export #858
+  <https://github.com/openwisp/openwisp-controller/pull/858>`_
+- `deviceconnection_unique_together fails due to duplicate objects #861
+  <https://github.com/openwisp/openwisp-controller/pull/861>`_
+
+**OpenWISP Monitoring**
+
+- `Random pause for every 10 successful sent requests #131
+  <https://github.com/openwisp/openwrt-openwisp-monitoring/pull/131>`_
 
 My Experience
 -------------
