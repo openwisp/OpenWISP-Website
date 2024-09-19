@@ -587,7 +587,17 @@ article.blog {
   time {
     font-weight: $weight-semibold;
   }
+
+  img {
+    display: block;
+    margin: 1.5rem auto;
+  }
+
+  div.section {
+    padding: 1rem 0;
+  }
 }
+
 // feed
 /* purgecss start ignore */
 // modal

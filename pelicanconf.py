@@ -3,6 +3,7 @@ SITENAME = 'OpenWISP'
 SITEURL = ''
 PATH = 'content'
 TIMEZONE = 'Europe/Rome'
+LOCALE = ('en_US.UTF-8',)
 DEFAULT_LANG = 'en'
 
 # Feed generation is usually not desired when developing

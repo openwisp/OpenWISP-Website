@@ -1,4 +1,4 @@
-Improve UX of the Notifications Module: GSoC’24 Project Report
+Improve UX of the Notifications Module: GSoC'24 Project Report
 ==============================================================
 
 :date: 2024-09-19
@@ -7,8 +7,8 @@ Improve UX of the Notifications Module: GSoC’24 Project Report
 :category: gsoc
 :lang: en
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/gsoc_2024.svg
-    :alt: GSOC 2024
+.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/gsoc-openwisp-notifications-ux.png
+    :alt: Google Summer of Code, OpenWISP UX Improvements to the Notifications Module
     :align: center
 
 As my Google Summer of Code (GSoC) journey with OpenWISP draws close, I
@@ -53,7 +53,7 @@ Features Implemented
 Batch Email Notifications to Prevent Email Flooding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/batch_email.png
+.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/batch-email.png
     :alt: Batch Email Summary
     :align: center
 
@@ -69,13 +69,13 @@ Key aspects of the batch email notification feature include:
 - The sending of individual emails is paused for a specified batch
   interval when batching is enabled.
 
-**Pull Request:-** `Batch email notifications #276
+**Pull Request:** `Batch email notifications #276
 <https://github.com/openwisp/openwisp-notifications/pull/276>`_
 
 Notification Preferences Page
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/notification_preference_page.png
+.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/notification-preference-page.png
     :alt: Notification Preferences Page
     :align: center
 
@@ -96,13 +96,13 @@ Key aspects of the notification preference feature include:
 - **Dedicated View:** A user-friendly UI to manage all notification
   preferences in one place.
 
-**Pull Request:-** `Notification Preferences Page #290
+**Pull Request:** `Notification Preferences Page #290
 <https://github.com/openwisp/openwisp-notifications/pull/290>`_
 
 Add Unsubscribe Link to Email Notifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/unsubscribe_page.png
+.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/unsubscribe-page.png
     :alt: Unsubscribe Page
     :align: center
 
@@ -122,8 +122,8 @@ Key aspects of the unsubscribe link feature include:
 - **List-Unsubscribe Header:** Implement the ``List-Unsubscribe-Header``
   to facilitate the unsubscribe button functionality in email clients.
 
-**Pull Request:-** `Add unsubscribe link to email notifications #307
-<https://github.com/openwisp/openwisp-notifications/pull/307>`_
+**Pull Request:** `Add unsubscribe link to email notifications #307
+<https://github.com/openwisp/openwisp-notifications/pull/307>`-
 
 Other Contributions
 -------------------
@@ -166,10 +166,10 @@ The mentors played a huge role in helping me refine my work, offering
 insightful feedback that enhanced my coding skills and deepened my
 understanding of open-source development.
 
-What’s Next?
+What's Next?
 ------------
 
-As my GSoC journey concludes, I’m excited to keep contributing to OpenWISP
+As my GSoC journey concludes, I'm excited to keep contributing to OpenWISP
 and other open-source projects. I plan to focus on fixing bugs, enhancing
 features, and tackling new challenges. I also look forward to helping new
 contributors to get started in their open-source journey.
