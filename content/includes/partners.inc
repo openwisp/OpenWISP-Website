@@ -7,7 +7,7 @@
   >
     <div class="container is-max-widescreen has-text-centered">
       <p class="has-text-weight-medium">{{ text }}</p>
-      <p class="pt-4">
+      <p class="pt-3">
         <a href="{filename}partners.html">
           {% if customers %}
             <img
@@ -122,7 +122,7 @@
         </a>
       </p>
       {% if more_button %}
-        <p class="button-container">
+        <p class="button-container mt-3">
           <a class="button with-text" href="{filename}partners.html">
             <span class="fas fa-solid fa-plus"></span>
             <span>{{ more_button_text }}</span>
