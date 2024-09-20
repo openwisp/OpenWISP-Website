@@ -27,7 +27,7 @@ MENU = {
         'Community Support': 'support/',
         'Commercial Support': 'commercial-support/',
     },
-    'Docs': 'https://openwisp.io/docs/preview/dev/',
+    'Docs': 'https://openwisp.io/docs/dev/',
     'Blog': 'blog/',
 }
 
