@@ -232,39 +232,41 @@ img.screenshot.main {
   padding-top: 2px;
   padding-right: 4px;
 }
-.partners img {
-  max-height: 60px;
-  margin: 1em 1.5em;
-}
-.partners .ubisoft {
-  max-height: 55px;
-  opacity: 0.7;
-}
-.partners .tdt {
-  max-height: 42px;
-  position: relative;
-  top: -7px;
-}
-.partners .uniurb {
-  max-height: 80px;
-  position: relative;
-  bottom: -7px;
-}
-.partners .insiel {
-  position: relative;
-  top: -9px;
-  opacity: 0.7;
-}
-.partners .ura {
-  max-height: 54px;
-  position: relative;
-  top: -4px;
-}
-.partners .wayru {
-  position: relative;
-  top: -12px;
-  max-height: 55px;
-  opacity: 0.7;
+.partners {
+  img {
+    max-height: 60px;
+    margin: 1em 1.5em;
+  }
+  .partners .ubisoft {
+    max-height: 55px;
+    opacity: 0.7;
+  }
+  .tdt {
+    max-height: 42px;
+    position: relative;
+    top: -7px;
+  }
+  .uniurb {
+    max-height: 80px;
+    position: relative;
+    bottom: -7px;
+  }
+  .insiel {
+    position: relative;
+    top: -9px;
+    opacity: 0.7;
+  }
+  .ura {
+    max-height: 54px;
+    position: relative;
+    top: -4px;
+  }
+  .wayru {
+    position: relative;
+    top: -12px;
+    max-height: 55px;
+    opacity: 0.7;
+  }
 }
 .grayscale img {
   filter: grayscale(100%);
@@ -272,6 +274,9 @@ img.screenshot.main {
 .grayscale img:hover {
   filter: grayscale(0%);
   opacity: 1;
+}
+.partners-page .is-hidden-desktop img {
+  max-width: 322px;
 }
 .alternative-bg {
   background-color: $alternative-bg;
