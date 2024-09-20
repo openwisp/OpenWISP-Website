@@ -123,7 +123,7 @@ Key aspects of the unsubscribe link feature include:
   to facilitate the unsubscribe button functionality in email clients.
 
 **Pull Request:** `Add unsubscribe link to email notifications #307
-<https://github.com/openwisp/openwisp-notifications/pull/307>`-
+<https://github.com/openwisp/openwisp-notifications/pull/307>`_
 
 Other Contributions
 -------------------
