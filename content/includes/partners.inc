@@ -7,7 +7,7 @@
   >
     <div class="container is-max-widescreen has-text-centered">
       <p class="has-text-weight-medium">{{ text }}</p>
-      <p>
+      <p class="pt-4">
         <a href="{filename}partners.html">
           {% if customers %}
             <img
@@ -17,6 +17,14 @@
               title="Ubisoft"
               width="172"
               height="55"
+            />
+            <img
+              src="{static}/images/partners/unidata.webp"
+              class="unidata"
+              alt="Unidata"
+              title="Unidata"
+              width="171"
+              height="60"
             />
             <img
               src="{static}/images/partners/csi-piemonte.webp"
@@ -49,6 +57,30 @@
               title="Wayru"
               width="171"
               height="55"
+            />
+            <img
+              src="{static}/images/partners/ltech.webp"
+              class="ltech"
+              alt="Ltech"
+              title="Ltech"
+              width="171"
+              height="60"
+            />
+            <img
+              src="{static}/images/partners/umoja.webp"
+              class="umoja"
+              alt="Umoja"
+              title="Umoja"
+              width="142"
+              height="60"
+            />
+            <img
+              src="{static}/images/partners/a2a.svg"
+              class="a2a"
+              alt="A2A"
+              title="A2A"
+              width="171"
+              height="60"
             />
           {% endif %}
           {% if contributors %}
