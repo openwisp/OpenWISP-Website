@@ -552,13 +552,15 @@ body main {
 // team
 .profile {
   margin: 0 1em;
-}
-.profile img {
-  min-width: 120px;
-  max-width: 200px;
-}
-.profile .team-role {
-  font-weight: $weight-medium;
+
+  img {
+    min-width: 120px;
+    max-width: 200px;
+    border-radius: 50%;
+  }
+  .team-role {
+    font-weight: $weight-medium;
+  }
 }
 .text p {
   margin-bottom: 1em;
