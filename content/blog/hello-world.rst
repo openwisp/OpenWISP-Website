@@ -5,6 +5,9 @@ Hello World!
 :author: Federico Capoano
 :category: news
 :lang: en
+:image_url: https://openwisp.org/images/blog/hello-world.png
+:image_width: 843
+:image_height: 466
 
 .. image:: {static}/images/blog/hello-world.png
     :alt: Hello World

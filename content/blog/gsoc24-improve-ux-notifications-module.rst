@@ -6,6 +6,9 @@ Improve UX of the Notifications Module: GSoC'24 Project Report
 :tags: gsoc, notifications, new-features
 :category: gsoc
 :lang: en
+:image_url: https://openwisp.org/images/blog/gsoc-improve-ux-notifications-module/gsoc-openwisp-notifications-ux.png
+:image_width: 713
+:image_height: 297
 
 .. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/gsoc-openwisp-notifications-ux.png
     :alt: Google Summer of Code, OpenWISP UX Improvements to the Notifications Module

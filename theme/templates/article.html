@@ -13,6 +13,15 @@
   {% for tag in article.tags %}
     <meta name="tags" content="{{ tag }}" />
   {% endfor %}
+  {% if article.image_url %}
+    <meta property="og:image" content="{{ article.image_url }}" />
+  {% endif %}
+  {% if article.image_width %}
+    <meta property="og:image:width" content="{{ article.image_width }}" />
+  {% endif %}
+  {% if article.image_height %}
+    <meta property="og:image:height" content="{{ article.image_height }}" />
+  {% endif %}
 {% endblock %}
 {% block content %}
   <article class="section pt-4 pb-4 blog">
