@@ -227,29 +227,35 @@
     </footer>
     <script src="{{ SITEURL }}/theme/js/theme.min.js?v=1" defer></script>
     {% block scripts %}{% endblock %}
-    {% if GOOGLE_ANALYTICS %}
-      <!-- Google Analytics v4 Cookieless -->
+    {% if MATOMO_SITE_ID %}
+      <!-- Matomo -->
       <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        // NO COOKIES
-        gtag("consent", "default", {
-          ad_storage: "denied",
-          ad_user_data: "denied",
-          ad_personalization: "denied",
-          analytics_storage: "denied",
-        });
+        var _paq = (window._paq = window._paq || []);
+        _paq.push(["disableCookies"]);
+        _paq.push(["trackPageView"]);
+        _paq.push(["enableLinkTracking"]);
+        (function () {
+          var u = "https://analytics.openwisp.io/";
+          _paq.push(["setTrackerUrl", u + "matomo.php"]);
+          _paq.push(["setSiteId", "{{ MATOMO_SITE_ID }}"]);
+          var d = document,
+            g = d.createElement("script"),
+            s = d.getElementsByTagName("script")[0];
+          g.async = true;
+          g.src = u + "matomo.js";
+          s.parentNode.insertBefore(g, s);
+        })();
       </script>
-      <script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-BV5EEJD3CV"
-      ></script>
-      <script>
-        gtag("js", new Date());
-        gtag("config", "G-BV5EEJD3CV");
-      </script>
+      <noscript
+        ><p>
+          <img
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://analytics.openwisp.io/matomo.php?idsite={{ MATOMO_SITE_ID }}&amp;rec=1"
+            style="border:0;"
+            alt=""
+          /></p
+      ></noscript>
+      <!-- End Matomo Code -->
     {% endif %}
   </body>
 </html>
