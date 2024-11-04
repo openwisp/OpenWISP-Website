@@ -161,6 +161,9 @@ body {
 p.button-container .button {
   margin: 5px;
 }
+#top-feature-container {
+  min-height: var(--km);
+}
 .rounded {
   padding: 0.6em 0.4em;
   border-radius: 20px;
