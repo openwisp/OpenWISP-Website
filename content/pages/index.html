@@ -17,10 +17,15 @@
     <div class="container is-fullhd">
       <section class="hero is-small has-text-centered">
         <div class="hero-body pt-1">
-          <p class="subtitle is-spaced">
-            <a href="{filename}features.html#node-management" class="rounded">
+          <p class="subtitle is-spaced" id="top-feature-container">
+            <a
+              id="top-feature-link"
+              href="#node-management"
+              class="rounded"
+              style="display: none;"
+            >
               <span class="rounded light-bg"> Top feature </span>
-              Automatic VPN provisioning
+              <span id="top-feature-title">Automatic VPN provisioning</span>
               <i class="fas fa-arrow-right"></i>
               &nbsp;
             </a>
@@ -459,5 +464,9 @@
         </p>
       </div>
     </section>
+    <script>
+      const featuresBasePath = "{{ SITEURL }}/features/";
+    </script>
+    <script src="{{ SITEURL }}/theme/js/index-top-feature.js"></script>
   </body>
 </html>
