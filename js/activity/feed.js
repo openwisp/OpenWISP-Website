@@ -265,9 +265,6 @@ function createActivityFeed(options) {
             break;
         }
 
-        if (!eventType) {
-          console.log(field.type);
-        }
         if (!eventType) return; // don't display if event not handled above
 
         if (!$(".feed-container div").length) $(".feed-container").html("");
@@ -299,10 +296,11 @@ function createActivityFeed(options) {
 
     <div class="content text mt-3">
       <h3 class="title is-size-5 mb-0 pb-0">
-        <a href="${link}" target="_blank">
+        ${link ? `<a href="${link}" target="_blank">` : ""}
           <span class="iconify" data-icon="${icon}" style="color: ${iconColor};"></span>
           <span>${header}</span>
-        </a>
+
+        ${link ? "</a>" : ""}
       </h3>
       ${content ? `<div class="mt-3">${sanitizeAndConvertToHtml(content)}</div>` : ""}
     </div>
