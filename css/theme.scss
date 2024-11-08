@@ -11,6 +11,7 @@ $grey-light: #475467;
 $grey-light-button: #344054;
 $grey-light-border: #d0d5dd;
 $alternative-bg: #f5f5f5;
+$alternative-bg-invert: #0f1629;
 $weight-medium: 500;
 $weight-semibold: 600;
 
@@ -30,6 +31,10 @@ $weight-semibold: 600;
     "white": (
       $white,
       $grey-light-button,
+    ),
+    "alternative-bg": (
+      $alternative-bg,
+      $alternative-bg-invert,
     )
   ),
   $primary: $orange,
@@ -71,6 +76,78 @@ $fa-font-path: "../webfonts";
 @import "@fortawesome/fontawesome-free/scss/regular";
 @import url("../webfonts/Inter.css");
 
+html[data-theme="light"]{
+  --bulma-hover-l-delta: 20%;
+  .logo-dark {
+    display: none;
+  }
+}
+
+/*! purgecss start ignore */
+html[data-theme="dark"]:root {
+  --bulma-scheme-main: hsl(223, 70%, 4%);
+  --bulma-scheme-h: 224;
+  --bulma-scheme-s: 71%;
+  --bulma-scheme-main-l: 4%;
+
+  --bulma-text: hsl(0, 0%, 88%);
+  --bulma-primary: hsl(25, 85%, 56%);
+  --bulma-primary-h: 25;
+  --bulma-primary-s: 85%;
+  --bulma-primary-l: 56%;
+
+  --bulma-orange: hsl(25, 85%, 56%);
+  --bulma-orange-h: 25;
+  --bulma-orange-s: 85%;
+  --bulma-orange-l: 56%;
+
+  --bulma-link: hsl(24, 100%, 68%);
+  --bulma-link-text: hsl(24, 100%, 68%);
+  --bulma-link-text-hover: var(--bulma-primary);
+  --bulma-link-text-active: var(--bulma-primary);
+
+  --bulma-grey-dark: hsl(213, 31%, 91%);
+  --bulma-grey-light: #b0b0b0;
+
+  --bulma-navbar-h: 224;
+  --bulma-navbar-s: 74%;
+  --bulma-navbar-l: 4%;
+
+  --bulma-alternative-bg: hsl(223, 47%, 11%);
+
+  .title {
+    --bulma-title-color: #e1e7ef;
+  }
+  .is-orange {
+    --bulma-button-h: 24deg;
+    --bulma-button-s: 100%;
+    --bulma-button-l: 68%;
+    --bulma-button-background-l: 68%;
+    color: var(--bulma-scheme-main);
+  }
+  .button.is-orange:hover,
+  .button.is-orange.is-hovered {
+    --bulma-button-h: var(--bulma-orange-h);
+    --bulma-button-s: var(--bulma-orange-s);
+    --bulma-button-l: var(--bulma-orange-l);
+    --bulma-button-background-l-delta: 0%;
+    --bulma-button-background-l: var(--bulma-orange-l);
+  }
+  .menu a {
+    --bulma-menu-item-h: 0;
+    --bulma-menu-item-s: 0%;
+    --bulma-menu-item-backround-l: 88%;
+    --bulma-menu-item-color-l: 88%;
+  }
+  .footer {
+    --bulma-footer-background-color: var(--bulma-scheme-main);
+  }
+  .logo-light {
+    display: none;
+  }
+}
+/*! purgecss end ignore */
+
 // general
 .text a:not(.button, .rounded)[href] {
   text-decoration: underline;
@@ -78,10 +155,10 @@ $fa-font-path: "../webfonts";
 .text a:not(.button, .rounded)[href]:hover,
 .text a:not(.button, .rounded)[href]:focus,
 .text a:not(.button, .rounded)[href]:active {
-  filter: brightness(135%);
+  color: var(--bulma-link-text-hover);
 }
 .text a:not(.button, .rounded)[href]:visited {
-  filter: brightness(80%);
+  color: var(--bulma-link-text-hover);
 }
 body {
   min-width: 370px;
@@ -117,7 +194,7 @@ body {
 #main-menu .navbar-center span.navbar-link {
   font-size: 15px;
   font-weight: $weight-semibold;
-  color: $grey-light;
+  color: var(--bulma-grey-light);
 }
 #main-menu .navbar-center a:hover,
 #main-menu .navbar-center a:focus,
@@ -125,21 +202,21 @@ body {
 #main-menu .navbar-center span.navbar-link:hover,
 #main-menu .navbar-center span.navbar-link:focus,
 #main-menu .navbar-center span.navbar-link:active {
-  color: $orange;
+  color: var(--bulma-orange);
   background: transparent;
 }
 #main-menu .has-dropdown .navbar-link:hover::after,
 #main-menu .has-dropdown .navbar-link:focus::after,
 #main-menu .has-dropdown .navbar-link:active::after,
 #main-menu .has-dropdown .navbar-link.is-active::after {
-  border-color: $orange;
+  border-color: var(--bulma-orange);
 }
 #main-menu .has-dropdown .navbar-link {
   cursor: default;
 }
 #main-menu .navbar-center a.is-active {
   background: transparent;
-  color: $orange;
+  color: var(--bulma-orange);
   cursor: default;
 }
 .navbar-dropdown {
@@ -153,10 +230,10 @@ body {
   margin-right: 0.5em;
 }
 .button.is-white {
-  outline: 1px solid $grey-light-border;
+  outline: 1px solid var(--bulma-grey-light-border);
 }
 .button.is-orange.is-inverted {
-  outline: 1px solid rgba($orange, 0.4);
+  outline: 1px solid rgba(var(--bulma-orange), 0.4);
 }
 p.button-container .button {
   margin: 5px;
@@ -170,8 +247,8 @@ p.button-container .button {
   border: 1px solid $orange-border;
   font-size: 0.75em;
   font-weight: $weight-medium;
-  color: $orange-dark;
-  background-color: $orange-light;
+  color: var(--bulma-orange-dark);
+  background-color: var(--bulma-orange-light);
 }
 a.rounded:hover {
   background-color: darken($orange-light, 5%);
@@ -203,12 +280,12 @@ h4,
 .features h2 > span,
 .features h2 a > span:not(.icon, .button) {
   font-weight: $weight-semibold;
-  color: $grey-dark;
+  color: var(--bulma-grey-dark);
 }
 .features.grid h2 a:hover span,
 .features.grid h2 a:focus span,
 .features.grid h2 a:active span {
-  color: $orange;
+  color: var(--bulma-orange);
   text-decoration: none;
 }
 .features.grid p {
@@ -282,7 +359,7 @@ img.screenshot.main {
   max-width: 322px;
 }
 .alternative-bg {
-  background-color: $alternative-bg;
+  background-color: var(--bulma-alternative-bg);
 }
 .circle {
   display: inline-block;
@@ -290,8 +367,8 @@ img.screenshot.main {
   height: 34px;
   line-height: 34px;
   border-radius: 100%;
-  color: $orange;
-  background-color: $orange-light;
+  color: var(--bulma-orange);
+  background-color: var(--bulma-orange-light);
   text-align: center;
 }
 .bullet {
@@ -327,10 +404,10 @@ body main {
   }
   .social a {
     margin-right: 0.56em;
-    color: $grey-light;
+    color: var(--bulma-grey-light);
   }
   .social a:hover {
-    color: $orange;
+    color: var(--bulma-orange);
   }
   .social a:last-child {
     margin: 0;
@@ -390,13 +467,13 @@ body main {
 .faq a.is-active,
 .faq a.is-active:hover,
 .faq a.is-active:focus {
-  background: $alternative-bg;
+  background: var(--bulma-alternative-bg);
   font-weight: $weight-semibold;
   border-bottom: 0 none;
 }
 
 .stats span {
-  color: $orange;
+  color: var(--bulma-orange);
   font-size: 1.3em;
   font-weight: $weight-semibold;
 }
@@ -415,7 +492,7 @@ body main {
   a.rounded:hover,
   a.rounded:focus,
   a.rounded:active {
-    color: $orange;
+    color: var(--bulma-orange);
   }
 }
 
@@ -478,7 +555,7 @@ body main {
   margin-bottom: 0.4em;
   font-weight: $weight-medium;
   letter-spacing: -0.3px;
-  color: $orange;
+  color: var(--bulma-orange);
 }
 .points .subtitle {
   margin: 1.2em 0;
@@ -488,7 +565,7 @@ body main {
   display: inline-block;
   padding: 0.25em 1em;
   background: transparent;
-  color: $grey-dark;
+  color: var(--bulma-grey-dark);
   font-weight: 400;
   font-size: 1.4em;
   border-radius: 30px;
@@ -518,7 +595,7 @@ body main {
   .points .column .circle::after {
     content: "";
     display: inline-block;
-    background: $orange;
+    background: var(--bulma-orange);
     width: 10px;
     height: 10px;
     border-radius: 100%;
