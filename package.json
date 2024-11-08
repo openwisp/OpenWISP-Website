@@ -18,8 +18,8 @@
     "build": "npm run build:css && npm run build:js && npm run minify",
     "serve": "http-server -a 0.0.0.0 -p 8080 ./output/",
     "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\"",
-    "prettify": "prettier -w *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/*.html",
-    "prettier:check": "prettier -c *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/*.html"
+    "prettify": "prettier -w *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/**/*.html",
+    "prettier:check": "prettier -c *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/**/*.html"
   },
   "dependencies": {
     "@babel/cli": "^7.24.8",

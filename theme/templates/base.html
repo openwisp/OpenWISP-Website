@@ -14,7 +14,7 @@
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
       />
       {% block extra_meta %}{% endblock %}
-      <link rel="stylesheet" href="{{ SITEURL }}/theme/css/theme.min.css?v=2" />
+      <link rel="stylesheet" href="{{ SITEURL }}/theme/css/theme.css?v=2" />
       <link
         rel="icon"
         type="image/x-icon"
@@ -90,6 +90,18 @@
           title="{{ SITENAME|striptags }} Tags RSS Feed"
         />
       {% endif %}
+      <script>
+        // Apply theme based on stored preference or system setting
+        const storedTheme = localStorage.getItem("theme");
+        if (storedTheme) {
+          document.documentElement.setAttribute("data-theme", storedTheme);
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.classList.add("dark");
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      </script>
       <meta name="generator" content="Pelican" />
     {% endblock head %}
   </head>
@@ -99,6 +111,9 @@
       <nav class="navbar is-transparent container" id="header-nav">
         <div class="navbar-brand">
           {% include "includes/logo.html" %}
+          <div class="toggle-theme-container">
+            {% include "includes/toggle-theme.html" %}
+          </div>
           <div
             class="navbar-burger js-burger"
             role="button"
@@ -149,6 +164,7 @@
             <div class="navbar-item">
               <div class="field is-grouped">
                 <p class="control">
+                  {% include "includes/toggle-theme.html" %}
                   <a
                     class="button is-orange with-text"
                     href="{{ SITEURL }}/demo/"
