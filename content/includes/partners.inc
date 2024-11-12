@@ -19,7 +19,7 @@
               height="55"
             />
             <img
-              src="{static}/images/partners/unidata.webp"
+              src="{static}/images/partners/unidata.png"
               class="unidata"
               alt="Unidata"
               title="Unidata"
@@ -35,7 +35,7 @@
               height="60"
             />
             <img
-              src="{static}/images/partners/insiel.webp"
+              src="{static}/images/partners/insiel.png"
               class="insiel"
               alt="Insiel"
               title="Insiel"
@@ -95,7 +95,7 @@
           {% endif %}
           {% if oss_funding %}
             <img
-              src="{static}/images/partners/gsoc.webp"
+              src="{static}/images/partners/gsoc.png"
               class="gsoc"
               alt="Google Summer of Code"
               title="Google Summer of Code"

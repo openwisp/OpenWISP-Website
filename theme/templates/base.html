@@ -90,18 +90,7 @@
           title="{{ SITENAME|striptags }} Tags RSS Feed"
         />
       {% endif %}
-      <script>
-        // Apply theme based on stored preference or system setting
-        const storedTheme = localStorage.getItem("theme");
-        if (storedTheme) {
-          document.documentElement.setAttribute("data-theme", storedTheme);
-        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          document.documentElement.classList.add("dark");
-          document.documentElement.setAttribute("data-theme", "dark");
-        } else {
-          document.documentElement.setAttribute("data-theme", "light");
-        }
-      </script>
+    <script src="{{ SITEURL }}/theme/js/dark-theme.min.js?v=1"></script>
       <meta name="generator" content="Pelican" />
     {% endblock head %}
   </head>
