@@ -216,6 +216,9 @@ html[data-theme="dark"]:root {
       transform: scale(0) rotate(90deg);
     }
   }
+  .invert-img {
+    filter: invert(1) brightness(200%) grayscale(50%);
+  }
 }
 /*! purgecss end ignore */
 
