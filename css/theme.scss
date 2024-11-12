@@ -301,7 +301,11 @@ body {
   flex-grow: 1;
 }
 .navbar-item.has-dropdown:focus-visible {
-  outline-color: hsl(var(--bulma-focus-h), var(--bulma-focus-s), var(--bulma-focus-l));
+  outline-color: hsl(
+    var(--bulma-focus-h),
+    var(--bulma-focus-s),
+    var(--bulma-focus-l)
+  );
   outline-offset: var(--bulma-focus-offset);
   outline-style: var(--bulma-focus-style);
   outline-width: var(--bulma-focus-width);
@@ -381,7 +385,9 @@ body {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
-.toggle-theme:hover, .toggle-theme:active, .toggle-theme:focus {
+.toggle-theme:hover,
+.toggle-theme:active,
+.toggle-theme:focus {
   background-color: var(--bulma-accent-background);
   color: var(--bulma-accent-foreground);
 }
