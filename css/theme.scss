@@ -266,8 +266,16 @@ html[data-theme="dark"]:root {
     }
   }
   .circle {
-    background-color: var(--bulma-text);
-    color: var(--bulma-scheme-main);
+    background-color: var(--bulma-scheme-main);
+    color: var(--bulma-primary);
+    border: 1px solid var(--bulma-primary);
+    line-height: 33px;
+  }
+  img.screenshot.main {
+    padding: 0;
+  }
+  img.screenshot {
+    border-color: #283e5e;
   }
 }
 /*! purgecss end ignore */
