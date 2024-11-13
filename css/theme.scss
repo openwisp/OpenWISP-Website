@@ -109,6 +109,10 @@ html[data-theme="light"] {
     filter: grayscale(0%);
     opacity: 1;
   }
+  .circle {
+    color: var(--bulma-orange);
+    background-color: var(--bulma-orange-light);
+  }
 }
 
 /*! purgecss start ignore */
@@ -534,8 +538,6 @@ img.screenshot.main {
   height: 34px;
   line-height: 34px;
   border-radius: 100%;
-  color: var(--bulma-orange);
-  background-color: var(--bulma-orange-light);
   text-align: center;
 }
 .bullet {
