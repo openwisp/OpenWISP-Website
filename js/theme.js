@@ -1,4 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Add event listener to toggle theme buttons
+  const toggleTheme = document.querySelectorAll(".toggle-theme");
+  toggleTheme.forEach((el) => {
+    el.addEventListener("click", () => {
+      if (document.documentElement.getAttribute("data-theme") === "light") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", "light");
+      }
+    });
+  });
+
   // Get all "navbar-burger" elements
   const $navbarBurgers = Array.prototype.slice.call(
     document.querySelectorAll(".navbar-burger"),
