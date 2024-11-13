@@ -95,7 +95,7 @@
           {% endif %}
           {% if oss_funding %}
             <img
-              src="{static}/images/partners/gsoc.png"
+              src="{static}/images/partners/gsoc.webp"
               class="gsoc"
               alt="Google Summer of Code"
               title="Google Summer of Code"

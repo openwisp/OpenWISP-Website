@@ -275,11 +275,23 @@ html[data-theme="dark"]:root {
     border: 1px solid var(--bulma-primary);
     line-height: 33px;
   }
+  .history .circle {
+    line-height: 31px;
+  }
   img.screenshot.main {
     padding: 0;
   }
   img.screenshot {
     border-color: #283e5e;
+  }
+  .partners {
+    .a2a:hover,
+    .ura:hover {
+      filter: grayscale(100%) invert(100%) brightness(170%);
+    }
+    .gsoc:hover {
+      filter: grayscale(100%) invert(100%) brightness(200%);
+    }
   }
 }
 /*! purgecss end ignore */
