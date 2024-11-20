@@ -1,5 +1,5 @@
-OpenWISP Shines at GSoc Mentor Summit 2024
-==========================================
+OpenWISP Shines at the GSoC Mentor Summit 2024
+==============================================
 
 :date: 2024-11-19
 :author: Gagan Deep
