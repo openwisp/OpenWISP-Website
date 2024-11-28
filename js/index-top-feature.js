@@ -5,7 +5,7 @@ const features = [
   },
   {
     title: "Automatic Provisioning",
-    href: "https://openwisp.io/docs/dev/openwrt-config-agent/user/automatic-registration.html",
+    href: "https://openwisp.io/docs/stable/openwrt-config-agent/user/automatic-registration.html",
   },
   {
     title: "Automatic VPN Tunnels",
@@ -53,11 +53,11 @@ const features = [
   },
   {
     title: "Modular, Programmable, Extensible",
-    href: "https://openwisp.io/docs/dev/general/values.html#software-reusability-for-long-term-sustainability",
+    href: "https://openwisp.io/docs/stable/general/values.html#software-reusability-for-long-term-sustainability",
   },
   {
     title: "Great Docs",
-    href: "https://openwisp.io/docs/dev/",
+    href: "https://openwisp.io/docs/stable/",
   },
 ];
 

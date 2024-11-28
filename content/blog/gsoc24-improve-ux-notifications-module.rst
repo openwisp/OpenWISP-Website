@@ -34,8 +34,8 @@ informed about critical activities and changes within their managed
 infrastructure.
 
 For a complete overview of its features, refer to the `features
-<https://openwisp.io/docs/dev/notifications/user/intro.html>`_ section of
-the OpenWISP documentation.
+<https://openwisp.io/docs/stable/notifications/user/intro.html>`_ section
+of the OpenWISP documentation.
 
 My Work on Improving the User Experience (UX)
 ---------------------------------------------
