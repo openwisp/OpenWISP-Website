@@ -1,0 +1,28 @@
+New Major Release: v24.11
+=========================
+
+:date: 2024-11-29
+:author: Federico Capoano
+:category: news
+:tags: releases
+:lang: en
+:image_url: https://openwisp.org/images/blog/v24.11.webp
+:image_width: 760
+:image_height: 326
+
+.. image:: {static}/images/blog/v24.11.webp
+    :alt: New OpenWISP Release: v24.11
+
+We are excited to announce that the latest release of OpenWISP is now
+available!
+
+Version 24.11 introduces numerous performance enhancements, improved
+stability, greater resilience, and new features.
+
+For detailed information about the updates, refer to the changelogs of the
+installers:
+
+- `Changelog of ansible-openwisp2
+  <https://github.com/openwisp/ansible-openwisp2/releases/tag/24.11.0>`_.
+- `Changelog of docker-openwisp
+  <https://github.com/openwisp/docker-openwisp/releases/tag/24.11.0>`_.
