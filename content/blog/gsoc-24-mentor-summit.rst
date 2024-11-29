@@ -11,7 +11,7 @@ OpenWISP Shines at the GSoC Mentor Summit 2024
 .. figure:: {static}/images/blog/gsoc-24-mentor-summit/hero.jpg
     :alt: Gagan Deep and Federico Capoano at GSoC Mentor Summit 2024
     :align: center
-    :height: 400px
+    :width: 600px
 
 This year, the Google Summer of Code (GSoC) Mentor Summit was hosted at
 the remarkable Google MP3 Office in Sunnyvale, California, I and `Federico
@@ -44,7 +44,7 @@ being mentored, sparking conversations and inspiring others.
 .. figure:: {static}/images/blog/gsoc-24-mentor-summit/lightning-talk.jpg
     :alt: Gagan Deep giving lightning talk
     :align: center
-    :height: 400px
+    :width: 600px
 
 The biggest highlight of the summit for me was the opportunity to share
 our work on `"Improving UX of the Notifications Module"
@@ -66,7 +66,7 @@ for exchanging innovative ideas and discussing potential collaborations.
 .. figure:: {static}/images/blog/gsoc-24-mentor-summit/group-photo.jpg
     :alt: Group photo of all attendees at GSoC Mentor Summit 2024
     :align: center
-    :height: 400px
+    :width: 600px
 
     © 2024 by Google LLC is licensed under CC BY 4.0
 
