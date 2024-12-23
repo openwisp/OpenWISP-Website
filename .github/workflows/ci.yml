@@ -48,14 +48,14 @@ jobs:
         run: make publish
 
       - name: Setup Google Cloud
-        # if: ${{ github.event_name=='push' }}
+        if: ${{ github.event_name=='push' }}
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: ${{ secrets.GCS_DOWNLOADS_SERVICE_ACCOUNT_JSON }}
           project_id: ${{ secrets.GCS_PROJECT_ID }}
           export_environment_variables: true
 
-      - name: 'Set up Cloud SDK'
+      - name: Set up Cloud SDK
         if: ${{ github.event_name=='push' }}
         uses: 'google-github-actions/setup-gcloud@v2'
 
