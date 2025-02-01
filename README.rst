@@ -19,11 +19,15 @@ Now, run quality assurance checks with:
 
     ./run-qa-checks
 
-Build::
+Build:
+
+::
 
     make html
 
-Serve::
+Serve:
+
+::
 
     make serve
 
