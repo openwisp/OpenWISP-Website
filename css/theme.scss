@@ -398,8 +398,8 @@ body {
   height: 2.3rem;
   width: 2.3rem;
   transition-duration: 0.15s;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   svg {

@@ -276,14 +276,18 @@ function createActivityFeed(options) {
     <div class="media mb-0">
       <div class="media-left">
         <figure class="image is-48x48">
-          <a href="https://github.com/${field.actor.display_login}" target="_blank">
+          <a href="https://github.com/${
+            field.actor.display_login
+          }" target="_blank">
             <img src="${field.actor.avatar_url}" />
           </a>
         </figure>
       </div>
       <div class="media-content">
         <p class="title is-5 is-size-6-mobile mb-1">
-          <a href="https://github.com/${field.actor.display_login}" target="_blank">
+          <a href="https://github.com/${
+            field.actor.display_login
+          }" target="_blank">
             ${field.actor.display_login}
           </a>
         </p>
@@ -302,7 +306,11 @@ function createActivityFeed(options) {
 
         ${link ? "</a>" : ""}
       </h3>
-      ${content ? `<div class="mt-3">${sanitizeAndConvertToHtml(content)}</div>` : ""}
+      ${
+        content
+          ? `<div class="mt-3">${sanitizeAndConvertToHtml(content)}</div>`
+          : ""
+      }
     </div>
   </div>
 </div>
