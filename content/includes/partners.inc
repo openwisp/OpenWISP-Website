@@ -118,6 +118,14 @@
               width="152"
               height="54"
             />
+            <img
+              src="{static}/images/partners/sponsors/d&b-audiotechnik.svg"
+              class="db"
+              alt="d&b audiotechnik"
+              title="D&B Audiotechnik"
+              width="200"
+              height="43"
+            />
           {% endif %}
         </a>
       </p>
