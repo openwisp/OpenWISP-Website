@@ -16,7 +16,7 @@ Improve UX of the Notifications Module: GSoC'24 Project Report
 
 As my Google Summer of Code (GSoC) journey with OpenWISP draws close, I
 want to reflect on my gratifying experience. First and foremost, I would
-like to extend my deepest gratitude to my mentors, `Federico Capaono
+like to extend my deepest gratitude to my mentors, `Federico Capoano
 (nemesifier) <https://github.com/nemesifier>`_ and `Gagan Deep (pandafy)
 <https://github.com/pandafy>`_. Their unwavering support, insightful
 feedback, and expert guidance have been invaluable throughout this summer.
