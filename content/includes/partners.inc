@@ -119,7 +119,7 @@
               height="54"
             />
             <img
-              src="{static}/images/partners/sponsors/d&b-audiotechnik.svg"
+              src="{static}/images/partners/sponsors/db-audiotechnik.svg"
               class="db"
               alt="d&b audiotechnik"
               title="D&B Audiotechnik"
