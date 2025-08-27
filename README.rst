@@ -41,4 +41,4 @@ Need help?
 ----------
 
 Feel free to post any doubt or comment through our `support channels
-<http://openwisp.org/support.html>`_.
+<http://openwisp.org/support/>`_.
