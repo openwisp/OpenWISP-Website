@@ -26,9 +26,17 @@ significantly enhanced both my technical and collaborative skills.
 About the Project
 -----------------
 
-.. image:: https://img.youtube.com/vi/tQTUJ5MKfTk/maxresdefault.jpg
-    :alt: WHOIS Information and IP Geolocation Demonstration Video
-    :target: https://youtu.be/tQTUJ5MKfTk
+.. raw:: html
+
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/CglJpTJrsfQ?si=ASs6NRIeJYXuv8Hk&vq=hd1080&autoplay=1&mute=1"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
 The WHOIS Information and IP Address-Based Geolocation Module enhances
 OpenWISP by enriching device metadata with ownership details and
