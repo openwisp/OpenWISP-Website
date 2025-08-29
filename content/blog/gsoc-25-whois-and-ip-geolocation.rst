@@ -1,5 +1,5 @@
-WHOIS Information and IP Address-Based Geolocation
-==================================================
+GSoC 2025: WHOIS Info and Estimated Geographic Locations
+========================================================
 
 :date: 2025-09-01
 :author: Aman Jagotra
@@ -167,7 +167,7 @@ Current state
 We are maintaining the ``gsoc25-whois`` branch as parent branch for all
 the WHOIS and IP geolocation features. Once all the PRs are merged and
 features are tested and validated, we can proceed with releasing these
-along with the next release of OpenWISP (Release 1.3).
+along with OpenWISP 26.
 
 All the WHOIS feature related PRs are merged to the ``gsoc25-whois``
 branch except `Updating stale WHOIS records #1116
@@ -196,7 +196,7 @@ optimization, caching strategies, and integration testing, which deepened
 my understanding of building scalable applications.
 
 Beyond coding, I experienced the true essence of open-source
-collaboration—engaging with the community, understanding real-world use
+collaboration, engaging with the community, understanding real-world use
 cases, and working in an environment where continuous feedback leads to
 better solutions. This journey strengthened my ability to adapt,
 troubleshoot, and deliver high-quality contributions.
