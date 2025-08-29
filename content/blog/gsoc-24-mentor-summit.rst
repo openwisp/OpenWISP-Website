@@ -6,9 +6,9 @@ OpenWISP Shines at the GSoC Mentor Summit 2024
 :tags: gsoc
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc-24-mentor-summit/hero.jpg
+:image_url: https://openwisp.org/images/blog/gsoc24/mentor-summit/hero.jpg
 
-.. figure:: {static}/images/blog/gsoc-24-mentor-summit/hero.jpg
+.. figure:: {static}/images/blog/gsoc24/mentor-summit/hero.jpg
     :alt: Gagan Deep and Federico Capoano at GSoC Mentor Summit 2024
     :align: center
     :width: 600px
@@ -41,7 +41,7 @@ fast-paced, requiring speakers to focus on the most impactful aspects of
 their work. These brief talks offer a snapshot of the diverse projects
 being mentored, sparking conversations and inspiring others.
 
-.. figure:: {static}/images/blog/gsoc-24-mentor-summit/lightning-talk.jpg
+.. figure:: {static}/images/blog/gsoc24/mentor-summit/lightning-talk.jpg
     :alt: Gagan Deep giving lightning talk
     :align: center
     :width: 600px
@@ -63,7 +63,7 @@ opportunity to network with some of the brightest minds in the open-source
 community. The wealth of experience in the room created a fertile ground
 for exchanging innovative ideas and discussing potential collaborations.
 
-.. figure:: {static}/images/blog/gsoc-24-mentor-summit/group-photo.jpg
+.. figure:: {static}/images/blog/gsoc24/mentor-summit/group-photo.jpg
     :alt: Group photo of all attendees at GSoC Mentor Summit 2024
     :align: center
     :width: 600px

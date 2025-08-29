@@ -6,11 +6,11 @@ Improve UX of the Notifications Module: GSoC'24 Project Report
 :tags: gsoc, notifications, new-features
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc-improve-ux-notifications-module/gsoc-openwisp-notifications-ux.png
+:image_url: https://openwisp.org/images/blog/gsoc24/gsoc-openwisp-notifications-ux.png
 :image_width: 713
 :image_height: 297
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/gsoc-openwisp-notifications-ux.png
+.. image:: {static}/images/blog/gsoc24/gsoc-openwisp-notifications-ux.png
     :alt: Google Summer of Code, OpenWISP UX Improvements to the Notifications Module
     :align: center
 
@@ -56,7 +56,7 @@ Features Implemented
 Batch Email Notifications to Prevent Email Flooding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/batch-email.png
+.. image:: {static}/images/blog/gsoc24/batch-email.png
     :alt: Batch Email Summary
     :align: center
 
@@ -78,7 +78,7 @@ Key aspects of the batch email notification feature include:
 Notification Preferences Page
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/notification-preference-page.png
+.. image:: {static}/images/blog/gsoc24/notification-preference-page.png
     :alt: Notification Preferences Page
     :align: center
 
@@ -105,7 +105,7 @@ Key aspects of the notification preference feature include:
 Add Unsubscribe Link to Email Notifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc-improve-ux-notifications-module/unsubscribe-page.png
+.. image:: {static}/images/blog/gsoc24/unsubscribe-page.png
     :alt: Unsubscribe Page
     :align: center
 

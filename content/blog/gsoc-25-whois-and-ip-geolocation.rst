@@ -6,11 +6,11 @@ GSoC 2025: WHOIS Info and Estimated Geographic Locations
 :tags: gsoc, controller, whois, ip, new-features
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc25-whois-and-ip-geolocation/gsoc25-whois-and-ip-geolocation.png
+:image_url: https://openwisp.org/images/blog/gsoc25/whois-and-ip-geolocation/gsoc25-whois-and-ip-geolocation.png
 :image_width: 713
 :image_height: 297
 
-.. image:: {static}/images/blog/gsoc25-whois-and-ip-geolocation/gsoc25-whois-and-ip-geolocation.png
+.. image:: {static}/images/blog/gsoc25/whois-and-ip-geolocation/gsoc25-whois-and-ip-geolocation.png
     :alt: Google Summer of Code, OpenWISP WHOIS Information and IP Geolocation
     :align: center
 
@@ -86,7 +86,7 @@ Features Implemented
 WHOIS Lookup
 ~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25-whois-and-ip-geolocation/whois-details.webp
+.. image:: {static}/images/blog/gsoc25/whois-and-ip-geolocation/whois-details.webp
     :alt: WHOIS Details in OpenWISP
 
 WHOIS is a widely used protocol that provides publicly available
@@ -129,7 +129,7 @@ Functional Highlights:
 Estimated Location
 ~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25-whois-and-ip-geolocation/estimated-location.webp
+.. image:: {static}/images/blog/gsoc25/whois-and-ip-geolocation/estimated-location.webp
     :alt: Estimated Location Feature in OpenWISP
 
 IP-based geolocation estimates the physical location of a device using its
