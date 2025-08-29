@@ -38,12 +38,14 @@ identify anomalies, and streamline troubleshooting by providing context
 about IP addresses directly within the OpenWISP platform.
 
 For further details on these features and their functionality within
-OpenWISP, see the documentation pages listed here:
+OpenWISP, see the documentation pages listed here (**the links below
+temporarily reference GitHub RST files and will be updated to the official
+documentation once merged in master**):
 
 - `WHOIS Lookup
-  <https://openwisp.io/docs/stable/controller/user/whois.html>`_
+  <https://github.com/openwisp/openwisp-controller/blob/issues/1034-fuzzy-location-creation/docs/user/whois.rst>`_
 - `Estimated Location
-  <https://openwisp.io/docs/stable/controller/user/estimated-location.html>`_
+  <https://github.com/openwisp/openwisp-controller/blob/issues/1034-fuzzy-location-creation/docs/user/estimated-location.rst>`_
 
 Building WHOIS and IP Geolocation Functionality
 -----------------------------------------------
