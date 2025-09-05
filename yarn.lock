@@ -11,11 +11,11 @@
     "@jridgewell/trace-mapping" "^0.3.24"
 
 "@babel/cli@^7.24.8":
-  version "7.24.8"
-  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.24.8.tgz#79eaa55a69c77cafbea3e87537fd1df5a5a2edf8"
-  integrity sha512-isdp+G6DpRyKc+3Gqxy2rjzgF7Zj9K0mzLNnxz+E/fgeag8qT3vVulX4gY9dGO1q0y+0lUv6V3a+uhUzMzrwXg==
+  version "7.28.3"
+  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.28.3.tgz#f33693753bc103ab0084a5776ccf8ab8a140038b"
+  integrity sha512-n1RU5vuCX0CsaqaXm9I0KUCNKNQMy5epmzl/xdSSm70bSqhg9GWhgeosypyQLc0bK24+Xpk1WGzZlI9pJtkZdg==
   dependencies:
-    "@jridgewell/trace-mapping" "^0.3.25"
+    "@jridgewell/trace-mapping" "^0.3.28"
     commander "^6.2.0"
     convert-source-map "^2.0.0"
     fs-readdir-recursive "^1.1.0"
@@ -24,7 +24,7 @@
     slash "^2.0.0"
   optionalDependencies:
     "@nicolo-ribaudo/chokidar-2" "2.1.8-no-fsevents.3"
-    chokidar "^3.4.0"
+    chokidar "^3.6.0"
 
 "@babel/code-frame@^7.24.7":
   version "7.24.7"
@@ -1052,10 +1052,10 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.0.tgz#3188bcb273a414b0d215fd22a58540b989b9409a"
   integrity sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==
 
-"@jridgewell/trace-mapping@^0.3.24", "@jridgewell/trace-mapping@^0.3.25":
-  version "0.3.25"
-  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.25.tgz#15f190e98895f3fc23276ee14bc76b675c2e50f0"
-  integrity sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==
+"@jridgewell/trace-mapping@^0.3.24", "@jridgewell/trace-mapping@^0.3.25", "@jridgewell/trace-mapping@^0.3.28":
+  version "0.3.30"
+  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.30.tgz#4a76c4daeee5df09f5d3940e087442fb36ce2b99"
+  integrity sha512-GQ7Nw5G2lTu/BtHTKfXhKHok2WGetd4XYcVKGx00SjAk8GMwgJM3zr6zORiPGuOE+/vkc90KtTosSSvaCjKb2Q==
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
@@ -1298,7 +1298,7 @@ chalk@^4.1.2:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-"chokidar@>=3.0.0 <4.0.0", chokidar@^3.3.0, chokidar@^3.4.0:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.3.0, chokidar@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.6.0.tgz#197c6cc669ef2a8dc5e7b4d97ee4e092c3eb0d5b"
   integrity sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==
