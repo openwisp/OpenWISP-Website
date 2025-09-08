@@ -14,7 +14,7 @@
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
       />
       {% block extra_meta %}{% endblock %}
-      <link rel="stylesheet" href="{{ SITEURL }}/theme/css/theme.css?v=2" />
+      <link rel="stylesheet" href="{{ SITEURL }}/theme/css/theme.min.css?v=1" />
       <link
         rel="icon"
         type="image/x-icon"
@@ -90,7 +90,6 @@
           title="{{ SITENAME|striptags }} Tags RSS Feed"
         />
       {% endif %}
-      <script src="{{ SITEURL }}/theme/js/dark-theme.min.js?v=1"></script>
       <meta name="generator" content="Pelican" />
     {% endblock head %}
   </head>
@@ -230,7 +229,7 @@
         </div>
       </div>
     </footer>
-    <script src="{{ SITEURL }}/theme/js/theme.min.js?v=1" defer></script>
+    <script src="{{ SITEURL }}/theme/js/theme.min.js?v=2" defer></script>
     {% block scripts %}{% endblock %}
     {% if MATOMO_SITE_ID %}
       <!-- Matomo -->
