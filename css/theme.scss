@@ -75,12 +75,19 @@ $weight-semibold: 600;
   $media-spacing-large: 1.1rem
 );
 
-$fa-font-path: "../webfonts";
-@import "@fortawesome/fontawesome-free/scss/fontawesome";
-@import "@fortawesome/fontawesome-free/scss/solid";
-@import "@fortawesome/fontawesome-free/scss/brands";
-@import "@fortawesome/fontawesome-free/scss/regular";
-@import url("../webfonts/Inter.css");
+@use "@fortawesome/fontawesome-free/scss/variables" with (
+  $font-path: "../webfonts",
+  $font-display: swap
+);
+// load Font Awesome core
+@use "@fortawesome/fontawesome-free/scss/fontawesome";
+// helpers (mixins, functions, variables)
+@use "@fortawesome/fontawesome-free/scss/fa" as fa;
+// individual styles
+@use "@fortawesome/fontawesome-free/scss/solid" as fa-solid;
+@use "@fortawesome/fontawesome-free/scss/brands" as fa-brands;
+@use "@fortawesome/fontawesome-free/scss/regular" as fa-regular;
+
 
 html[data-theme="light"] {
   --bulma-hover-l-delta: 20%;
