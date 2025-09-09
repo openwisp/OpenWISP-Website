@@ -26,7 +26,7 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@fortawesome/fontawesome-free": "^7.0.1",
-    "@fullhuman/postcss-purgecss": "^6.0.0",
+    "@fullhuman/postcss-purgecss": "^7.0.2",
     "babel-plugin-remove-template-literals-whitespace": "^1.0.4",
     "bulma": "^1.0.2",
     "concat-cli": "^4.0.0",
