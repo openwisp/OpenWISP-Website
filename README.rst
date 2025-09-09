@@ -37,6 +37,13 @@ To open a html file in the browser:
 
     google-chrome index.html
 
+Credits
+-------
+
+- `Ura Design <https://ura.design>`_ (Conceptual Design)
+- `Bulma CSS <https://bulma.io>`_ (Great CSS Framework)
+- `Font Awesome <https://fontawesome.com>`_ (Great Icons)
+
 Need help?
 ----------
 
