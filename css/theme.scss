@@ -749,7 +749,7 @@ body main {
   .navbar-center {
     display: block;
   }
-  .navbar-center a {
+  .navbar-center a, .navbar-center span.navbar-link {
     padding-left: 1.5em;
     padding-right: 1.5em;
   }
