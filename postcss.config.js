@@ -1,10 +1,10 @@
-const purgecss = require("@fullhuman/postcss-purgecss");
-const cssnano = require("cssnano");
-const pruneVar = require("postcss-prune-var");
-const varCompress = require("postcss-variable-compress");
-const postcssUrl = require("postcss-url");
+import postcssUrl from "postcss-url";
+import { purgeCSSPlugin } from "@fullhuman/postcss-purgecss";
+import pruneVar from "postcss-prune-var";
+import varCompress from "postcss-variable-compress";
+import cssnano from "cssnano";
 
-module.exports = {
+export default {
   plugins: [
     postcssUrl({
       url: "inline",
@@ -12,7 +12,7 @@ module.exports = {
       maxSize: Infinity,
     }),
     // remove unused CSS
-    purgecss({
+    purgeCSSPlugin({
       content: ["**/*.html", "js/activity/feed.js"],
       safelist: ["is-active"],
     }),
