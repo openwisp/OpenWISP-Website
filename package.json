@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.25.3",
     "@fortawesome/fontawesome-free": "^7.0.1",
     "babel-plugin-remove-template-literals-whitespace": "^1.0.4",
-    "bulma": "^1.0.2",
+    "bulma": "^1.0.4",
     "concat-cli": "^4.0.0",
     "concurrently": "^8.2.2",
     "cssnano": "^7.0.2",
