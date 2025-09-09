@@ -92,8 +92,7 @@ $weight-semibold: 600;
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-display: "swap";
-  src: url(../webfonts/Inter/Inter-normal-400);
+  font-display: swap;
   src:
     local("Inter"),
     url(../webfonts/Inter/Inter-normal-400.ttf) format("truetype"),
@@ -106,7 +105,7 @@ $weight-semibold: 600;
   font-family: "Inter";
   font-style: normal;
   font-weight: 500;
-  font-display: "swap";
+  font-display: swap;
   src:
     url(../webfonts/Inter/Inter-normal-500.ttf) format("truetype"),
     url(../webfonts/Inter/Inter-normal-500.woff2) format("woff2"),
@@ -116,7 +115,7 @@ $weight-semibold: 600;
   font-family: "Inter";
   font-style: normal;
   font-weight: 600;
-  font-display: "swap";
+  font-display: swap;
   src:
     url(../webfonts/Inter/Inter-normal-600.ttf) format("truetype"),
     url(../webfonts/Inter/Inter-normal-600.woff2) format("woff2"),
