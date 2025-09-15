@@ -44,6 +44,13 @@ understanding of mapping libraries like `Leaflet.js
 opportunities to collaborate with the open-source community and contribute
 to a project with global impact.
 
+Additionally, I contributed a fix for `Django Channels
+<https://github.com/django/channels>`_ ChannelsLiveServerTestCase class,
+which had become incompatible with Django 5.2. I also added a sample
+project with Selenium tests to ensure future compatibility, so that any
+changes to Django internals that might break the test setup can be caught
+early.
+
 Building the General Map Enhancements
 -------------------------------------
 
@@ -131,6 +138,8 @@ and validated, we can proceed with releasing these along with OpenWISP 26.
 You can follow the development process and explore the implementation
 details in the following pull requests:
 
+- `ChannelsLiveServerTestCase fix for Django channels
+  <https://github.com/django/channels/pull/2172>`_
 - `Indoor Coordinates Endpoint
   <https://github.com/openwisp/openwisp-controller/pull/976>`_
 - `Indoor Floor Plan Integration
