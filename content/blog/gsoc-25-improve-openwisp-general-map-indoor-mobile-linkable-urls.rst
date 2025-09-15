@@ -30,67 +30,88 @@ open-source projects.
 About the Project
 -----------------
 
-The project focused on improving the OpenWISP general map by adding new
-features such as indoor floor plan integration, and linkable map URLs and
-real-time mobile device tracking. These enhancements are aimed at making
-the platform more accessible and useful for network administrators,
-helping them navigate complex networks, monitor devices, and troubleshoot
-issues more efficiently.
+The project aimed to enhance the OpenWISP general map with features that
+improve accessibility, navigation, and monitoring for network
+administrators. Key additions include indoor floor plan integration,
+linkable map URLs, and real-time mobile device tracking. These
+improvements help users manage complex networks more effectively and
+troubleshoot issues with ease.
 
-While the journey presented deep technical challenges and learning
-opportunities, it also allowed me to collaborate with a vibrant community
-and contribute to an open-source project that impacts users globally.
+The experience presented significant technical challenges that deepened my
+understanding of mapping libraries like `Leaflet.js
+<https://github.com/Leaflet/Leaflet>`_ and `netjsongraph.js
+<https://github.com/openwisp/netjsongraph.js>`_, while also offering
+opportunities to collaborate with the open-source community and contribute
+to a project with global impact.
 
 Building the General Map Enhancements
 -------------------------------------
 
-My work revolved around improving the map UI to make it more usable by
-enabling features such as searching for devices, adding filters based on
-device status, opening indoor maps directly from the general map view, and
-viewing a device’s location within an indoor map. Additionally, the
-improvements support sharing URLs for specific views and implementing
-real-time location updates for mobile devices to enhance monitoring and
-navigation.
+My contributions focused on making the map interface more intuitive and
+interactive. I added features like device search, status-based filtering,
+and seamless access to indoor maps from the general map view. Users can
+now view specific devices within floor plans, switch between floors, and
+open maps in fullscreen mode for better visualization. Additionally, users
+can share URLs that link directly to specific nodes, graph states, or zoom
+levels, making navigation and collaboration much easier.
 
 .. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/before-after-ui-view.png
-    :alt: Improve DashBoard Map UI in OpenWISP
+    :alt: Improved Dashboard Map UI before and after in OpenWISP
 
 Features Implemented
 --------------------
 
+UI improvements on Location Pop-up
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/improved-popup-ui-feature.gif
+    :alt: Improved Dashboard Map UI Location Pop-up in OpenWISP
+
+The location pop-up in the dashboard map has been enhanced to improve
+usability and navigation. Users can now search for devices by name and
+filter them by labels directly within the map interface through a popup
+above the map. After filtering, users can quickly navigate to the detailed
+page of the selected device. Additionally, devices associated with floor
+plans include a button that opens the corresponding floor layout overlay
+for better visualization.
+
+To optimize performance, infinite scroll has been implemented in the
+device list table to load data efficiently as users scroll. A debounce
+mechanism is also applied to the search input, ensuring that unnecessary
+queries are minimized and the interface remains responsive.
+
 Indoor Map View
 ~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/improved-general-map-view.gif
+.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/indoor-map-view.gif
     :alt: Indoor Map view in OpenWISP
 
-For the Indoor map view, I improved the UI of the dashboard map to make it
-more user-friendly and efficient. The updated interface allows users to
-search for devices by name and filter devices by their labels. If a device
-has an associated floor plan, a button is displayed that opens the floor
-plan overlay, allowing users to switch between floors and toggle
-fullscreen mode for a better visualization experience. The data for the
-indoor map is provided through a newly created API endpoint, which loads
-the least positive floor by default and supports filtering based on the
-selected floor. To optimize performance, I implemented separate instances
-of netjsongraph in dedicated div elements, allowing the map to be shown or
-hidden efficiently without unnecessary reloads.
+If a device has an associated floor plan, a button is displayed that opens
+the floor plan overlay, allowing users to switch between floors and toggle
+fullscreen mode for a better visualization experience. Additionally, users
+can click on a node in the indoor map to open a popup from which they can
+navigate directly to the device’s detail page, making it easier to access
+relevant information from within the map.
+
+To optimize performance, separate instances of `netjsongraph.js
+<https://github.com/openwisp/netjsongraph.js>`_ are used in dedicated
+elements, enabling the map to be shown or hidden efficiently without
+unnecessary reloads.
 
 Shareable URLs
 ~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/share-url.gif
+.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/shareable-urls.gif
     :alt: Shareable URLs Feature in OpenWISP
 
-I added a new feature in netjsongraph.js called urlFragments, which is
-disabled by default and can be enabled when needed. With this feature,
-every time a user clicks on a node or link in the map, the URL is updated
-with parameters like graph ID, node ID, and zoom level. This makes it easy
-to create shareable URLs that anyone can use to open the map directly to
-the selected node or view. The logic is designed to be standardized and
-extendable, so it can be applied across multiple maps, such as the
-geographic and indoor maps. In the future, this could become a default
-option, but for now, it’s available as an opt-in feature.
+Support for shareable URLs has been added to the map interface. Whenever
+users click on a node or link, the URL is dynamically updated with
+parameters such as the graph ID, node ID, and zoom level to reflect the
+current view. This allows users to bookmark or share direct links to
+specific views within both geographic and indoor maps, simplifying
+navigation and collaboration. The implementation is designed to be
+standardized and extendable, enabling it to support multiple maps on a
+single page when needed.
 
 Real Time Device Location
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,57 +131,52 @@ and validated, we can proceed with releasing these along with OpenWISP 26.
 You can follow the development process and explore the implementation
 details in the following pull requests:
 
+- `Indoor Coordinates Endpoint
+  <https://github.com/openwisp/openwisp-controller/pull/976>`_
 - `Indoor Floor Plan Integration
   <https://github.com/openwisp/openwisp-monitoring/pull/688>`_
-- `Linkable Map URLs
+- `Linkable Map URLs in Monitoring
   <https://github.com/openwisp/openwisp-monitoring/pull/703>`_
+- `Linkable Map URLs in Netjsongraph.js
+  <https://github.com/openwisp/netjsongraph.js/pull/417>`_
 - `Real-Time Mobile Device Tracking
   <https://github.com/openwisp/openwisp-monitoring/issues/563>`_
 
 My Experience
 -------------
 
-My GSoC journey with OpenWISP has been an incredibly rewarding experience.
-Working under the mentorship of Federico Capoano and Gagan Deep, I had the
-chance to grow both technically and personally. Their guidance, patience,
-and insightful feedback helped me navigate the challenges of developing
-complex features while staying aligned with OpenWISP’s architecture and
-community standards.
+My GSoC journey with OpenWISP has been a highly rewarding experience. With
+the mentorship of `Federico Capoano (nemesifier)
+<https://github.com/nemesifier>`_ and `Gagan Deep (pandafy)
+<https://github.com/pandafy>`_, I was able to grow both technically and
+personally. Their guidance, patience, and feedback helped me navigate
+challenges while ensuring my contributions aligned with OpenWISP’s
+architecture and community standards.
 
-Throughout the summer, I focused on improving the map UI by adding new
-functionalities that enhance usability, navigation, and accessibility.
-Implementing the indoor map view in particular allowed me to dive deep
-into front-end optimization, API design, and user experience improvements.
-I learned how to efficiently manage data flow, create scalable components,
-and handle dynamic visualization using netjsongraph. The process of
-creating API endpoints, refining interactions, and integrating feedback
-helped me better understand best practices in software development.
+During the program, I focused on enhancing the map UI by implementing
+features such as indoor map views, device search, and improved navigation.
+This gave me the opportunity to deepen my understanding of front-end
+optimization, API design, scalable components, and efficient data flow
+management using tools like `netjsongraph.js
+<https://github.com/openwisp/netjsongraph.js>`_.
 
-Some of the toughest challenges I faced were managing conflicts between
-overlapping Coordinate Reference Systems (CRS) and designing the
-bookmarkable URL feature. These problems pushed me to explore and
-understand the inner workings of libraries like Leaflet.js and
-netjsongraph.js more deeply, expanding my knowledge of mapping tools and
-data handling.
+Some of the toughest challenges I encountered included handling conflicts
+between overlapping Coordinate Reference Systems (CRS) and designing the
+bookmarkable URL feature. These challenges pushed me to explore libraries
+like `Leaflet.js <https://github.com/Leaflet/Leaflet>`_ and
+`netjsongraph.js <https://github.com/openwisp/netjsongraph.js>`_ more
+thoroughly, broadening my knowledge of mapping tools and data handling
+techniques.
 
-Although the shareable URLs feature has been implemented and works well,
-refining its performance and ensuring smooth integration across multiple
-views presented new learning opportunities. The real-time mobile device
-tracking feature, while still under development, has further motivated me
-to explore advanced data synchronization and event-driven architectures.
-
-Beyond coding, I had the opportunity to engage with the OpenWISP
-community, review code, collaborate on discussions, and contribute to
-improving documentation and testing workflows. This experience has
-strengthened my problem-solving skills, communication, and confidence in
-contributing to open-source projects. I am grateful for the support I
-received and the chance to grow as a developer.
-
-The push we needed towards the end of the program to complete the project
-was especially helpful. It gave me the motivation and structure to focus
-my efforts, prioritize tasks, and deliver as much as possible within the
-timeline. The final weeks taught me the importance of discipline, time
-management, and perseverance when working on open-source projects.
+Beyond coding, engaging with the OpenWISP community through discussions
+and reviews was a valuable learning experience. The push we needed toward
+the end of the program was especially helpful—it provided the motivation
+and structure to stay focused, prioritize tasks, and deliver as much as
+possible within the timeline. These final weeks taught me the importance
+of discipline, time management, and perseverance when contributing to
+open-source projects. I’m grateful for the support I received, which
+strengthened my skills, confidence, and commitment to open-source
+development.
 
 What's Next?
 ------------
