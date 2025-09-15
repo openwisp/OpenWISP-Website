@@ -6,11 +6,11 @@ GSoC 2025: Improve OpenWISP General Map: Indoor, Mobile, Linkable URLs
 :tags: gsoc, netjsongraph.js, monitoring, new-feature
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/gsoc-25-improve-openwisp-general-map-indoor-mobile-linkable-urls.png
-:image_width: 713
-:image_height: 297
+:image_url: https://openwisp.org/images/blog/gsoc25/map-improvements-indoor-mobile/gsoc-25-indoor-maps.png
+:image_width: 782
+:image_height: 765
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/gsoc-25-improve-openwisp-general-map-indoor-mobile-linkable-urls.png
+.. image:: {static}/images/blog/gsoc25/map-improvements-indoor-mobile/gsoc-25-indoor-maps.png
     :alt: Google Summer of Code, Improve OpenWISP General Map: Indoor, Mobile, Linkable URLs
     :align: center
 
@@ -55,7 +55,7 @@ open maps in fullscreen mode for better visualization. Additionally, users
 can share URLs that link directly to specific nodes, graph states, or zoom
 levels, making navigation and collaboration much easier.
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/before-after-ui-view.png
+.. image:: {static}/images/blog/gsoc25/map-improvements-indoor-mobile/before-after-ui-view.png
     :alt: Improved Dashboard Map UI before and after in OpenWISP
 
 Features Implemented
@@ -64,7 +64,7 @@ Features Implemented
 UI improvements on Location Pop-up
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/improved-popup-ui-feature.gif
+.. image:: {static}/images/blog/gsoc25/map-improvements-indoor-mobile/improved-popup-ui-feature.gif
     :alt: Improved Dashboard Map UI Location Pop-up in OpenWISP
 
 The location pop-up in the dashboard map has been enhanced to improve
@@ -83,7 +83,7 @@ queries are minimized and the interface remains responsive.
 Indoor Map View
 ~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/indoor-map-view.gif
+.. image:: {static}/images/blog/gsoc25/map-improvements-indoor-mobile/indoor-map-view.gif
     :alt: Indoor Map view in OpenWISP
 
 If a device has an associated floor plan, a button is displayed that opens
@@ -101,7 +101,7 @@ unnecessary reloads.
 Shareable URLs
 ~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/shareable-urls.gif
+.. image:: {static}/images/blog/gsoc25/map-improvements-indoor-mobile/shareable-urls.gif
     :alt: Shareable URLs Feature in OpenWISP
 
 Support for shareable URLs has been added to the map interface. Whenever
