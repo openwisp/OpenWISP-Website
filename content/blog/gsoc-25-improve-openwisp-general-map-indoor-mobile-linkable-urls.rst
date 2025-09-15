@@ -3,8 +3,7 @@ GSoC 2025: Improve OpenWISP General Map: Indoor, Mobile, Linkable URLs
 
 :date: 2025-09-14
 :author: Deepanshu Sahu
-:tags: gsoc, openwisp, python, django, javascript, netjsongraph.js,
-    leaflet, echarts, maps, new-features
+:tags: gsoc, netjsongraph.js, monitoring, new-feature
 :category: gsoc
 :lang: en
 :image_url: https://openwisp.org/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/gsoc-25-improve-openwisp-general-map-indoor-mobile-linkable-urls.png
@@ -34,23 +33,13 @@ About the Project
 The project focused on improving the OpenWISP general map by adding new
 features such as indoor floor plan integration, and linkable map URLs and
 real-time mobile device tracking. These enhancements are aimed at making
-the platform more accessible and useful for network administrators and
-users alike, helping them navigate complex networks, monitor devices, and
-troubleshoot issues more efficiently.
+the platform more accessible and useful for network administrators,
+helping them navigate complex networks, monitor devices, and troubleshoot
+issues more efficiently.
 
 While the journey presented deep technical challenges and learning
 opportunities, it also allowed me to collaborate with a vibrant community
 and contribute to an open-source project that impacts users globally.
-
-For more details, you can visit the documentation pages below (links will
-be updated once the project is completed):
-
-- `Indoor Floor Plan Integration
-  <https://github.com/openwisp/openwisp-monitoring/issues/564>`_
-- `Linkable Map URLs
-  <https://github.com/openwisp/netjsongraph.js/issues/238>`_
-- `Real-Time Mobile Device Tracking
-  <https://github.com/openwisp/openwisp-monitoring/issues/563>`_
 
 Building the General Map Enhancements
 -------------------------------------
@@ -62,6 +51,9 @@ viewing a device’s location within an indoor map. Additionally, the
 improvements support sharing URLs for specific views and implementing
 real-time location updates for mobile devices to enhance monitoring and
 navigation.
+
+.. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/before-after-ui-view.png
+    :alt: Improve DashBoard Map UI in OpenWISP
 
 Features Implemented
 --------------------
@@ -90,15 +82,15 @@ Shareable URLs
 .. image:: {static}/images/blog/gsoc25/improve-openwisp-general-map-indoor-mobile-linkable-urls/share-url.gif
     :alt: Shareable URLs Feature in OpenWISP
 
-For the shareable URLs, I introduced a new configuration option called
-urlFragments in netjsongraph.js, which is disabled by default but can be
-enabled when required. Once enabled, clicking on a node updates the URL
-with relevant parameters such as node ID, graph ID, and zoom level if
-applicable. The logic is designed to be standardized and extendable,
-making it possible to apply this functionality across multiple
-maps—specifically, both the geographic map and the indoor map. This allows
-users to share or bookmark specific views, with the map loading the state
-from the URL fragments.
+I added a new feature in netjsongraph.js called urlFragments, which is
+disabled by default and can be enabled when needed. With this feature,
+every time a user clicks on a node or link in the map, the URL is updated
+with parameters like graph ID, node ID, and zoom level. This makes it easy
+to create shareable URLs that anyone can use to open the map directly to
+the selected node or view. The logic is designed to be standardized and
+extendable, so it can be applied across multiple maps, such as the
+geographic and indoor maps. In the future, this could become a default
+option, but for now, it’s available as an opt-in feature.
 
 Real Time Device Location
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -114,6 +106,16 @@ Current state
 We are maintaining the ``gsoc25-map`` branch as parent branch for all the
 General map features. Once all the PRs are merged and features are tested
 and validated, we can proceed with releasing these along with OpenWISP 26.
+
+You can follow the development process and explore the implementation
+details in the following pull requests:
+
+- `Indoor Floor Plan Integration
+  <https://github.com/openwisp/openwisp-monitoring/pull/688>`_
+- `Linkable Map URLs
+  <https://github.com/openwisp/openwisp-monitoring/pull/703>`_
+- `Real-Time Mobile Device Tracking
+  <https://github.com/openwisp/openwisp-monitoring/issues/563>`_
 
 My Experience
 -------------
@@ -133,6 +135,13 @@ I learned how to efficiently manage data flow, create scalable components,
 and handle dynamic visualization using netjsongraph. The process of
 creating API endpoints, refining interactions, and integrating feedback
 helped me better understand best practices in software development.
+
+Some of the toughest challenges I faced were managing conflicts between
+overlapping Coordinate Reference Systems (CRS) and designing the
+bookmarkable URL feature. These problems pushed me to explore and
+understand the inner workings of libraries like Leaflet.js and
+netjsongraph.js more deeply, expanding my knowledge of mapping tools and
+data handling.
 
 Although the shareable URLs feature has been implemented and works well,
 refining its performance and ensuring smooth integration across multiple
