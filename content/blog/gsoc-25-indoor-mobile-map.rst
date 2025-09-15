@@ -1,5 +1,5 @@
-GSoC 2025: Improve OpenWISP General Map: Indoor, Mobile, Linkable URLs
-======================================================================
+GSoC 2025: Better Map UX: Indoor, Mobile, Linkable URLs
+=======================================================
 
 :date: 2025-09-14
 :author: Deepanshu Sahu
@@ -11,7 +11,7 @@ GSoC 2025: Improve OpenWISP General Map: Indoor, Mobile, Linkable URLs
 :image_height: 765
 
 .. image:: {static}/images/blog/gsoc25/map-improvements-indoor-mobile/gsoc-25-indoor-maps.png
-    :alt: Google Summer of Code, Improve OpenWISP General Map: Indoor, Mobile, Linkable URLs
+    :alt: Google Summer of Code, Better Map UX: Indoor, Mobile, Linkable URLs
     :align: center
 
 Participating in Google Summer of Code has been a transformative
