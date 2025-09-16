@@ -45,7 +45,7 @@ opportunities to collaborate with the open-source community and contribute
 to a project with global impact.
 
 Additionally, I contributed a fix for `Django Channels
-<https://github.com/django/channels>`_ ChannelsLiveServerTestCase class,
+<https://github.com/django/channels>`_ ``ChannelsLiveServerTestCase`` class,
 which had become incompatible with Django 5.2. I also added a sample
 project with Selenium tests to ensure future compatibility, so that any
 changes to Django internals that might break the test setup can be caught
