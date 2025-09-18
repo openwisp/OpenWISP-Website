@@ -30,6 +30,18 @@ open-source projects.
 About the Project
 -----------------
 
+.. raw:: html
+
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/jFlQg64aZAk?si=DL1Ku7l5kfq4lact&vq=hd1080&autoplay=1"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
+
 The project aimed to enhance the OpenWISP general map with features that
 improve accessibility, navigation, and monitoring for network
 administrators. Key additions include indoor floor plan integration,
