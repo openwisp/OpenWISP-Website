@@ -160,8 +160,10 @@ details in the following pull requests:
   <https://github.com/openwisp/openwisp-monitoring/pull/703>`_
 - `Linkable Map URLs in Netjsongraph.js
   <https://github.com/openwisp/netjsongraph.js/pull/417>`_
-- `Real-Time Mobile Device Tracking
-  <https://github.com/openwisp/openwisp-monitoring/issues/563>`_
+- `Real-Time Mobile Device Tracking in monitoring
+  <https://github.com/openwisp/openwisp-monitoring/pull/706>`_
+- `Real-Time Mobile Device Tracking in netjsongraph.js
+  <https://github.com/openwisp/netjsongraph.js/pull/444>`_
 
 My Experience
 -------------
