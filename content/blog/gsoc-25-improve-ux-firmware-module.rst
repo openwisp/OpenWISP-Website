@@ -108,12 +108,14 @@ Group and location filters can be used together to achieve very precise
 targeting, such as "Access Points in Building A" or "Edge devices in the
 European region".
 
-**Use Cases**: - **Staged Rollouts**: Upgrade devices gradually by
-location (office by office, region by region) - **Device Type Targeting**:
-Update only specific device types (routers vs access points) - **Testing
-Deployments**: Upgrade test environments or pilot groups before production
-rollout - **Emergency Patches**: Quickly target security updates to
-specific vulnerable device groups
+**Use Cases**: 
+- **Staged Rollouts**: Upgrade devices gradually by
+location (office by office, region by region) 
+- **Device Type Targeting**:
+Update only specific device types (routers vs access points) 
+- **Testing Deployments**: Upgrade test environments or pilot groups before production
+rollout 
+- **Emergency Patches**: Quickly target security updates tospecific vulnerable device groups
 
 Current state
 -------------
@@ -144,7 +146,7 @@ My Experience
 -------------
 
 Working on `OpenWISP Firmware Upgrader
-<https://github.com/openwisp/openwisp-firmware-upgrader>`__ during GSoC
+<https://github.com/openwisp/openwisp-firmware-upgrader>`_ during GSoC
 has been an enriching experience that deepened my understanding of
 real-time web applications, network device management, and large-scale
 system design. The project challenged me to think about user experience
