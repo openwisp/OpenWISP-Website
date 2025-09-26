@@ -15,10 +15,11 @@ GSoC 2025: Improve UX and Flexibility of the Firmware Upgrader Module
     :align: center
 
 Over the past three months, I had the opportunity to work on my Google
-Summer of Code project under the guidance of Federico Capoano (nemesifier)
-<https://github.com/nemesifier>, Aryaman (Aryamanz29)
-<https://github.com/Aryamanz29>, and Oliver Kraitschy (okraits)
-<https://github.com/okraits>_. The journey was filled with challenges,
+Summer of Code project under the guidance of `Federico Capoano
+(nemesifier) <https://github.com/nemesifier>`_, `Aryaman (Aryamanz29)
+<https://github.com/Aryamanz29>`_, `Gagan Deep (pandafy)
+<https://github.com/pandafy>`_ and `Oliver Kraitschy (okraits)
+<https://github.com/okraits>`_. The journey was filled with challenges,
 creative problem-solving, and exciting milestones that not only deepened
 my technical knowledge but also strengthened my ability to collaborate and
 adapt.
@@ -26,35 +27,17 @@ adapt.
 About the Project
 -----------------
 
-The firmware upgrader enhancements significantly improve the user
-experience when managing firmware updates across OpenWISP networks. These
-features address common pain points that network administrators face:
-uncertainty about upgrade progress, inability to stop problematic
-upgrades, and lack of granular control over which devices to upgrade in
-large deployments.
+The firmware upgrader enhancements address key pain points network
+administrators face:
 
-The enhanced firmware upgrade system now provides real-time feedback,
-safety controls, and filtering the upgrade capabilities that make managing
-firmware across hundreds or thousands of devices both safer and more
-efficient.
+- **Uncertainty about upgrade progress** - No real-time feedback
+- **Inability to stop problematic upgrades** - No cancellation controls
+- **Lack of granular control** - Upgrading entire networks vs. targeted
+  subsets
 
-Technical Approach
-~~~~~~~~~~~~~~~~~~
-
-The solution uses WebSocket connections to deliver real-time progress
-updates directly to the admin interface, eliminating the need for manual
-page refreshes. Progress tracking is implemented at multiple levels - from
-individual device operations to batch upgrade summaries - providing
-comprehensive visibility into upgrade status.
-
-For safety, the cancellation feature includes checks that prevent
-cancellation once the firmware flashing phase begins. This prevents
-potentially damaging interruptions during critical phases of the upgrade
-process.
-
-The mass upgrade filtering system integrates with OpenWISP's existing
-device group and location management, allowing administrators to target
-specific subsets of devices with surgical precision.
+The enhanced system provides real-time feedback, safety controls, and
+filtering capabilities that make managing firmware across large
+deployments safer and more efficient.
 
 Features Implemented
 --------------------
@@ -77,13 +60,13 @@ on the progress of firmware upgrades. This feature is implemented using
 WebSocket connections to deliver real-time progress updates directly to
 the admin interface, eliminating the need for manual page refreshes.
 
-Progress tracking is implemented at multiple levels - from individual
-device operations to batch upgrade summaries - providing comprehensive
+Progress tracking is implemented at multiple levels, from individual
+device operations to batch upgrade summaries, providing comprehensive
 visibility into upgrade status.
 
-**Use Cases**: - Network administrators can monitor long-running firmware
-upgrades progress and logs of the upgrade without uncertainty and without
-refreshing the page.s
+**Use Cases**: network administrators can monitor the progress of
+long-running firmware upgrades progress and logs of the upgrade without
+uncertainty and without refreshing the page.s
 
 Upgrade Operation Cancellation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,7 +87,7 @@ services that were stopped during the upgrade process, ensuring devices
 remain in a stable state.
 
 **Use Cases**: Stop problematic upgrades that are taking too long or
-showing errors - Cancel upgrades when emergency maintenance requires
+showing errors, cancel upgrades when emergency maintenance requires
 immediate device access.
 
 Mass Upgrade by Group and Location
@@ -135,15 +118,18 @@ specific vulnerable device groups
 Current state
 -------------
 
-We are maintaining the ``gsoc25`` branch of openwisp-firmware-upgrader
-module as parent branch for all the firmware upgrade features. Once all
-the PRs are merged and features are tested and validated, we can proceed
-with releasing these along with OpenWISP 26.
+We are maintaining the `gsoc25
+<https://github.com/openwisp/openwisp-firmware-upgrader/tree/gsoc25>`_
+branch of `openwisp-firmware-upgrader
+<https://github.com/openwisp/openwisp-firmware-upgrader>`_ module as
+parent branch for all the firmware upgrade features. Once all the PRs are
+merged and features are tested and validated, we can proceed with
+releasing these along with OpenWISP 26.
 
 You can follow the development process and explore the implementation
 details in the following pull requests:
 
-- `how upgrade progress for single upgrade operations in real time
+- `Show upgrade progress for single upgrade operations in real time
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/320>`_
 - `Show upgrade progress for mass upgrade operations in real time
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/325>`_
@@ -151,16 +137,19 @@ details in the following pull requests:
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/329>`_
 - `Allow mass upgrade by their group or location
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/343>`_
+- `Updated quick-start docs for gsoc25 features
+  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/347>`_
 
 My Experience
 -------------
 
-Working on the OpenWISP firmware upgrader during GSoC has been an
-enriching experience that deepened my understanding of real-time web
-applications, network device management, and large-scale system design.
-The project challenged me to think about user experience from an
-administrator's perspective - where clarity, safety, and control are
-paramount.
+Working on `OpenWISP Firmware Upgrader
+<https://github.com/openwisp/openwisp-firmware-upgrader>`__ during GSoC
+has been an enriching experience that deepened my understanding of
+real-time web applications, network device management, and large-scale
+system design. The project challenged me to think about user experience
+from an administrator's perspective - where clarity, safety, and control
+are paramount.
 
 I gained valuable experience with WebSocket programming, real-time data
 synchronization, and building responsive user interfaces that handle
