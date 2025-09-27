@@ -30,10 +30,10 @@ About the Project
 The firmware upgrader enhancements address key pain points network
 administrators face:
 
-- **Uncertainty about upgrade progress** - No real-time feedback
-- **Inability to stop problematic upgrades** - No cancellation controls
-- **Lack of granular control** - Upgrading entire networks vs. targeted
-  subsets
+- **Uncertainty about upgrade progress**: No real-time feedback.
+- **Inability to stop problematic upgrades**: No cancellation controls.
+- **Lack of granular control**: Upgrading entire networks vs. targeted
+  subsets.
 
 The enhanced system provides real-time feedback, safety controls, and
 filtering capabilities that make managing firmware across large
@@ -45,12 +45,12 @@ Features Implemented
 Real-Time Firmware Upgrade Progress Tracking
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Single Device Upgrade Progress
+**Single Device Upgrade Progress**
 
 .. image:: {static}/images/blog/gsoc25/firmware-upgrader/single-device-progress-tracking.gif
     :alt: Real-Time upgrade progress tracking
 
-Mass Upgrade Progress
+**Mass Upgrade Progress**
 
 .. image:: {static}/images/blog/gsoc25/firmware-upgrader/mass-upgrade-progress-tracking.gif
     :alt: Real-Time upgrade progress tracking
@@ -64,9 +64,18 @@ Progress tracking is implemented at multiple levels, from individual
 device operations to batch upgrade summaries, providing comprehensive
 visibility into upgrade status.
 
-**Use Cases**: network administrators can monitor the progress of
-long-running firmware upgrades progress and logs of the upgrade without
-uncertainty and without refreshing the page.s
+**Use Cases**:
+
+- Monitor real-time progress of long-running firmware upgrades without
+  uncertainty
+- Access upgrade logs without manual page refreshes
+
+**Pull Requests:**
+
+- `Show upgrade progress for single upgrade operations in real time
+  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/320>`_
+- `Show upgrade progress for mass upgrade operations in real time
+  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/325>`_
 
 Upgrade Operation Cancellation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,9 +95,16 @@ When an upgrade is cancelled, the system automatically restarts any
 services that were stopped during the upgrade process, ensuring devices
 remain in a stable state.
 
-**Use Cases**: Stop problematic upgrades that are taking too long or
-showing errors, cancel upgrades when emergency maintenance requires
-immediate device access.
+**Use Cases**:
+
+- Stop problematic upgrades that are taking too long or showing errors
+- Cancel upgrades when emergency maintenance requires immediate device
+  access
+
+**Pull Requests:**
+
+- `Allow cancelling firmware upgrade operations
+  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/329>`_
 
 Mass Upgrade by Group and Location
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -108,14 +124,18 @@ Group and location filters can be used together to achieve very precise
 targeting, such as "Access Points in Building A" or "Edge devices in the
 European region".
 
-**Use Cases**: 
-- **Staged Rollouts**: Upgrade devices gradually by
-location (office by office, region by region) 
-- **Device Type Targeting**:
-Update only specific device types (routers vs access points) 
-- **Testing Deployments**: Upgrade test environments or pilot groups before production
-rollout 
-- **Emergency Patches**: Quickly target security updates tospecific vulnerable device groups
+**Use Cases**:
+
+- Upgrade devices gradually by location (office by office, region by
+  region)
+- Update only specific device types (routers vs access points)
+- Upgrade test environments or pilot groups before production rollout
+- Quickly target security updates to specific vulnerable device groups
+
+**Pull Requests:**
+
+- `Allow mass upgrade by their group or location
+  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/343>`_
 
 Current state
 -------------
@@ -128,30 +148,20 @@ parent branch for all the firmware upgrade features. Once all the PRs are
 merged and features are tested and validated, we can proceed with
 releasing these along with OpenWISP 26.
 
-You can follow the development process and explore the implementation
-details in the following pull requests:
-
-- `Show upgrade progress for single upgrade operations in real time
-  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/320>`_
-- `Show upgrade progress for mass upgrade operations in real time
-  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/325>`_
-- `Allow cancelling firmware upgrade operations
-  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/329>`_
-- `Allow mass upgrade by their group or location
-  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/343>`_
-- `Updated quick-start docs for gsoc25 features
-  <https://github.com/openwisp/openwisp-firmware-upgrader/pull/347>`_
+Documentation Updates are tracked under the Pull Request `Updated
+quick-start docs for gsoc25 features
+<https://github.com/openwisp/openwisp-firmware-upgrader/pull/347>`_.
 
 My Experience
 -------------
 
 Working on `OpenWISP Firmware Upgrader
-<https://github.com/openwisp/openwisp-firmware-upgrader>`_ during GSoC
-has been an enriching experience that deepened my understanding of
-real-time web applications, network device management, and large-scale
-system design. The project challenged me to think about user experience
-from an administrator's perspective - where clarity, safety, and control
-are paramount.
+<https://github.com/openwisp/openwisp-firmware-upgrader>`_ during GSoC has
+been an enriching experience that deepened my understanding of real-time
+web applications, network device management, and large-scale system
+design. The project challenged me to think about user experience from an
+administrator's perspective - where clarity, safety, and control are
+paramount.
 
 I gained valuable experience with WebSocket programming, real-time data
 synchronization, and building responsive user interfaces that handle
