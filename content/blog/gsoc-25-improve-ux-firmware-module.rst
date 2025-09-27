@@ -140,13 +140,14 @@ European region".
 Current state
 -------------
 
-We are maintaining the `gsoc25
-<https://github.com/openwisp/openwisp-firmware-upgrader/tree/gsoc25>`_
-branch of `openwisp-firmware-upgrader
-<https://github.com/openwisp/openwisp-firmware-upgrader>`_ module as
-parent branch for all the firmware upgrade features. Once all the PRs are
-merged and features are tested and validated, we can proceed with
-releasing these along with OpenWISP 26.
+We are maintaining this work in the ``gsoc25`` branch of the `Firmware
+Upgrader Module
+<https://github.com/openwisp/openwisp-firmware-upgrader>`_.
+
+Once all the remaining open PRs are merged, we will proceed with a final
+general verification and then merge this branch into the main branch.
+
+**We aim to release these improvements in OpenWISP 26**.
 
 Documentation Updates are tracked under the Pull Request `Updated
 quick-start docs for gsoc25 features
