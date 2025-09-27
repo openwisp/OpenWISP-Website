@@ -7,8 +7,8 @@ GSoC 2025: Improve UX and Flexibility of the Firmware Upgrader Module
 :category: gsoc
 :lang: en
 :image_url: https://openwisp.org/images/blog/gsoc25/firmware-upgrader/gsoc25-firmware-upgrader.png
-:image_width: 713
-:image_height: 297
+:image_width: 753
+:image_height: 759
 
 .. image:: {static}/images/blog/gsoc25/firmware-upgrader/gsoc25-firmware-upgrader.png
     :alt: Google Summer of Code, OpenWISP Firmware Upgrader Module
