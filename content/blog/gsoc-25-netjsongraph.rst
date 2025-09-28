@@ -14,28 +14,25 @@ GSoC 2025: Improving the NetJSONGraph.js Visualization Library
     :alt: Google Summer of Code, Improving the NetJSONGraph.js Visualization Library
     :align: center
 
-Participating in Google Summer of Code has truly been a transformative journey.
-Over the past three months, I had the privilege of working with **OpenWISP** on
-enhancing the `netjsongraph.js <https://github.com/openwisp/netjsongraph.js>`_
-visualization library, an experience that pushed me to grow not only as a
-developer but also as an openSource contributor.
+Participating in Google Summer of Code has truly been a transformative journey. Over the
+past three months, I had the privilege of working with **OpenWISP** on enhancing the
+`netjsongraph.js <https://github.com/openwisp/netjsongraph.js>`_ visualization library,
+an experience that pushed me to grow not only as a developer but also as an openSource
+contributor.
 
-With the constant guidance, encouragement, and expertise of my mentors
-`Federico Capoano [nemesifier] <https://github.com/nemesifier>`_ and
-`Nitesh Sinha [niteshsinha17] <https://github.com/niteshsinha17>`_ I was able to
-dive into new technologies, tackle complex challenges, and implement features
-that meaningfully improve usability, navigation, and resiliency in network
-visualization tools.
+With the constant guidance, encouragement, and expertise of my mentors `Federico Capoano
+[nemesifier] <https://github.com/nemesifier>`_ and `Nitesh Sinha [niteshsinha17]
+<https://github.com/niteshsinha17>`_ I was able to dive into new technologies, tackle
+complex challenges, and implement features that meaningfully improve usability,
+navigation, and resiliency in network visualization tools.
 
 Their insightful feedback, patience, and unwavering support created the perfect
-environment for learning and innovation. This mentorship has been instrumental
-in shaping my ability to approach problems thoughtfully, contribute effectively,
-and embrace the collaborative spirit that makes openSource communities thrive.
+environment for learning and innovation. This mentorship has been instrumental in
+shaping my ability to approach problems thoughtfully, contribute effectively, and
+embrace the collaborative spirit that makes openSource communities thrive.
 
-Google Summer of Code with OpenWISP has been nothing short of inspiring, and I'm
-deeply grateful for the opportunity to contribute, learn, and grow through this
-experience.
-
+Google Summer of Code with OpenWISP has been nothing short of inspiring, and I'm deeply
+grateful for the opportunity to contribute, learn, and grow through this experience.
 
 About the Project
 -----------------
@@ -104,7 +101,7 @@ different status types (like "ok" vs "critical").
 - **Spacing:** Added forces between clusters to keep them properly spaced.
 
 [feature] Added Client-Nodes Functionality
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/clients-overlay.gif
     :alt: Connected clients overlay in netjsongraph.js
@@ -128,7 +125,7 @@ calculated dynamically based on its circumference.
 allowing it to display detailed information for each client (e.g., MAC address).
 
 [feature] Add option to show node labels only after hitting a certain zoom level
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **The Problem:** In both map and graph views, displaying all node labels simultaneously
 at low zoom levels results in a cluttered and unreadable visualization.
@@ -150,7 +147,6 @@ ECharts series.
     :alt: Zoom-dependent labels in netjsongraph.js graph mode
     :align: center
 
-
 [fix] Fixed duplicate node ID handling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -165,7 +161,6 @@ invalid data. The core logic is a new ``deduplicateNodesById`` utility.
     :alt: Duplicate node IDs in netjsongraph.js
     :align: center
 
-
 [fix] Limit default max zoom level on mapOptions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -179,7 +174,6 @@ limits and added CSS for visual feedback on the zoom controls.
     :alt: Zoom levels in netjsongraph.js
     :align: center
 
-
 Current state
 -------------
 
@@ -192,7 +186,7 @@ You can follow the development process and explore the implementation details in
 following pull requests:
 
 [feature] Added Cluster Prevention Mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Developed a sophisticated algorithm to visually separate data clusters that share the
 same geographic location but belong to different categories, solving a major data
@@ -200,7 +194,8 @@ visibility issue.
 
 - `#396 [netjsongraph.js] <https://github.com/openwisp/netjsongraph.js/pull/396>`_,
   `#349 [netjsongraph.js] <https://github.com/openwisp/netjsongraph.js/pull/349>`_,
-  `#668 [openwisp-monitoring] <https://github.com/openwisp/openwisp-monitoring/pull/668>`_
+  `#668 [openwisp-monitoring]
+  <https://github.com/openwisp/openwisp-monitoring/pull/668>`_
 
 [feature] Added Client-Nodes Functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -211,16 +206,16 @@ dots orbiting each node, with a highly efficient placement algorithm.
 - `#411 [netjsongraph.js] <https://github.com/openwisp/netjsongraph.js/pull/411>`_
 
 [feature] Add option to show node labels only after hitting a certain zoom level
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Added options to show node labels only when the user zooms past a certain threshold,
 decluttering the view for both map and graph modes.
 
-- `#407 [map] <https://github.com/openwisp/netjsongraph.js/pull/407>`_,
-  `#419 [graph] <https://github.com/openwisp/netjsongraph.js/pull/419>`_
+- `#407 [map] <https://github.com/openwisp/netjsongraph.js/pull/407>`_, `#419 [graph]
+  <https://github.com/openwisp/netjsongraph.js/pull/419>`_
 
 [fix] Fixed duplicate node ID handling
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Hardened the library against data with duplicate node IDs. It now handles this issue
 gracefully by deduplicating nodes and logging a warning instead of crashing.
