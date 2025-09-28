@@ -84,11 +84,13 @@ overlapping clusters would not show all other clusters clearly.
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/Clustering-Disabled.gif
     :alt: Before: Clustering disabled - overlapping clusters hide information
+    :align: center
 
 **After:**
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/Clustering-Enabled.gif
     :alt: After: Clustering enabled - separated clusters show all information clearly
+    :align: center
 
 **The Problem:** When node clusters were at the same location, you couldn't see the
 different status types (like "ok" vs "critical").
@@ -106,6 +108,7 @@ different status types (like "ok" vs "critical").
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/clients-overlay.gif
     :alt: Connected clients overlay in netjsongraph.js
+    :align: center
 
 **The Problem:** The library lacked a built-in, flexible way to visualize secondary data
 points on nodes, such as the number of connected WiFi clients.
@@ -138,12 +141,14 @@ ECharts series.
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-labels.gif
     :alt: Zoom-dependent labels in netjsongraph.js map mode
+    :align: center
 
 **Graph Mode:** The solution uses the ECharts ``graphRoam`` event and a custom label
 ``formatter`` function.
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-lables-graph.gif
     :alt: Zoom-dependent labels in netjsongraph.js graph mode
+    :align: center
 
 
 [fix] Fixed duplicate node ID handling
@@ -158,10 +163,11 @@ invalid data. The core logic is a new ``deduplicateNodesById`` utility.
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/duplicate-node-ids.png
     :alt: Duplicate node IDs in netjsongraph.js
+    :align: center
 
 
 [fix] Limit default max zoom level on mapOptions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **The Problem:** The map showed blank tiles when the max zoom level was exceeded the
 value higher than the tile provider's max zoom level.
@@ -171,6 +177,7 @@ limits and added CSS for visual feedback on the zoom controls.
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-levels.gif
     :alt: Zoom levels in netjsongraph.js
+    :align: center
 
 
 Current state
@@ -221,7 +228,7 @@ gracefully by deduplicating nodes and logging a warning instead of crashing.
 - `#355 [netjsongraph.js] <https://github.com/openwisp/netjsongraph.js/pull/355>`_
 
 [fix] Limit default max zoom level on mapOptions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Fixed the map's zoom behavior to honor the ``minZoom`` and ``maxZoom`` limits of the
 active tile provider, improving the user experience with visual cues on the zoom
