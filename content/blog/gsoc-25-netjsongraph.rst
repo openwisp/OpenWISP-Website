@@ -147,12 +147,28 @@ maps) and ``showGraphLabelsAtZoom`` (for graphs).
 **Map Mode:** The solution uses the Leaflet ``zoomend`` event to
 dynamically update the ECharts series.
 
-.. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-labels.gif
+**Before:**
+
+.. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-labels-map-before.gif
+    :alt: Zoom-dependent labels in netjsongraph.js map mode before
+    :align: center
+
+**After:**
+
+.. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-labels-map.gif
     :alt: Zoom-dependent labels in netjsongraph.js map mode
     :align: center
 
 **Graph Mode:** The solution uses the ECharts ``graphRoam`` event and a
 custom label ``formatter`` function.
+
+**Before:**
+
+.. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-labels-graph-before.gif
+    :alt: Zoom-dependent labels in netjsongraph.js graph mode before
+    :align: center
+
+**After:**
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-lables-graph.gif
     :alt: Zoom-dependent labels in netjsongraph.js graph mode
@@ -183,6 +199,14 @@ exceeded the value higher than the tile provider's max zoom level.
 
 **The Mechanism & Logic:** I corrected the map's behavior to respect tile
 provider limits and added CSS for visual feedback on the zoom controls.
+
+**Before:**
+
+.. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-levels-before.gif
+    :alt: Zoom levels in netjsongraph.js before
+    :align: center
+
+**After:**
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/zoom-levels.gif
     :alt: Zoom levels in netjsongraph.js
