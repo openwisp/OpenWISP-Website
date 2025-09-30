@@ -3,7 +3,7 @@ GSoC 2025: Better Map UX: Indoor, Mobile, Linkable URLs
 
 :date: 2025-09-14
 :author: Deepanshu Sahu
-:tags: gsoc, netjsongraph.js, monitoring, new-feature
+:tags: gsoc, netjsongraph.js, monitoring, new-features
 :category: gsoc
 :lang: en
 :image_url: https://openwisp.org/images/blog/gsoc25/map-improvements-indoor-mobile/gsoc-25-indoor-maps.png
