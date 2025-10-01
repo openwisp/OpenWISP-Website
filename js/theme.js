@@ -32,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // write copyright year
-  document.getElementById("copyright-year").innerText =
-    new Date().getFullYear();
+  document.getElementById("copyright-year").innerText = new Date().getFullYear();
 
   // Dark theme: apply theme based on stored preference or system setting
   const storedTheme = localStorage.getItem("theme");

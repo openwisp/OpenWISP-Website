@@ -45,8 +45,7 @@ function createActivityFeed(options) {
   }
 
   $.getJSON(
-    "https://api.github.com/orgs/openwisp/events?page=" +
-      window.__githubApiPage,
+    "https://api.github.com/orgs/openwisp/events?page=" + window.__githubApiPage,
     function (result) {
       $.each(result, function (i, field) {
         var eventType,
@@ -128,9 +127,7 @@ function createActivityFeed(options) {
             // ignore dependabot merges
             if (
               content &&
-              content.indexOf(
-                "<summary>Dependabot commands and options</summary>",
-              ) > 1
+              content.indexOf("<summary>Dependabot commands and options</summary>") > 1
             ) {
               content = "";
             }
@@ -276,18 +273,14 @@ function createActivityFeed(options) {
     <div class="media mb-0">
       <div class="media-left">
         <figure class="image is-48x48">
-          <a href="https://github.com/${
-            field.actor.display_login
-          }" target="_blank">
+          <a href="https://github.com/${field.actor.display_login}" target="_blank">
             <img src="${field.actor.avatar_url}" />
           </a>
         </figure>
       </div>
       <div class="media-content">
         <p class="title is-5 is-size-6-mobile mb-1">
-          <a href="https://github.com/${
-            field.actor.display_login
-          }" target="_blank">
+          <a href="https://github.com/${field.actor.display_login}" target="_blank">
             ${field.actor.display_login}
           </a>
         </p>
@@ -306,11 +299,7 @@ function createActivityFeed(options) {
 
         ${link ? "</a>" : ""}
       </h3>
-      ${
-        content
-          ? `<div class="mt-3">${sanitizeAndConvertToHtml(content)}</div>`
-          : ""
-      }
+      ${content ? `<div class="mt-3">${sanitizeAndConvertToHtml(content)}</div>` : ""}
     </div>
   </div>
 </div>
@@ -336,10 +325,7 @@ function createActivityFeed(options) {
             loadMore: true,
             addPage: true,
           });
-          $("#load-more")
-            .removeAttr("href")
-            .removeClass("black")
-            .addClass("gray");
+          $("#load-more").removeAttr("href").removeClass("black").addClass("gray");
         });
       }
 
@@ -360,9 +346,7 @@ const showLoading = function () {
     if ($(".loading-overlay").length) {
       return;
     }
-    $("body").append(
-      '<div class="loading-overlay"><div class="spinner"></div></div>',
-    );
+    $("body").append('<div class="loading-overlay"><div class="spinner"></div></div>');
   },
   closeLoading = function () {
     var overlay = $(".loading-overlay");

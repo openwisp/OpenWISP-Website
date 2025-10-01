@@ -6,14 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
     link.addEventListener("click", function (event) {
       let isActive = event.target.className == "is-active";
       // Remove 'is-active' class from all li elements and their children <a> elements
-      document
-        .querySelectorAll(".menu-list li.is-active")
-        .forEach(function (li) {
-          li.classList.remove("is-active");
-          li.querySelectorAll("a.is-active").forEach(function (activeLink) {
-            activeLink.classList.remove("is-active");
-          });
+      document.querySelectorAll(".menu-list li.is-active").forEach(function (li) {
+        li.classList.remove("is-active");
+        li.querySelectorAll("a.is-active").forEach(function (activeLink) {
+          activeLink.classList.remove("is-active");
         });
+      });
       if (isActive) {
         history.pushState(
           "",
