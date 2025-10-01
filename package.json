@@ -27,7 +27,7 @@
     "babel-plugin-remove-template-literals-whitespace": "^1.0.4",
     "bulma": "^1.0.4",
     "concat-cli": "^4.0.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.2.1",
     "cssnano": "^7.0.2",
     "http-server": "^14.1.1",
     "@fullhuman/postcss-purgecss": "^7.0.2",
