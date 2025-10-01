@@ -2590,10 +2590,10 @@ postcss@^8.4.47:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
-prettier-plugin-jinja-template@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-jinja-template/-/prettier-plugin-jinja-template-1.4.1.tgz#79ecf70684f571b6166da47ee2dac644e5190277"
-  integrity sha512-YHDa/f9BpEDIYIPKsnmoKQudWszXBPaVifjR7X+W2n/uAzWLXV/j9FEvua3np7gkzSEOFyapJQrCS4YhhbhbdA==
+prettier-plugin-jinja-template@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-jinja-template/-/prettier-plugin-jinja-template-2.1.0.tgz#ea2c83e473a8d12a61b289a1d8f1c591ef09b3a8"
+  integrity sha512-mzoCp2Oy9BDSug80fw3B3J4n4KQj1hRvoQOL1akqcDKBb5nvYxrik9zUEDs4AEJ6nK7QDTGoH0y9rx7AlnQ78Q==
 
 prettier@^3.3.3:
   version "3.6.2"
