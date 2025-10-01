@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 # check HTML, JS, CSS
-yarn prettier:check
 make html
 
 # check for broken link

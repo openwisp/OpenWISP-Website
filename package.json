@@ -17,9 +17,7 @@
     "minify": "npm run minify:activity && npm run minify:theme && npm run minify:faq && npm run minify:modal && npm run minify:index",
     "build": "npm run build:css && npm run build:js && npm run minify",
     "serve": "http-server -a 0.0.0.0 -p 8080 ./output/",
-    "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\"",
-    "prettify": "prettier -w *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/**/*.html",
-    "prettier:check": "prettier -c *.json *.js css/* js/* content/**/*.html content/**/*.inc theme/templates/**/*.html"
+    "start": "concurrently \"npm run serve\" \"npm run build:sass\" \"npm run build:postcss\""
   },
   "dependencies": {
     "@babel/cli": "^7.24.8",
