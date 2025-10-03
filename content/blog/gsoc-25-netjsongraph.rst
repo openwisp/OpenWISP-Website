@@ -1,4 +1,4 @@
-GSoC 2025: Improving the NetJSONGraph.js Visualization Library
+GSoC 2025: Improving the Netjsongraph.js Visualization Library
 ==============================================================
 
 :date: 2025-09-28
@@ -7,8 +7,8 @@ GSoC 2025: Improving the NetJSONGraph.js Visualization Library
 :category: gsoc
 :lang: en
 :image_url: https://openwisp.org/images/blog/gsoc25/netjsongraph/gsoc-25-improving-netjsongraph.png
-:image_width: 1786
-:image_height: 794
+:image_width: 735
+:image_height: 870
 
 .. image:: {static}/images/blog/gsoc25/netjsongraph/gsoc-25-improving-netjsongraph.png
     :alt: Google Summer of Code, Improving the NetJSONGraph.js Visualization Library
