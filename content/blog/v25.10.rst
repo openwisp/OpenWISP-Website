@@ -1,0 +1,23 @@
+New Major Release: v25.10
+=========================
+
+:date: 2025-10-29
+:author: Federico Capoano
+:category: news
+:tags: releases
+:lang: en
+:image_url: https://openwisp.org/images/blog/v25.10.webp
+:image_width: 760
+:image_height: 326
+
+.. image:: {static}/images/blog/v25.10.webp
+    :alt: New OpenWISP Release: v25.10
+
+We are excited to announce that the latest release of OpenWISP is now
+available!
+
+This release brings improvements to stability, security, scalability and
+usability.
+
+For detailed information about the updates, refer to the `OpenWISP 25.10
+Release Notes <https://openwisp.io/docs/25.10/releases/25.10.html>`_.
