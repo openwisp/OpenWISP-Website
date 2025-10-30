@@ -64,24 +64,44 @@ function createActivityFeed(options) {
           // last page for all organizations
           $("#load-more").remove();
 
+        const getLabelAction = (target) => {
+          let val = `labeled ${target}`;
+          if (field.payload.label) {
+            val += ` as
+             <code
+               title="${field.payload.label.description}"
+               style="color:#${field.payload.label.color}"
+             >${field.payload.label.name}</code>
+             `;
+          }
+          val += " in";
+          return val;
+        };
+
         switch (field.type) {
           case "IssuesEvent":
             actionMap = {
               opened: "opened an issue in",
               closed: "closed an issue in",
               reopened: "reopened an issue in",
+              labeled: getLabelAction,
             };
             iconMap = {
               opened: "octicon:issue-opened",
               closed: "octicon:issue-closed",
               reopened: "octicon:issue-reopened",
+              labeled: "octicon:tag-16",
             };
             iconColorMap = {
               opened: "#1a7f37",
               closed: "#cb2431",
               reopened: "#1a7f37",
+              labeled: (field.payload.label && field.payload.label.color) || "#24292e",
             };
             eventType = actionMap[field.payload.action];
+            if (typeof eventType === "function") {
+              eventType = eventType("an issue");
+            }
             eventType = `${eventType} <code>${field.repo.name}</code>`;
             header = field.payload.issue.title;
             icon = iconMap[field.payload.action];
@@ -96,6 +116,7 @@ function createActivityFeed(options) {
               merged: "merged a pull request in",
               edited: "edited a pull request in",
               reopened: "reopened a pull request in",
+              labeled: getLabelAction,
             };
             iconMap = {
               opened: "octicon:git-pull-request",
@@ -103,6 +124,7 @@ function createActivityFeed(options) {
               merged: "octicon:git-merge",
               edited: "octicon:git-pull-request",
               reopened: "octicon:git-pull-request",
+              labeled: "octicon:tag-16",
             };
             iconColorMap = {
               opened: "#1a7f37",
@@ -110,12 +132,16 @@ function createActivityFeed(options) {
               merged: "#6f42c1",
               edited: "#24292e",
               reopened: "#1a7f37",
+              labeled: (field.payload.label && field.payload.label.color) || "#24292e",
             };
             eventType = field.payload.pull_request.merged
               ? actionMap.merged
               : actionMap[field.payload.action];
+            if (typeof eventType === "function") {
+              eventType = eventType("a pull request");
+            }
             eventType = `${eventType} <code>${field.repo.name}</code>`;
-            header = field.payload.pull_request.title;
+            header = field.payload.pull_request.title || field.repo.name;
             icon = field.payload.pull_request.merged
               ? iconMap.merged
               : iconMap[field.payload.action];
@@ -153,7 +179,7 @@ function createActivityFeed(options) {
             };
             eventType = actionMap[field.payload.action];
             eventType = `${eventType} <code>${field.repo.name}</code>`;
-            header = field.payload.pull_request.title;
+            header = field.payload.pull_request.title || field.repo.name;
             icon = iconMap[field.payload.review.state];
             iconColor = iconColorMap[field.payload.review.state];
             content = field.payload.review.body;
@@ -167,7 +193,7 @@ function createActivityFeed(options) {
             };
             eventType = actionMap[field.payload.action];
             eventType = `${eventType} <code>${field.repo.name}</code>`;
-            header = field.payload.pull_request.title;
+            header = field.payload.pull_request.title || field.repo.name;
             icon = "octicon:comment";
             iconColor = "#24292e";
             content = field.payload.comment.body;
@@ -213,12 +239,16 @@ function createActivityFeed(options) {
             iconColor = "#24292e";
             content = null;
             content = ""; // undefined before and altered content message
-            field.payload.commits.map(function (commit) {
-              var hash = commit.sha.substr(0, 7),
-                // only first line
-                summary = commit.message.split("\n", 1)[0];
-              content += `<code>${hash}</code> ${summary}<br>`;
-            });
+            // this seems to have been removed from the Github API
+            // in August 2025, the code is kept in case they rollback this change
+            const commits = field.payload.commits;
+            commits &&
+              commits.map(function (commit) {
+                var hash = commit.sha.substr(0, 7),
+                  // only first line
+                  summary = commit.message.split("\n", 1)[0];
+                content += `<code>${hash}</code> ${summary}<br>`;
+              });
             link = field.payload.compare;
             break;
           case "DeleteEvent":
@@ -268,7 +298,7 @@ function createActivityFeed(options) {
 
         // Define a template using a template literal
         const template = `
-<div class="card">
+<div class="card" data-type="${field.type}" data-id="${field.id}">
   <div class="card-content">
     <div class="media mb-0">
       <div class="media-left">
