@@ -7,8 +7,8 @@ New Major Release: v25.10
 :tags: releases
 :lang: en
 :image_url: https://openwisp.org/images/blog/v25.10.webp
-:image_width: 760
-:image_height: 326
+:image_width: 713
+:image_height: 306
 
 .. image:: {static}/images/blog/v25.10.webp
     :alt: New OpenWISP Release: v25.10
