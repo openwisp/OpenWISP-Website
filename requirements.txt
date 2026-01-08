@@ -1,7 +1,7 @@
 pelican~=4.11.0
 pelican-jinja2content~=1.0.1
 pelican-minify~=2.0.1
-pelican-sitemap~=1.2.1
+pelican-sitemap~=1.2.2
 typogrify~=2.1.0
 pylinkvalidator
 openwisp-utils[qa] @ https://github.com/openwisp/openwisp-utils/tarball/1.2
