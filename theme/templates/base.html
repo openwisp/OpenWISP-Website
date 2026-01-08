@@ -138,7 +138,7 @@
                     {% for subtext, sublink in item.items() %}
                       <a
                         class="navbar-item {% if output_file == sublink %}is-active{% endif %}"
-                        href="{{ SITEURL }}/{{ sublink }}"
+                        href="{% if not sublink.startswith("http") %}{{ SITEURL }}/{% endif %}{{ sublink }}"
                         >{{ subtext }}</a
                       >
                     {% endfor %}
