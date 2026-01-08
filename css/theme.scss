@@ -75,6 +75,7 @@ $weight-semibold: 600;
   $media-spacing-large: 1.1rem
 );
 
+@use "sass:color";
 @use "@fortawesome/fontawesome-free/scss/variables" with (
   $font-path: "../webfonts",
   $font-display: swap
@@ -478,7 +479,7 @@ p.button-container .button {
   background-color: var(--bulma-orange-light);
 }
 a.rounded:hover {
-  background-color: darken($orange-light, 5%);
+  background-color: color.adjust($orange-light, $lightness: -5%);
 }
 .rounded .rounded {
   padding: 0.25em 0.2em 0.25em 0.4em;
