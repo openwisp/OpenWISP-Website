@@ -18,6 +18,7 @@ MENU = {
     "About": {
         "FAQ": "faq/",
         "Source Code": "code/",
+        "Roadmap": "https://openwisp.io/docs/dev/general/roadmap-2030.html",
         "History": "history/",
         "Team": "team/",
         "Partners": "partners/",
