@@ -7,8 +7,8 @@ New Major Release: v24.11
 :tags: releases
 :lang: en
 :image_url: https://openwisp.org/images/blog/v24.11.webp
-:image_width: 760
-:image_height: 326
+:image_width: 713
+:image_height: 306
 
 .. image:: {static}/images/blog/v24.11.webp
     :alt: New OpenWISP Release: v24.11
