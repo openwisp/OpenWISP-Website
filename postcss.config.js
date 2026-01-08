@@ -1,10 +1,10 @@
-import postcssUrl from "postcss-url";
-import { purgeCSSPlugin } from "@fullhuman/postcss-purgecss";
-import pruneVar from "postcss-prune-var";
-import varCompress from "postcss-variable-compress";
-import cssnano from "cssnano";
+const postcssUrl = require("postcss-url");
+const { purgeCSSPlugin } = require("@fullhuman/postcss-purgecss");
+const pruneVar = require("postcss-prune-var");
+const varCompress = require("postcss-variable-compress");
+const cssnano = require("cssnano");
 
-export default {
+module.exports = {
   plugins: [
     postcssUrl({
       url: "inline",
