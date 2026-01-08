@@ -294,6 +294,11 @@ function createActivityFeed(options) {
 
         if (!eventType) return; // don't display if event not handled above
 
+        // truncate AI reviews to avoid flooding the feed
+        if (field.actor.login === "coderabbitai[bot]") {
+          content = "";
+        }
+
         if (!$(".feed-container div").length) $(".feed-container").html("");
 
         // Define a template using a template literal
