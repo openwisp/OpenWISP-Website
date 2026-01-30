@@ -51,14 +51,6 @@
               height="80"
             />
             <img
-              src="{static}/images/partners/wayru.svg"
-              class="wayru"
-              alt="Wayru"
-              title="Wayru"
-              width="171"
-              height="55"
-            />
-            <img
               src="{static}/images/partners/ltech.webp"
               class="ltech"
               alt="Ltech"
