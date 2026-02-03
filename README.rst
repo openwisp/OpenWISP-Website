@@ -25,6 +25,10 @@ Build:
 
     make html
 
+    # if you are working only on content and
+    # do not need to rebuild CSS/JS files:
+    make html SKIP_YARN=1
+
 Serve:
 
 ::

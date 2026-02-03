@@ -26,6 +26,8 @@ ifneq ($(PORT), 0)
 	PELICANOPTS += -p $(PORT)
 endif
 
+SKIP_YARN ?= 0
+
 
 help:
 	@echo 'Makefile for a pelican Web site                                           '
@@ -41,10 +43,13 @@ help:
 	@echo '                                                                          '
 	@echo 'Set the DEBUG variable to 1 to enable debugging, e.g. make DEBUG=1 html   '
 	@echo 'Set the RELATIVE variable to 1 to enable relative urls                    '
+	@echo 'Set the SKIP_YARN variable to 1 to skip yarn build, e.g. make SKIP_YARN=1 html'
 	@echo '                                                                          '
 
 html:
+ifeq ($(SKIP_YARN), 0)
 	yarn build
+endif
 	"$(PELICAN)" "$(INPUTDIR)" -o "$(OUTPUTDIR)" -s "$(CONFFILE)" $(PELICANOPTS)
 	$(MAKE) post_build_cleanup
 
