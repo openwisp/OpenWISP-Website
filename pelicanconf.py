@@ -27,6 +27,7 @@ MENU = {
     "Support": {
         "Community Support": "support/",
         "Commercial Support": "commercial-support/",
+        "Deploy Like a Pro": "deploy/",
     },
     "Docs": "https://openwisp.io/docs/stable/",
     "Blog": "blog/",
