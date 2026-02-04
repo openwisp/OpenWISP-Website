@@ -86,10 +86,11 @@ document.addEventListener("DOMContentLoaded", function () {
   if (typeof _paq === "undefined") {
     return;
   }
+  var pageName = window.location.pathname.split("/").filter(Boolean).pop() || "modal";
   document.querySelectorAll("a.open-modal").forEach(function (link) {
     link.addEventListener("click", function () {
       var linkText = link.textContent.trim();
-      _paq.push(["trackEvent", "Feature", "Modal", linkText]);
+      _paq.push(["trackEvent", pageName, "open-modal", linkText]);
     });
   });
 });
