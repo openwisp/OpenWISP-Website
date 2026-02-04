@@ -228,7 +228,6 @@
       </div>
     </footer>
     <script src="{{ SITEURL }}/theme/js/theme.min.js?v=2" defer></script>
-    {% block scripts %}{% endblock %}
     {% if MATOMO_SITE_ID %}
       <!-- Matomo -->
       <script>
@@ -259,5 +258,6 @@
       ></noscript>
       <!-- End Matomo Code -->
     {% endif %}
+    {% block scripts %}{% endblock %}
   </body>
 </html>

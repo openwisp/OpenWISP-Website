@@ -53,3 +53,15 @@ document.addEventListener("DOMContentLoaded", function () {
     openFragment(event.target.location.hash);
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof _paq === "undefined") {
+    return;
+  }
+  document.querySelectorAll("aside.faq .menu-list > li > a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      var linkText = link.textContent.trim();
+      _paq.push(["trackEvent", "FAQ", "Open", linkText]);
+    });
+  });
+});
