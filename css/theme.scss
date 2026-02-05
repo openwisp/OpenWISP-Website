@@ -69,13 +69,14 @@ $weight-semibold: 600;
   $control-border-width: 1px,
   $input-shadow: none,
   $navbar-breakpoint: 800px,
-  $tablet: 450px,
   $footer-padding: 1.5rem,
   $media-spacing: 0.7rem,
   $media-spacing-large: 1.1rem
 );
 
 @use "sass:color";
+@use "bulma/sass/utilities/mixins" as bulma-mixins;
+@use "bulma/sass/utilities/initial-variables" as bulma-vars;
 @use "@fortawesome/fontawesome-free/scss/variables" with (
   $font-path: "../webfonts",
   $font-display: swap
@@ -465,6 +466,14 @@ body {
 }
 p.button-container .button {
   margin: 5px;
+}
+// Adjustment for the main call to action buttons in
+// home page which look terrible on mobile
+p.button-container .button.is-block-mobile {
+  @include bulma-mixins.until(bulma-vars.$tablet) {
+    margin: 1rem auto;
+    max-width: 55%;
+  }
 }
 #top-feature-container {
   min-height: var(--km);
