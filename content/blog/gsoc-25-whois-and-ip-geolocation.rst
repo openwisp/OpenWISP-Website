@@ -45,15 +45,13 @@ reported. This feature helps administrators improve network visibility,
 identify anomalies, and streamline troubleshooting by providing context
 about IP addresses directly within the OpenWISP platform.
 
-For further details on these features and their functionality within
-OpenWISP, see the documentation pages listed here (**the links below
-temporarily reference GitHub RST files and will be updated to the official
-documentation once merged in master**):
+For further information on these new features, refer to the dedicated
+documentation pages:
 
 - `WHOIS Lookup
-  <https://github.com/openwisp/openwisp-controller/blob/issues/1034-fuzzy-location-creation/docs/user/whois.rst>`_
+  <https://openwisp.io/docs/dev/controller/user/whois.html>`_
 - `Estimated Location
-  <https://github.com/openwisp/openwisp-controller/blob/issues/1034-fuzzy-location-creation/docs/user/estimated-location.rst>`_
+  <https://openwisp.io/docs/dev/controller/user/estimated-location.html>`_
 
 Building WHOIS and IP Geolocation Functionality
 -----------------------------------------------
@@ -174,21 +172,13 @@ Functional Highlights:
 Current state
 -------------
 
-We are maintaining the ``gsoc25-whois`` branch as parent branch for all
-the WHOIS and IP geolocation features. Once all the PRs are merged and
-features are tested and validated, we can proceed with releasing these
-along with OpenWISP 26.
-
-All the WHOIS feature related PRs are merged to the ``gsoc25-whois``
-branch except `Updating stale WHOIS records #1116
-<https://github.com/openwisp/openwisp-controller/pull/1116>`_ which is
-pending review.
-
-The Estimated location feature related PRs `Estimated Location Creation
-#1067 <https://github.com/openwisp/openwisp-controller/pull/1067>`_ and
-`Estimated Location: Admin and API filters #1109
-<https://github.com/openwisp/openwisp-controller/pull/1109>`_ are also
-pending review.
+All WHOIS and Estimated Location features have been merged and are now
+available in the OpenWISP Controller. For detailed documentation, refer to
+the `WHOIS Lookup
+<https://openwisp.io/docs/dev/controller/user/whois.html>`_ and `Estimated
+Location
+<https://openwisp.io/docs/dev/controller/user/estimated-location.html>`_
+guides.
 
 My Experience
 -------------
