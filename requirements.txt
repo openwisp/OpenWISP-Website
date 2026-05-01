@@ -1,4 +1,4 @@
-pelican~=4.11.0
+pelican~=4.12.0
 pelican-jinja2content~=1.0.1
 pelican-minify~=2.0.1
 pelican-sitemap~=1.2.2
