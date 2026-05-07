@@ -1,151 +1,172 @@
-Stellar's OpenWisp Adoption Journey
-===================================
+Stellar's OpenWISP Adoption Journey: From Fork to Extension
+===========================================================
 
 :date: 2026-05-05
 :author: Alexandre Vincent
-:tags: ??
-:category: ??
+:tags: openwisp, networking, open-source, devops
+:category: Community
 :lang: en
+:summary: How Stellar Telecommunications transitioned from a forked OpenWISP setup to a fully extended architecture.
 
 ..
     :image_url: https://openwisp.org/images/blog/gsoc26/openwisp-10-years-google-summer-of-code.webp
     :image_width: 798
     :image_height: 532
 
-At `Stellar Telecommunications<http://stellar.tc>`_, we build connectivity solutions for the world's most demanding environments.
+At `Stellar Telecommunications <http://stellar.tc>`_, we build connectivity solutions for some of the world's most demanding environments.
 Our flagship product, the GLOBBLE router, is a multilink router that uses our proprietary STEER software to deliver ubiquitous, high-speed internet.
-By seamlessly connecting to and intelligently switching between cellular, Wi-Fi, and satellite networks, GLOBBLE aims to ensures an industry-leading 99% internet availability.
+By seamlessly connecting to and intelligently switching between cellular, Wi-Fi, and satellite networks, GLOBBLE aims to ensure an industry-leading 99% internet availability.
 
-As we've scaled, we've relied on powerful open-source tools to manage our fleet of GLOBBLE routers.
-For the past two years, we've leveraged OpenWISP to allow us to remotely manage our Dual-Cellular + WAN connections at scale.
-Our team working on OpenWISP (and related topics) consists of one to two senior devs (depending on availability and other business constraints), with backgrounds primarily in software, network, and system administration.
+As we've scaled, we've relied on open-source tools—particularly OpenWISP—to manage our growing fleet of GLOBBLE routers.
+For the past two years, we've leveraged `OpenWISP <https://openwisp.org/>`_ to remotely manage our dual-cellular + WAN connections at scale.
+Our team working on OpenWISP (and related topics) consists of one to two senior developers (depending on availability and business constraints), with backgrounds in software development, networking, and system administration.
 
-The map
+The Map
 -------
 
 We began our journey with an Ansible-based deployment of the original OpenWISP.
-From the outset, we did not utilize the Wi-Fi-related modules, as they were not relevant to our specific use case.
-It can be argued that our purpose might be slightly different from openwisp original aim (providing management capabilities to WiFi hotspots).
-However most of the required features are the same, or similar enough that it makes sense for us to coordinate our efforts.
+From the outset, we did not utilize the Wi-Fi-related modules, as they were not relevant to our use case.
+It can be argued that our goals differ slightly from OpenWISP's original aim (managing Wi-Fi hotspots).
+However, most of the required features are similar enough that collaboration remains beneficial.
 
-After a couple of years using a somewhat limited set of features of OpenWisp, we reached the limitation of using the original version:
-- No custom configuration for our proprietary routers (based on OpenWRT but with extra features)
-- No adjustment for our daily usage and the newly formed habits of our Operations Team
-- What about improvement that would be useful to us, but mabe a burden to OpenWisp community, or at least would take a long time to integrate into master branch
-- What about customers who wanted some sort of solution to manage the routers they would buy from us.
+After a couple of years using a limited subset of OpenWISP features, we reached several limitations:
 
-=> We would need to fork the repo and manage all our modifications directly on the repo source,
-which was working for a while, but eventually became unsustainable due to all the conflicting changes from various sources.
+- No support for custom configuration of our proprietary routers (based on `OpenWrt <https://openwrt.org/>`_ but extended with additional features)
+- Limited adaptability to our operational workflows and evolving practices
+- Difficulty introducing improvements that might not align immediately with the upstream roadmap
+- Increasing demand from customers for a dedicated management solution for their deployed routers
 
-Seeing that OpenWisp was made with the explicit intent for anyone to extend it for their own usage,
-we got to work and developed an extended version of it to host our own hacks, modifications, features,
-but also regression tests, development environment setup, etc.
+To address these challenges, we initially forked the repository and maintained our own modifications.
+While this worked temporarily, it became unsustainable due to divergence and merge conflicts.
+
+Recognizing that OpenWISP is designed to be extensible, we transitioned to a more robust approach:
+building an extended version of OpenWISP to host our customizations, including features, regression tests, and development tooling.
 
 We followed the official documentation to extend OpenWISP modules.
-When the documentation was not fully up-to-date, we found that the automated tests served as a reliable reference.
+When documentation gaps arose, the automated test suites proved to be a reliable reference.
 
-for the full technical story, read the next chapter "The territory".
+For the full technical details, see the next section: *The Territory*.
 
-Our primary achievement has been the successful transition from an ad-hoc, forked installation of OpenWISP to a fully extended setup.
-This new architecture allows us to develop custom code tailored to our specific routers while also enabling us to identify, fix, and contribute solutions for OpenWISP issues back to the main project in a relatively short time frame.
+Our primary achievement has been the successful transition from an ad-hoc fork to a fully extended architecture.
+This allows us to develop custom features for our routers while identifying, fixing, and contributing upstream improvements in a much shorter time frame.
 
-
-The territory
+The Territory
 -------------
 
-Our technical approach was guided by a set of clear constraints:
- 
-- Do not lose past data.
-- Make the database migration process as simple and safe as possible.
-- Maintain our existing technology stack: OpenWISP 24.11, Django 4.2, Python 3.11, and Debian 12.
-- Establish the ability to thoroughly test all code, and quickly upstream relevant changes.
+Our technical approach was guided by the following constraints:
 
-We have since updated to to Django 5.2, Python 3.13 on Debian 13.
+- Preserve all existing data
+- Keep database migrations simple and safe
+- Maintain our technology stack: OpenWISP 24.11, Django 4.2, Python 3.11, Debian 12
+- Enable thorough testing and facilitate upstream contributions
 
-Our python dev environment for each module is perhaps simpler than OpenWisp's one:
-- We started with direnv + asdf to manage virtual environments, and we recently we moved to mise.
-- pip-tools to manage exact the version of dependencies for a specific version of python itself, and the code. Note that this is workable since noone is supposed to depend on that custom version.
-- We aim to run all tests from any openwisp dependency module, from any repo.
-  This is not yet possible, due to various constraints, but we are working on improving the situation,
-  as it would ensure underlying modules are working as expected, no matter the settings of hte current django project (which might be modified by various actors).
+We have since upgraded to Django 5.2 and Python 3.13 on Debian 13.
 
-## Code and Module Extension
+Our Python development environment for each module is intentionally simpler than OpenWISP’s:
 
- During this process, we noted that for Python code, inheritance is generally effective. However, we encountered several challenges:
- 
-- Some tests contain hardcoded dependencies to OpenWISP apps which need to be overridden.
-- The `swapper` tool requires a significant number of settings, so we actually have default settings that are loaded by the app's ready() method.
-- Certain settings are used at import time, so they need to be overridden at import time, while django is still being setup.
-- We found that duplicating the URL configuration structure in our extended app was the clearest way to handle overriding URLs and views.
-- In rare cases, the import order makes django initialization happen in the wrong order, leading to settings not being taken into account, and other tricky issues.
-- Celery tasks are imported everywhere (transitively when importing the module) -> overriding existing tasks might be troublesome. However we didn't need to so far.
+- Initially based on ``direnv`` and ``asdf`` for environment management; recently migrated to ``mise``
+- Use of ``pip-tools`` to pin exact dependency versions per Python and codebase version
+- A long-term goal to run tests from any OpenWISP dependency module across repositories
 
-## Database Migration Strategy
- 
-While the documentation usually explains how to change models and we could regenerate migrations, it seemed overly complex to get these newly-generated migrations to play nicely with the existing openwisp database, and migrations, and their interdependencies.
-Instead, we adopted the following strategy:
- 
-- We duplicated the migrations from the original OpenWISP modules, fixing dependencies when needed.
-- We also specified the tables & constraints names to point to the original OpenWISP tables & constraints.
-- Our custom changes were added in migrations on top, with an offset for future upgrades.
-- We created a management command that fake-apply the migration if the equivalent openwisp migration is already applied on DB.
-- Our very first migration for extended apps concerns Content Types: original openwisp contenttype needs to be renamed to point to extended app (attempting to keep the foreign keys unchanged in exiting data)
-- All migrations for the extended version need to be reversible (with a backup/restore behaviour on migrate forward), so that we can reverse them, apply updated openwisp migrations, and migrate upwards to restore our own data.
-- Another custom management command was developed to migate the database forward, from a "broken" history graph (migrations in the updates have not been applied, which currently works by fake-reverting our custom migrations before upgrading openwisp, and then fake-reapplying our custom migrations.
+This last goal is not fully achieved yet due to technical constraints, but remains a priority, as it would ensure consistency regardless of Django project configuration.
 
-## Specific modules concerns
+Code and Module Extension
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- openwisp-monitoring can be tricky to extend. For instance, the code in __init__ in db.backends make it harder than necessary to replace only part of it (specifically queries to also access monitoring data, stored either via openwisp2 or the current app)
-- openwisp-formware-upgrader modifies forms and I have yet to succeed getting all tests to pass with an extended controller...
+During this process, we found that inheritance works well for extending Python code, but several challenges emerged:
 
- 
-## Deployment and Git Flow
- 
-For deployment, we use our own Ansible configuration, including/importing task from the original `ansible-openwisp2` role and overriding some when needed.
-This approach allows us to keep our Django project/website with all (safe) settings in source and reduce the amount of settings that can be changed, which simplifies our specific use case.
- 
-Our git workflow involves one branch to integrate changes from OpenWISP, and one branch to integrate our changes, where we periodically merge openwisp changes.
-We use a pipeline similar to the one on openwisp github repos, so whenever we pick a set of changes to upstream it, it has been running in our setup and already passed automated openwisp-qa-checks.
- 
- 
-## Organisational choices (given our limited resources and restricted customization options):
+- Some tests contain hardcoded dependencies on OpenWISP apps that must be overridden
+- The ``swapper`` tool requires many settings; we provide defaults loaded in the app’s ``ready()`` method
+- Certain settings must be overridden at import time, during Django initialization
+- Duplicating URL configuration structures proved to be the clearest way to override views and routes
+- Import order can affect Django initialization, leading to subtle and difficult issues
+- Celery tasks are widely imported transitively, making overrides complex (though we have not needed this yet)
 
-- Each repository is separately runnable in local LAN (via NO_MANAGEMENT_IP setting)
-- Each package manual testing (on LAN environment) and release is therefore independant.
-- When deploying the whole solution, we can, most of the time, grab the latest of each package.
+Database Migration Strategy
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Final django project in separate repo (with recommended settings) and independently testable (on LAN setup) by any dev.
-- We rely on envvar for a very limited customization (no extensibility, only a few tested combination of "flag options", etc.)
-- No need to deploy unreleased version of packages from pipeline (we prefer to release as often as necessary)
-- One straight pipeline, modifying only envvars, using latest version of packages
-- We aim to keep our maintenance effort minimal. 
+Instead of generating new migrations and attempting to reconcile them with existing OpenWISP migrations, we adopted a different strategy:
 
+- Duplicate migrations from original OpenWISP modules, adjusting dependencies as needed
+- Explicitly reference existing database tables and constraints
+- Add custom changes as additional migrations with an offset for future upgrades
+- Provide a management command to fake-apply migrations when equivalent OpenWISP migrations already exist
+- Handle ContentType migration first by remapping original entries to extended apps while preserving foreign keys
+- Ensure all migrations are reversible, allowing safe rollback and reapplication
+- Develop a custom command to handle forward migration from inconsistent migration states by temporarily reverting and reapplying custom migrations
 
-## Challenges and Lessons Learned
- 
-This project has been a valuable learning experience, providing a real-world example of moving from a standard OpenWISP installation to a custom, extended version.
- 
-While the initial effort to upstream our changes was significant, we recognize its long-term value.
-Contributing back to the master branch ensures not only licensing compliance, but also that the entire OpenWISP community, and by extension our own platform, benefits from our findings and fixes.
- 
-Our work has uncovered areas where the platform can evolve, which we're actively contributing to.
-We discovered that not all modules fully support extension; for example, we encountered issues with the `firmware-upgrader` module when using an extended controller.
-We also found that debugging can be difficult, as the tests of one module often do not run correctly from a dependent module, sometimes making it hard to pinpoint where a problem lies.
- 
-Ultimately, this challenging transition was a crucial step in ensuring our GLOBBLE routers remain at the forefront of the industry, delivering the reliability and performance our customers expect.
- 
- 
+Specific Module Concerns
+^^^^^^^^^^^^^^^^^^^^^^^^
 
+Some modules are more difficult to extend:
+
+- ``openwisp-monitoring``: initialization logic in database backends complicates partial overrides, especially for query handling
+- ``openwisp-firmware-upgrader``: modifying forms and extending controllers remains challenging, and not all tests pass in extended setups
+
+Deployment and Git Workflow
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We use a custom Ansible setup, partially based on the
+`ansible-openwisp2 <https://github.com/openwisp/ansible-openwisp2>`_ role, overriding tasks where necessary.
+
+This approach allows us to:
+
+- Keep our Django project configuration in source control
+- Minimize runtime configuration variability
+- Simplify deployments for our specific use case
+
+Our Git workflow consists of:
+
+- One branch tracking upstream OpenWISP changes
+- One branch for internal development, regularly merged with upstream updates
+
+We use CI pipelines similar to those in OpenWISP repositories, ensuring that any upstream contributions have already passed automated QA checks in our environment.
+
+Organizational Choices
+^^^^^^^^^^^^^^^^^^^^^^
+
+Given our limited resources and need for controlled customization:
+
+- Each repository can run independently in a local LAN (using ``NO_MANAGEMENT_IP``)
+- Manual testing and releases are performed per package
+- Deployments typically use the latest version of each package
+
+Additional practices:
+
+- Final Django project resides in a separate repository with recommended settings
+- Limited customization via environment variables (controlled feature flags)
+- Frequent releases preferred over deploying unreleased pipeline artifacts
+- Single deployment pipeline with environment-based configuration
+- Strong focus on minimizing maintenance overhead
+
+Challenges and Lessons Learned
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This project has been a valuable real-world experience in transitioning from a standard OpenWISP setup to a fully extended architecture.
+
+While upstreaming changes required significant effort, it provides long-term benefits:
+
+- Ensures licensing compliance
+- Improves the ecosystem for all users
+- Reduces long-term maintenance burden
+
+We identified areas for improvement in OpenWISP:
+
+- Not all modules fully support extensibility (e.g., firmware upgrader)
+- Debugging can be difficult due to cross-module test dependencies
+- Running tests across module boundaries remains challenging
+
+Despite these challenges, this transition has been essential to maintaining the performance and reliability of our GLOBBLE routers.
 
 Closing Thoughts
 ----------------
 
-We are now operating a fully extended OpenWISP setup.
-This allows us to efficiently develop our own features and contribute fixes back to the community.
+We are now operating a fully extended OpenWISP setup, enabling efficient internal development and active contribution to the community.
 
-Many details have been omitted in this summary, but we hope this overview of our experience will be useful for some of you.
- 
-I'd like to thank the OpenWISP team, and in particular Federico Capoano, for their work and ongoing support of the community.
- 
-Stay safe and connected out there.
+Many technical details have been omitted, but we hope this overview is useful to others facing similar challenges.
 
+If you are working on similar extensions or facing related challenges, we encourage you to engage with the OpenWISP community and share your experience.
+
+We would like to thank the OpenWISP team, and in particular Federico Capoano (OpenWISP Founder), for their work and continued support of the community.
+
+Stay safe and connected.
