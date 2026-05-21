@@ -40,14 +40,14 @@ collaboration remains beneficial.
 
 .. raw:: html
 
-    <div class="mermaid">
-    graph TD;
-    OpenWISP_Users;
-    OpenWISP_Notifications;
-    OpenWISP_Controller;
-    OpenWISP_Monitoring;
-    OpenWISP_FirmwareUpgrader;
-    </div>
+    <pre class="mermaid">
+    graph TD
+    OpenWISP_Users
+    OpenWISP_Notifications
+    OpenWISP_Controller
+    OpenWISP_Monitoring
+    OpenWISP_FirmwareUpgrader
+    </pre>
 
 After a couple of years using a limited subset of OpenWISP features, we
 reached several limitations:
@@ -75,14 +75,14 @@ reliable reference.
 
 .. raw:: html
 
-    <div class="mermaid">
-    graph TD;
-    OpenWISP_Users --> STEER_Users;
-    OpenWISP_Notifications --> STEER_Notifications;
-    OpenWISP_Controller --> STEER_Controller;
-    OpenWISP_Monitoring --> STEER_Monitoring;
-    OpenWISP_FirmwareUpgrader --> STEER_FirmwareUpgrader;
-    </div>
+    <pre class="mermaid">
+    graph TD
+    OpenWISP_Users -- extended --> STEER_Users
+    OpenWISP_Notifications -- extended --> STEER_Notifications
+    OpenWISP_Controller -- extended --> STEER_Controller
+    OpenWISP_Monitoring -- extended --> STEER_Monitoring
+    OpenWISP_FirmwareUpgrader -- extended --> STEER_FirmwareUpgrader
+    </pre>
 
 For the full technical details, see the next section: *The Territory*.
 
@@ -122,7 +122,21 @@ Code and Module Extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 During this process, we found that inheritance works well for extending
-Python code, but several challenges emerged:
+Python code.
+
+.. raw:: html
+
+    <pre class="mermaid">
+    classDiagram
+    class OpenWISP_App
+    class STEER_App
+    class OpenWISP_App_TestCase
+    class STEER_App_TestCase
+    OpenWISP_App <|-- STEER_App
+    OpenWISP_App_TestCase <|-- STEER_App_TestCase
+    </pre>
+
+But several challenges emerged:
 
 - Some tests contain hardcoded dependencies on OpenWISP apps that must be
   overridden
@@ -142,6 +156,19 @@ Database Migration Strategy
 
 Instead of generating new migrations and attempting to reconcile them with
 existing OpenWISP migrations, we adopted a different strategy:
+
+.. raw:: html
+
+    <pre class="mermaid">
+    stateDiagram-v2
+    direction LR
+    OW: OpenWISP DB (vN)
+    STEER: STEER DB (vN)
+    STEER_UP: STEER DB (vN+1)
+    OW --> STEER: Migrate OW to STEER (fake-apply duplicated migrations, remap ContentTypes)
+    STEER --> STEER_UP: Apply upstream OpenWISP migrations
+    STEER --> STEER_UP: Apply custom STEER migrations (via custom command for inconsistent states)
+    </pre>
 
 - Duplicate migrations from original OpenWISP modules, adjusting
   dependencies as needed
@@ -176,6 +203,27 @@ We use a custom Ansible setup, partially based on the `ansible-openwisp2
 <https://github.com/openwisp/ansible-openwisp2>`_ role, overriding tasks
 where necessary.
 
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart LR
+    UP[upstream OpenWISP]
+    subgraph StellarGit["Stellar Git"]
+    direction LR
+    OWDEV[master branch<br/>vanilla OpenWISP extension]
+    STELLARDEV[dev branch<br/>STEER customizations]
+    OWDEV -- periodic merges --> STELLARDEV
+    STELLARDEV -- cherrypicks --> OWDEV
+    end
+    CI[CI pipelines<br/>OpenWISP-like QA]
+    ANS[Custom Ansible<br/>based on ansible-openwisp2]
+    QA[STEER deployment environment for QA<br/>GLOBBLE routers fleet]
+    UP -- release upgrade --> OWDEV
+    OWDEV -- upstream contributions --> UP
+    STELLARDEV --> CI
+    CI --> ANS --> QA
+    </pre>
+
 This approach allows us to:
 
 - Keep our Django project configuration in source control
@@ -196,6 +244,27 @@ Organizational Choices
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Given our limited resources and need for controlled customization:
+
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart LR
+    subgraph Development["1-Dev Flow"]
+    Develop[Develop<br/>local LAN<br/>NO_MANAGEMENT_IP]
+    UnitTests[Unit Tests]
+    LANTests[LAN Tests<br/>manually per-package]
+    Develop --> UnitTests
+    UnitTests -- problems ? --> Develop
+    UnitTests --> LANTests
+    LANTests -- Issues found --> Develop
+    LANTests -- all good ? --> Release
+    end
+    Release[Release<br/>tag &amp; publish package<br/>as frequently as needed]
+    InternalDeploy[Deploy<br/>bump version in Django project<br/>single pipeline, env vars / feature flags]
+    Maintain[Maintain<br/>Goal: minimize maintenance overhead]
+    Release --> InternalDeploy --> Maintain
+    Maintain -- Issue ? --> Develop
+    </pre>
 
 - Each repository can run independently in a local LAN (using
   ``NO_MANAGEMENT_IP``)
