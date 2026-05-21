@@ -38,6 +38,17 @@ differ slightly from OpenWISP's original aim (managing Wi-Fi hotspots).
 However, most of the required features are similar enough that
 collaboration remains beneficial.
 
+.. raw:: html
+
+    <div class="mermaid">
+    graph TD;
+    OpenWISP_Users;
+    OpenWISP_Notifications;
+    OpenWISP_Controller;
+    OpenWISP_Monitoring;
+    OpenWISP_FirmwareUpgrader;
+    </div>
+
 After a couple of years using a limited subset of OpenWISP features, we
 reached several limitations:
 
@@ -61,6 +72,17 @@ tooling.
 We followed the official documentation to extend OpenWISP modules. When
 documentation gaps arose, the automated test suites proved to be a
 reliable reference.
+
+.. raw:: html
+
+    <div class="mermaid">
+    graph TD;
+    OpenWISP_Users --> STEER_Users;
+    OpenWISP_Notifications --> STEER_Notifications;
+    OpenWISP_Controller --> STEER_Controller;
+    OpenWISP_Monitoring --> STEER_Monitoring;
+    OpenWISP_FirmwareUpgrader --> STEER_FirmwareUpgrader;
+    </div>
 
 For the full technical details, see the next section: *The Territory*.
 
