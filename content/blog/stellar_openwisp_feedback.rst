@@ -8,11 +8,14 @@ Stellar's OpenWISP Adoption Journey: From Fork to Extension
 :lang: en
 :summary: How Stellar Telecommunications transitioned from a forked
     OpenWISP setup to a fully extended architecture.
+:image_url: https://openwisp.org/images/blog/steer-management.webp
+:image_width: 1200
+:image_height: 400
 
-..
-    :image_url: https://openwisp.org/images/blog/gsoc26/openwisp-10-years-google-summer-of-code.webp
-    :image_width: 798
-    :image_height: 532
+.. image:: {static}/images/blog/steer-management.webp
+    :alt: Stellar's OpenWISP extension: STEER-MANAGEMENT
+    :align: center
+    :target: /blog/stellars-openwisp-adoption-journey-from-fork-to-extension/
 
 At `Stellar Telecommunications <http://stellar.tc>`_, we bring resilient
 connectivity across networks to mobility, enterprise, and governments,
@@ -20,13 +23,13 @@ leveraging the combined strength of all terrestrial and satellite
 networks. We offer software, data plans, and all-inclusive options for
 unbreakable and sovereign connectivity needs.
 
-As we've scaled, we've relied on open-source tools—particularly
-OpenWISP—to manage our growing fleet of GLOBBLE routers. For the past two
-years, we've leveraged `OpenWISP <https://openwisp.org/>`_ to remotely
-manage our dual-cellular + WAN connections at scale. Our team working on
-OpenWISP (and related topics) consists of one to two senior developers
-(depending on availability and business constraints), with backgrounds in
-software development, networking, and system administration.
+As we've scaled, we've relied on open-source tools - particularly OpenWISP
+- to manage our growing fleet of GLOBBLE routers. For the past two years,
+we've leveraged `OpenWISP <https://openwisp.org/>`_ to remotely manage our
+dual-cellular + WAN connections at scale. Our team working on OpenWISP
+(and related topics) consists of one to two senior developers (depending
+on availability and business constraints), with backgrounds in software
+development, networking, and system administration.
 
 The Map
 -------
@@ -317,7 +320,7 @@ encourage you to engage with the OpenWISP community and share your
 experience.
 
 We would like to thank the OpenWISP team, and in particular Federico
-Capoano (OpenWISP Founder), for their work and continued support of the
-community.
+Capoano (OpenWISP Lead Maintainer), for their work and continued support
+of the community.
 
 Stay safe and connected.
