@@ -1,11 +1,12 @@
 Stellar's OpenWISP Adoption Journey: From Fork to Extension
 ===========================================================
 
-:date: 2026-05-05
+:date: 2026-06-02
 :author: Alexandre Vincent
 :tags: openwisp, networking, open-source, devops
 :category: Community
 :lang: en
+:mermaid: true
 :summary: How Stellar Telecommunications transitioned from a forked
     OpenWISP setup to a fully extended architecture.
 :image_url: https://openwisp.org/images/blog/steer-management.webp
@@ -17,14 +18,14 @@ Stellar's OpenWISP Adoption Journey: From Fork to Extension
     :align: center
     :target: /blog/stellars-openwisp-adoption-journey-from-fork-to-extension/
 
-At `Stellar Telecommunications <http://stellar.tc>`_, we bring resilient
+At `Stellar Telecommunications <https://stellar.tc>`_, we bring resilient
 connectivity across networks to mobility, enterprise, and governments,
 leveraging the combined strength of all terrestrial and satellite
 networks. We offer software, data plans, and all-inclusive options for
 unbreakable and sovereign connectivity needs.
 
-As we've scaled, we've relied on open-source tools - particularly OpenWISP
-- to manage our growing fleet of GLOBBLE routers. For the past two years,
+As we've scaled, we've relied on open-source tools, particularly OpenWISP,
+to manage our growing fleet of GLOBBLE routers. For the past two years,
 we've leveraged `OpenWISP <https://openwisp.org/>`_ to remotely manage our
 dual-cellular + WAN connections at scale. Our team working on OpenWISP
 (and related topics) consists of one to two senior developers (depending
@@ -108,7 +109,7 @@ Our technical approach was guided by the following constraints:
 We have since upgraded to Django 5.2 and Python 3.13 on Debian 13.
 
 Our Python development environment for each module is intentionally
-simpler than OpenWISP’s:
+simpler than OpenWISP's:
 
 - Initially based on ``direnv`` and ``asdf`` for environment management;
   recently migrated to ``mise``
@@ -144,7 +145,7 @@ But several challenges emerged:
 - Some tests contain hardcoded dependencies on OpenWISP apps that must be
   overridden
 - The ``swapper`` tool requires many settings; we provide defaults loaded
-  in the app’s ``ready()`` method
+  in the app's ``ready()`` method
 - Certain settings must be overridden at import time, during Django
   initialization
 - Duplicating URL configuration structures proved to be the clearest way
