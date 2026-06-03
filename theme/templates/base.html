@@ -90,13 +90,6 @@
           title="{{ SITENAME|striptags }} Tags RSS Feed"
         />
       {% endif %}
-      <script src="{{ SITEURL }}/theme/js/mermaid.min.js"></script>
-      <script>
-        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-        document.addEventListener('DOMContentLoaded', () => {
-          mermaid.run();
-        });
-      </script>
       <meta name="generator" content="Pelican" />
     {% endblock head %}
   </head>
