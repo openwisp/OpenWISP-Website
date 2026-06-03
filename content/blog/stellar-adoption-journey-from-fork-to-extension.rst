@@ -7,8 +7,6 @@ Stellar's OpenWISP Adoption Journey: From Fork to Extension
 :category: Community
 :lang: en
 :mermaid: true
-:summary: How Stellar Telecommunications transitioned from a forked
-    OpenWISP setup to a fully extended architecture.
 :image_url: https://openwisp.org/images/blog/steer-management.webp
 :image_width: 1200
 :image_height: 400
