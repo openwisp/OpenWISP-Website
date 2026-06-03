@@ -4,4 +4,4 @@ pelican-minify~=2.0.2
 pelican-sitemap~=1.2.2
 typogrify~=2.1.0
 pylinkvalidator
-openwisp-utils[qa] @ https://github.com/openwisp/openwisp-utils/tarball/1.2
+openwisp-utils[qa] @ https://github.com/openwisp/openwisp-utils/tarball/fix/node_modules-rst-exclude
