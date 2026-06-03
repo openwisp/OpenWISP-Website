@@ -13,5 +13,4 @@ kill "${pid}"
 openwisp-qa-check \
     --skip-checkmigrations \
     --skip-checkmakemigrations \
-    --skip-checkendline \
-    --skip-checkrst
+    --skip-checkendline
