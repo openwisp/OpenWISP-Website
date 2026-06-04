@@ -262,12 +262,12 @@ existing OpenWISP migrations, we adopted a different strategy:
       **Disclaimer:** This is the approach we are currently using to
       manage deployments and automatic database upgrades. It might not be
       the best solution - or even a safe one. Do not blindly copy-paste or
-      run code form the internet (or any AI). Use your own judgement
+      run code from the internet (or any AI). Use your own judgement
       before running any code. You are responsible for the code you
       execute, so make sure you understand it first.
 
-The command to fake-apply migrations when an equivalent OpenWISP migration
-has already been applied to the database is straightforward
+Here is the command to fake-apply migrations when an equivalent OpenWISP
+migration has already been applied to the database
 
 .. code-block:: python
 
