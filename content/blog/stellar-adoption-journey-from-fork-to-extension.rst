@@ -23,12 +23,15 @@ networks. We offer software, data plans, and all-inclusive options for
 unbreakable and sovereign connectivity needs.
 
 As we've scaled, we've relied on open-source tools, particularly OpenWISP,
-to manage our growing fleet of GLOBBLE routers. For the past two years,
-we've leveraged `OpenWISP <https://openwisp.org/>`_ to remotely manage our
-dual-cellular + WAN connections at scale. Our team working on OpenWISP
-(and related topics) consists of one to two senior developers (depending
-on availability and business constraints), with backgrounds in software
-development, networking, and system administration.
+to manage our growing fleet. We currently manage several hundred GLOBBLE
+routers across multiple OpenWISP instances, with over a hundred routers
+per instance. For the past two years, we've leveraged OpenWISP
+<https://openwisp.org/>_ to remotely manage our dual-cellular + WAN
+connections. Our core OpenWISP development team consists of one to two
+senior developers (depending on availability and business constraints)
+with backgrounds in software development, networking, and system
+administration, while a separate operations team handles day-to-day router
+maintenance using the platform.
 
 The Map
 -------
