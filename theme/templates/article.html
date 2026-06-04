@@ -90,3 +90,14 @@
     </div>
   </article>
 {% endblock %}
+{% block scripts %}
+  {% if article.mermaid %}
+    <script src="{{ SITEURL }}/theme/js/mermaid.min.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        mermaid.run();
+      });
+    </script>
+  {% endif %}
+{% endblock %}
