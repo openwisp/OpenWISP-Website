@@ -153,6 +153,75 @@ But several challenges emerged:
 - Celery tasks are widely imported transitively, making overrides complex
   (though we have not needed this yet)
 
+Having default settings makes juggling multiple Django apps much more
+manageable. It is a small and simple piece of code, but it makes extending
+OpenWISP a much more practical choice than it might seem at first. As an
+example, our defaults settings (for ``swapper`` or others) for
+``openwisp_steer_users`` are defined in a dedicated file:
+
+**File: defaults.py**
+
+.. code-block:: python
+
+    # Because we extend openwisp-users
+    # Setting models for swapper module
+    OPENWISP_USERS_GROUP_MODEL = "openwisp_steer_users.Group"
+    OPENWISP_USERS_ORGANIZATION_MODEL = "openwisp_steer_users.Organization"
+    OPENWISP_USERS_ORGANIZATIONUSER_MODEL = "openwisp_steer_users.OrganizationUser"
+    OPENWISP_USERS_ORGANIZATIONOWNER_MODEL = "openwisp_steer_users.OrganizationOwner"
+
+These can then be loaded during ``django.setup()`` via an extended
+``AppConfig.__init__()`` or ``AppConfig.ready()``, depending on when the
+settings should be activated during setup time.
+
+As is usually the case with complex Python code like Django, using the
+debugger is mandatory to understand what is actually happening when
+writing code. For instance, here is what worked for us with
+``openwisp_steer_users``:
+
+**File: app.py**
+
+.. code-block:: python
+
+    class OpenwispExtensionUsersConfig(OpenwispUsersConfig):
+        name = "openwisp_steer_users"
+        label = "openwisp_steer_users"
+
+        def __init__(self, app_name, app_module) -> None:
+            super().__init__(app_name, app_module)
+
+            from .defaults import (
+                OPENWISP_USERS_GROUP_MODEL,
+                OPENWISP_USERS_ORGANIZATION_MODEL,
+                OPENWISP_USERS_ORGANIZATIONOWNER_MODEL,
+                OPENWISP_USERS_ORGANIZATIONUSER_MODEL,
+            )
+
+            # Because we extend openwisp-users
+            # Setting models for swapper module
+            settings.OPENWISP_USERS_GROUP_MODEL = getattr(
+                settings, "OPENWISP_USERS_GROUP_MODEL", OPENWISP_USERS_GROUP_MODEL
+            )
+            settings.OPENWISP_USERS_ORGANIZATION_MODEL = getattr(
+                settings,
+                "OPENWISP_USERS_ORGANIZATION_MODEL",
+                OPENWISP_USERS_ORGANIZATION_MODEL,
+            )
+            settings.OPENWISP_USERS_ORGANIZATIONUSER_MODEL = getattr(
+                settings,
+                "OPENWISP_USERS_ORGANIZATIONUSER_MODEL",
+                OPENWISP_USERS_ORGANIZATIONUSER_MODEL,
+            )
+            settings.OPENWISP_USERS_ORGANIZATIONOWNER_MODEL = getattr(
+                settings,
+                "OPENWISP_USERS_ORGANIZATIONOWNER_MODEL",
+                OPENWISP_USERS_ORGANIZATIONOWNER_MODEL,
+            )
+
+The same pattern can be repeated for any django app extension you wish to
+write, provided there is no interaction with module import logic. But as
+always, when in doubt, trust your debugger.
+
 Database Migration Strategy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -168,8 +237,8 @@ existing OpenWISP migrations, we adopted a different strategy:
     STEER: STEER DB (vN)
     STEER_UP: STEER DB (vN+1)
     OW --> STEER: Migrate OW to STEER (fake-apply duplicated migrations, remap ContentTypes)
-    STEER --> STEER_UP: Apply upstream OpenWISP migrations
-    STEER --> STEER_UP: Apply custom STEER migrations (via custom command for inconsistent states)
+    STEER --> STEER_UP: Apply upstream OpenWISP migrations (via custom command for inconsistent states)
+    STEER --> STEER_UP: Apply custom STEER migrations
     </pre>
 
 - Duplicate migrations from original OpenWISP modules, adjusting
@@ -187,6 +256,177 @@ existing OpenWISP migrations, we adopted a different strategy:
   migration states by temporarily reverting and reapplying custom
   migrations
 
+      **Disclaimer:** This is the approach we are currently using to
+      manage deployments and automatic database upgrades. It might not be
+      the best solution - or even a safe one. Do not blindly copy-paste or
+      run code form the internet (or any AI). Use your own judgement
+      before running any code. You are responsible for the code you
+      execute, so make sure you understand it first.
+
+The command to fake-apply migrations when an equivalent OpenWISP migration
+has already been applied to the database is straightforward
+
+.. code-block:: python
+
+    class Command(BaseCommand):
+        help = "Mark migrations as applied for OpenWISP extended apps"
+
+        def add_arguments(self, parser):
+            parser.add_argument(
+                "--database",
+                default=DEFAULT_DB_ALIAS,
+                help="Nominates a database to synchronize",
+            )
+
+        def handle(self, *args, **options):
+            migrations = fake_migrations_registry.get_all()
+            connection = connections[options["database"]]
+            executor = MigrationExecutor(connection)
+            state = executor.loader.project_state()
+
+            def cmd_msg(app_label, migration_name, msg, indent=2, style=None):
+                prefix = f"{' ' * indent}- {app_label}"
+                if migration_name:
+                    prefix += f".{migration_name}"
+
+                if style:
+                    self.stdout.write(style(f"{prefix}: {msg}"))
+                else:
+                    self.stdout.write(f"{prefix}: {msg}")
+
+            for original_app_label, (
+                app_label,
+                start,
+                end,
+                skip,
+                skip_initial,
+            ) in migrations.items():
+                cmd_msg(app_label, None, "Faking migrations...", indent=0)
+
+                for i in range(start, end + 1):
+                    if skip and i in skip:
+                        continue
+                    migration_name = f"{i:04d}"
+                    try:
+                        # Get the migration
+                        migration = executor.loader.get_migration_by_prefix(
+                            app_label, migration_name
+                        )
+                        if not migration:
+                            continue
+
+                    except Exception as e:
+                        cmd_msg(
+                            app_label,
+                            migration_name,
+                            f"Error loading migration: {e}",
+                            style=self.style.ERROR,
+                        )
+                        # Raise immediately, we cant even load the migration
+                        raise CommandError(f"Error loading migration: {e}")
+
+                    # Check if migration is already applied
+                    if (
+                        app_label,
+                        migration.name,
+                    ) in executor.loader.applied_migrations:
+                        cmd_msg(app_label, migration.name, "SKIPPED. Already applied.")
+                        continue
+                    else:
+                        # Check if original app migration is applied
+                        if (
+                            original_app_label,
+                            migration.name,
+                        ) not in executor.loader.applied_migrations:
+                            err_msg = (
+                                f"Original Migration "
+                                f"{original_app_label}.{migration_name}"
+                                " not applied on DB."
+                            )
+                            cmd_msg(
+                                app_label,
+                                migration.name,
+                                f"ERROR. {err_msg}",
+                                style=self.style.ERROR,
+                            )
+
+                            raise CommandError(
+                                f"{err_msg}"
+                                "\nYou might want to use `migrate` to apply "
+                                f"{app_label}.{migration_name} instead."
+                            )
+                            # we need to stop applying migrations here, even fake ones
+                            # continuing would write inconsistent history into the DB
+
+                    try:
+                        # Only use fake_initial for initial migrations,
+                        # otherwise use fake=True
+                        if i == start and not skip_initial and migration.initial:
+                            state = executor.apply_migration(
+                                state,
+                                migration,
+                                fake=False,  # Don't use fake here,
+                                # it prevents useful checks
+                                fake_initial=True,
+                            )
+
+                            cmd_msg(
+                                app_label,
+                                migration.name,
+                                "[initial] Faked successfully",
+                            )
+
+                        else:
+                            state = executor.apply_migration(
+                                state, migration, fake=True, fake_initial=False
+                            )
+
+                            cmd_msg(app_label, migration.name, "Faked successfully")
+
+                    except Exception as e:
+                        # Raise immediately, we are applying migrations
+                        # and we dont know what went wrong
+                        raise CommandError(
+                            f"Failed to fake migration {app_label}.{migration.name}. "
+                            f"This usually means the tables from {original_app_label} "
+                            f"app are not present. Are you running this on an existing "
+                            f"OpenWISP 1.1.1 database?"
+                            f"Error: {str(e)}"
+                        )
+
+            self.stdout.write(
+                self.style.SUCCESS("\nSuccessfully processed all registered migrations")
+            )
+
+``fake_migrations_registry`` is a registry listing the migrations that are
+duplicated from OpenWISP and, therefore, may have potentially already been
+applied to the database (depending on the version of OpenWISP being
+extended). This effectively allows you to deploy an extension on top of a
+database that was previously used with OpenWISP.
+
+However, to make this usable, the content types and versions in the
+database need to be updated. To achieve this, the extension requires its
+own migrations. To prevent issues, these migrations should be reversible
+without breaking foreign keys. This way you can revert and reapply them
+without losing information.
+
+Furthermore, when running ``./manage.py migrate`` after updating the
+extension itself to follow OpenWISP changes, you might end up in an
+inconsistent state. This is because migrations (the openwisp duplicates)
+have been added earlier in the list of applied migrations. To resolve
+this, you will need to:
+
+- First (fake-)unapply the extension specific migrations
+- Then apply the openwisp-duplicated migrations to bring the DB up to date
+- And finally (fake-)apply the extension specific migrations
+
+Faking the apply/unapply process is fine when the extension specific
+migrations do not change. However, when your extension specific migrations
+need to change between versions, you'll have to actually unapply-reapply
+them - which is when their reversibility will come in handy.
+
+Or you can always create another migration on top.
+
 Specific Module Concerns
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -197,6 +437,12 @@ Some modules are more difficult to extend:
 - ``openwisp-firmware-upgrader``: modifying forms and extending
   controllers remains challenging, and not all tests pass in extended
   setups
+
+We are currently collaborating with OpenWISP to make these simpler to
+extend and work with other customized OpenWISP modules, helping to
+maintain consistency between projects and ensuring tests can run with a
+wide variety of setups. It is this kind of boring but necessary work that
+keeps a project like OpenWISP meaningful for a lot of us.
 
 Deployment and Git Workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
