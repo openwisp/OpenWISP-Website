@@ -955,8 +955,37 @@ article.blog {
     font-weight: $weight-semibold;
   }
 
+  .content :not(pre) > code,
+  .content code.docutils.literal,
+  .content tt.docutils.literal {
+    padding: 0.16em .4em;
+    border-radius: 0.25em;
+    background-color: var(--bulma-orange-light);
+    color: var(--bulma-orange-dark);
+    font-size: 1.1em;
+    font-weight: $weight-medium;
+  }
+
+  .content code.docutils.literal .pre,
+  .content tt.docutils.literal .pre {
+    color: inherit;
+    font-size: inherit;
+  }
+
   img {
     display: block;
+    margin: 1.5rem auto;
+  }
+
+  object[type="image/svg+xml"] {
+    display: block;
+    width: 100%;
+    inline-size: 100%;
+    max-width: 100%;
+    max-inline-size: 100%;
+    height: auto;
+    aspect-ratio: 3 / 1;
+    object-fit: contain;
     margin: 1.5rem auto;
   }
 

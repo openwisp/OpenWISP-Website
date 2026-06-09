@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="100%"
+   height="100%"
+   viewBox="0 0 1200 520"
+   preserveAspectRatio="xMidYMid meet"
+   role="img"
+   aria-labelledby="title desc"
+   version="1.1"
+   id="svg42"
+   sodipodi:docname="agent-debugging-loop.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview42"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="3.9535304"
+     inkscape:cx="1092.0619"
+     inkscape:cy="379.5342"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg42" />
+  <title
+     id="title">Supervised AI debugging loop</title>
+  <desc
+     id="desc">A diagram showing flaky CI logs flowing into an agent-generated report, human review, prioritized fixes, local stress tests, GitHub Actions reruns, and report updates that repeat until failures go down.</desc>
+  <defs
+     id="defs9">
+    <linearGradient
+       id="bg"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#061526"
+         id="stop1" />
+      <stop
+         offset="0.55"
+         stop-color="#09283d"
+         id="stop2" />
+      <stop
+         offset="1"
+         stop-color="#0a1f2f"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       id="card"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#123752"
+         id="stop4" />
+      <stop
+         offset="1"
+         stop-color="#0c263a"
+         id="stop5" />
+    </linearGradient>
+    <linearGradient
+       id="accent"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#f7941d"
+         id="stop6" />
+      <stop
+         offset="1"
+         stop-color="#20c997"
+         id="stop7" />
+    </linearGradient>
+    <filter
+       id="shadow"
+       x="-0.023113208"
+       y="-0.082214765"
+       width="1.0462264"
+       height="1.1979866">
+      <feGaussianBlur
+         in="SourceAlpha"
+         stdDeviation="10"
+         result="blur"
+         id="feGaussianBlur7" />
+      <feOffset
+         in="blur"
+         dx="0"
+         dy="10"
+         result="offsetBlur"
+         id="feOffset7" />
+      <feFlood
+         flood-color="#000000"
+         flood-opacity="0.28"
+         result="shadowColor"
+         id="feFlood7" />
+      <feComposite
+         in="shadowColor"
+         in2="offsetBlur"
+         operator="in"
+         result="shadow"
+         id="feComposite7" />
+      <feMerge
+         id="feMerge8">
+        <feMergeNode
+           in="shadow"
+           id="feMergeNode7" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode8" />
+      </feMerge>
+    </filter>
+    <marker
+       id="arrow"
+       viewBox="0 0 10 10"
+       refX="9"
+       refY="5"
+       markerWidth="5"
+       markerHeight="5"
+       orient="auto-start-reverse">
+      <path
+         d="M0 0L10 5L0 10Z"
+         fill="#f7941d"
+         id="path8" />
+    </marker>
+    <pattern
+       id="grid"
+       width="40"
+       height="40"
+       patternUnits="userSpaceOnUse">
+      <path
+         d="M40 0H0V40"
+         fill="none"
+         stroke="#ffffff"
+         stroke-width="1"
+         opacity="0.05"
+         id="path9" />
+    </pattern>
+    <style
+       id="style9">
+      .label { fill: #ffffff; font-family: Inter, Arial, sans-serif; font-size: 25px; font-weight: 700; }
+      .node-label { fill: #ffffff; font-family: Inter, Arial, sans-serif; font-size: 20px; font-weight: 700; dominant-baseline: middle; }
+      .small { fill: #c8d9e8; font-family: Inter, Arial, sans-serif; font-size: 17px; }
+      .tiny { fill: #91a9bc; font-family: Inter, Arial, sans-serif; font-size: 14px; }
+      .step { fill: #ffffff; font-family: Inter, Arial, sans-serif; font-size: 18px; font-weight: 700; }
+    </style>
+  </defs>
+  <rect
+     width="1200"
+     height="520"
+     rx="34"
+     fill="url(#bg)"
+     id="rect9" />
+  <rect
+     width="1200"
+     height="520"
+     rx="34"
+     fill="url(#grid)"
+     id="rect10" />
+  <text
+     x="70"
+     y="72"
+     class="label"
+     id="text10">The supervised debugging loop</text>
+  <text
+     x="70"
+     y="104"
+     class="small"
+     id="text11">The agent did the repetitive work I would have done manually, while I reviewed reports and steered priorities.</text>
+  <g
+     filter="url(#shadow)"
+     id="g35">
+    <rect
+       x="70"
+       y="155"
+       width="220"
+       height="118"
+       rx="22"
+       fill="url(#card)"
+       stroke="#2e617f"
+       id="rect11" />
+    <circle
+       cx="105"
+       cy="190"
+       r="19"
+       fill="#ff3b5f"
+       opacity="0.95"
+       id="circle11" />
+    <text
+       x="101"
+       y="197"
+       class="step"
+       id="text12">1</text>
+    <text
+       x="135"
+       y="192"
+       class="node-label"
+       id="text13">Flaky CI logs</text>
+    <text
+       x="88"
+       y="234"
+       class="small"
+       id="text14">Failed and restarted</text>
+    <text
+       x="88"
+       y="257"
+       class="small"
+       id="text15">GitHub Actions runs</text>
+    <rect
+       x="370"
+       y="155"
+       width="220"
+       height="118"
+       rx="22"
+       fill="url(#card)"
+       stroke="#2e617f"
+       id="rect15" />
+    <circle
+       cx="405"
+       cy="190"
+       r="19"
+       fill="#f7941d"
+       id="circle15" />
+    <text
+       x="399.81305"
+       y="197"
+       class="step"
+       id="text16">2</text>
+    <text
+       x="435"
+       y="192"
+       class="node-label"
+       id="text17">Agent report</text>
+    <text
+       x="388"
+       y="234"
+       class="small"
+       id="text18">Patterns, frequency,</text>
+    <text
+       x="388"
+       y="257"
+       class="small"
+       id="text19">Possible fixes</text>
+    <rect
+       x="670"
+       y="155"
+       width="220"
+       height="118"
+       rx="22"
+       fill="url(#card)"
+       stroke="#2e617f"
+       id="rect19" />
+    <circle
+       cx="705"
+       cy="190"
+       r="19"
+       fill="#20c997"
+       id="circle19"
+       style="fill:#1cc896;fill-opacity:1" />
+    <text
+       x="701"
+       y="197"
+       class="step"
+       id="text20">3</text>
+    <text
+       x="735"
+       y="192"
+       class="node-label"
+       id="text21">Human review</text>
+    <text
+       x="688"
+       y="234"
+       class="small"
+       id="text22">Hints, priorities,</text>
+    <text
+       x="688"
+       y="257"
+       class="small"
+       id="text23">Methodology</text>
+    <rect
+       x="970"
+       y="155"
+       width="160"
+       height="118"
+       rx="22"
+       fill="url(#card)"
+       stroke="#2e617f"
+       id="rect23" />
+    <circle
+       cx="1005"
+       cy="190"
+       r="19"
+       fill="#71f7b1"
+       id="circle23"
+       style="fill:#007a8a;fill-opacity:1" />
+    <text
+       x="1000.187"
+       y="197"
+       class="step"
+       id="text24">4</text>
+    <text
+       x="1035"
+       y="192"
+       class="node-label"
+       id="text25">Fix</text>
+    <text
+       x="988"
+       y="234"
+       class="small"
+       id="text26">Small targeted</text>
+    <text
+       x="988"
+       y="257"
+       class="small"
+       id="text27">Changes first</text>
+    <rect
+       x="760"
+       y="335"
+       width="260"
+       height="118"
+       rx="22"
+       fill="url(#card)"
+       stroke="#2e617f"
+       id="rect27" />
+    <circle
+       cx="795"
+       cy="370"
+       r="19"
+       fill="#f7941d"
+       id="circle27"
+       style="fill:#0088d6;fill-opacity:1" />
+    <text
+       x="790.18695"
+       y="377"
+       class="step"
+       id="text28">5</text>
+    <text
+       x="825"
+       y="372"
+       class="node-label"
+       id="text29">Stress runs</text>
+    <text
+       x="778"
+       y="414"
+       class="small"
+       id="text30">Local tests plus repeated</text>
+    <text
+       x="778"
+       y="437"
+       class="small"
+       id="text31">GitHub Actions reruns</text>
+    <rect
+       x="380"
+       y="335"
+       width="260"
+       height="118"
+       rx="22"
+       fill="url(#card)"
+       stroke="#2e617f"
+       id="rect31" />
+    <circle
+       cx="415"
+       cy="370"
+       r="19"
+       fill="#20c997"
+       id="circle31"
+       style="fill:#00bdff;fill-opacity:1" />
+    <text
+       x="410.18695"
+       y="377"
+       class="step"
+       id="text32">6</text>
+    <text
+       x="445"
+       y="372"
+       class="node-label"
+       id="text33">Decision</text>
+    <text
+       x="398"
+       y="414"
+       class="small"
+       id="text34">Valid fix or new</text>
+    <text
+       x="398"
+       y="437"
+       class="small"
+       id="text35">Hypothesis needed</text>
+  </g>
+  <path
+     d="M295 214H360"
+     stroke="#f7941d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrow)"
+     id="path35" />
+  <path
+     d="M595 214H660"
+     stroke="#f7941d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrow)"
+     id="path36" />
+  <path
+     d="M895 214H960"
+     stroke="#f7941d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrow)"
+     id="path37" />
+  <path
+     d="m 1064.5248,278.56168 c 0,0 0.8441,19.537 0.8257,43.14845 -0.061,77.50805 8.1013,75.20567 -36.0516,75.20567"
+     stroke="#f7941d"
+     stroke-width="2.95131"
+     fill="none"
+     marker-end="url(#arrow)"
+     id="path38"
+     sodipodi:nodetypes="csc" />
+  <path
+     d="M755 394H650"
+     stroke="#f7941d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrow)"
+     id="path39" />
+  <path
+     d="M380 394H270Q210 394 210 284"
+     stroke="#f7941d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrow)"
+     id="path40" />
+  <rect
+     x="70"
+     y="335"
+     width="220"
+     height="118"
+     rx="22"
+     fill="#0b2234"
+     stroke="#2e617f"
+     stroke-dasharray="7 7"
+     id="rect40" />
+  <text
+     x="100"
+     y="375.18695"
+     class="label"
+     font-size="21"
+     id="text40">Repeat until</text>
+  <text
+     x="100"
+     y="405"
+     class="label"
+     font-size="21"
+     id="text41">flaky failures</text>
+  <text
+     x="100"
+     y="434.81305"
+     class="label"
+     font-size="21"
+     id="text42">come down</text>
+  <rect
+     x="62"
+     y="480"
+     width="1076"
+     height="8"
+     rx="4"
+     fill="url(#accent)"
+     opacity="0.85"
+     id="rect42" />
+</svg>

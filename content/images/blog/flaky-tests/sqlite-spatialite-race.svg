@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="100%"
+   height="100%"
+   viewBox="0 0 1200 620"
+   preserveAspectRatio="xMidYMid meet"
+   role="img"
+   aria-labelledby="title desc"
+   version="1.1"
+   id="svg36"
+   sodipodi:docname="sqlite-spatialite-race.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview36"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.67734937"
+     inkscape:cx="630.39846"
+     inkscape:cy="430.35398"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg36" />
+  <title
+     id="title">SpatiaLite lookup and SQLite cleanup race</title>
+  <desc
+     id="desc">A diagram showing one thread opening a SpatiaLite connection and forking ldconfig through find_library while another thread closes a SQLite connection, causing heap corruption. The fix memoizes the library lookup and serializes connection open and close.</desc>
+  <defs
+     id="defs13">
+    <linearGradient
+       id="bg"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#061526"
+         id="stop1" />
+      <stop
+         offset="0.55"
+         stop-color="#09283d"
+         id="stop2" />
+      <stop
+         offset="1"
+         stop-color="#0a1f2f"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       id="threadA"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#123752"
+         id="stop4" />
+      <stop
+         offset="1"
+         stop-color="#153f5e"
+         id="stop5" />
+    </linearGradient>
+    <linearGradient
+       id="threadB"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#3a1829"
+         id="stop6" />
+      <stop
+         offset="1"
+         stop-color="#5a2035"
+         id="stop7" />
+    </linearGradient>
+    <linearGradient
+       id="fix"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#0e3b35"
+         id="stop8" />
+      <stop
+         offset="1"
+         stop-color="#124b3d"
+         id="stop9" />
+    </linearGradient>
+    <filter
+       id="shadow"
+       x="-0.018584906"
+       y="-0.053972603"
+       width="1.0371698"
+       height="1.129863">
+      <feGaussianBlur
+         in="SourceAlpha"
+         stdDeviation="8"
+         result="blur"
+         id="feGaussianBlur9" />
+      <feOffset
+         in="blur"
+         dx="0"
+         dy="8"
+         result="offsetBlur"
+         id="feOffset9" />
+      <feFlood
+         flood-color="#000000"
+         flood-opacity="0.26"
+         result="shadowColor"
+         id="feFlood9" />
+      <feComposite
+         in="shadowColor"
+         in2="offsetBlur"
+         operator="in"
+         result="shadow"
+         id="feComposite9" />
+      <feMerge
+         id="feMerge10">
+        <feMergeNode
+           in="shadow"
+           id="feMergeNode9" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode10" />
+      </feMerge>
+    </filter>
+    <marker
+       id="arrowOrange"
+       viewBox="0 0 10 10"
+       refX="9"
+       refY="5"
+       markerWidth="6"
+       markerHeight="6"
+       orient="auto-start-reverse">
+      <path
+         d="M0 0L10 5L0 10Z"
+         fill="#f7941d"
+         id="path10" />
+    </marker>
+    <marker
+       id="arrowRed"
+       viewBox="0 0 10 10"
+       refX="9"
+       refY="5"
+       markerWidth="6"
+       markerHeight="6"
+       orient="auto-start-reverse">
+      <path
+         d="M0 0L10 5L0 10Z"
+         fill="#ff4d6d"
+         id="path11" />
+    </marker>
+    <marker
+       id="arrowGreen"
+       viewBox="0 0 10 10"
+       refX="9"
+       refY="5"
+       markerWidth="6"
+       markerHeight="6"
+       orient="auto-start-reverse">
+      <path
+         d="M0 0L10 5L0 10Z"
+         fill="#20c997"
+         id="path12" />
+    </marker>
+    <pattern
+       id="grid"
+       width="40"
+       height="40"
+       patternUnits="userSpaceOnUse">
+      <path
+         d="M40 0H0V40"
+         fill="none"
+         stroke="#ffffff"
+         stroke-width="1"
+         opacity="0.05"
+         id="path13" />
+    </pattern>
+    <style
+       id="style13">
+      .title { fill: #ffffff; font-family: Inter, Arial, sans-serif; font-size: 28px; font-weight: 700; }
+      .subtitle { fill: #c8d9e8; font-family: Inter, Arial, sans-serif; font-size: 17px; }
+      .lane { fill: #ffffff; font-family: Inter, Arial, sans-serif; font-size: 21px; font-weight: 700; }
+      .label { fill: #ffffff; font-family: Inter, Arial, sans-serif; font-size: 18px; font-weight: 700; }
+      .small { fill: #c8d9e8; font-family: Inter, Arial, sans-serif; font-size: 15px; }
+      .code { fill: #f6d48f; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 15px; }
+      .danger { fill: #ffd3dc; font-family: Inter, Arial, sans-serif; font-size: 17px; font-weight: 700; }
+      .fixText { fill: #d7fff1; font-family: Inter, Arial, sans-serif; font-size: 17px; font-weight: 700; }
+    </style>
+  </defs>
+  <rect
+     width="1200"
+     height="620"
+     rx="34"
+     fill="url(#bg)"
+     id="rect13" />
+  <rect
+     width="1200"
+     height="620"
+     rx="34"
+     fill="url(#grid)"
+     id="rect14" />
+  <text
+     x="70"
+     y="66"
+     class="title"
+     id="text14">The race behind the crash</text>
+  <text
+     x="70"
+     y="98"
+     class="subtitle"
+     id="text15">Two ordinary test-server operations overlapped in native code, where Python could not give us a friendly traceback.</text>
+  <g
+     filter="url(#shadow)"
+     id="g32">
+    <rect
+       x="70"
+       y="135"
+       width="520"
+       height="185"
+       rx="24"
+       fill="url(#threadA)"
+       stroke="#2e617f"
+       id="rect15" />
+    <text
+       x="100"
+       y="178"
+       class="lane"
+       id="text16">Thread A opens a SpatiaLite connection</text>
+    <rect
+       x="100"
+       y="205"
+       width="190"
+       height="72"
+       rx="16"
+       fill="#0b2234"
+       stroke="#335c78"
+       id="rect16" />
+    <text
+       x="122"
+       y="235"
+       class="label"
+       id="text17">GeoDjango</text>
+    <text
+       x="122"
+       y="260"
+       class="code"
+       id="text18">connect()</text>
+    <rect
+       x="355"
+       y="205"
+       width="200"
+       height="72"
+       rx="16"
+       fill="#0b2234"
+       stroke="#335c78"
+       id="rect18" />
+    <text
+       x="377"
+       y="235"
+       class="label"
+       id="text19">Library lookup</text>
+    <text
+       x="377"
+       y="260"
+       class="code"
+       id="text20">find_library()</text>
+    <path
+       d="M300 241H345"
+       stroke="#f7941d"
+       stroke-width="3"
+       fill="none"
+       marker-end="url(#arrowOrange)"
+       id="path20" />
+    <rect
+       x="70"
+       y="360"
+       width="520"
+       height="140"
+       rx="24"
+       fill="url(#threadB)"
+       stroke="#743347"
+       id="rect20" />
+    <text
+       x="100"
+       y="403"
+       class="lane"
+       id="text21">Thread B closes another SQLite connection</text>
+    <rect
+       x="100"
+       y="430"
+       width="205"
+       height="52"
+       rx="16"
+       fill="#210f18"
+       stroke="#7a3b51"
+       id="rect21" />
+    <text
+       x="122"
+       y="462"
+       class="code"
+       id="text22">DbWrapper._close()</text>
+    <rect
+       x="365"
+       y="430"
+       width="190"
+       height="52"
+       rx="16"
+       fill="#210f18"
+       stroke="#7a3b51"
+       id="rect22" />
+    <text
+       x="392"
+       y="462"
+       class="label"
+       id="text23">SQLite cleanup</text>
+    <path
+       d="M315 456H355"
+       stroke="#ff4d6d"
+       stroke-width="3"
+       fill="none"
+       marker-end="url(#arrowRed)"
+       id="path23" />
+    <rect
+       x="675"
+       y="155"
+       width="250"
+       height="130"
+       rx="24"
+       fill="#2a1621"
+       stroke="#8f4256"
+       id="rect23" />
+    <text
+       x="705"
+       y="191"
+       class="danger"
+       id="text24">Bad interleaving</text>
+    <text
+       x="705"
+       y="218"
+       class="small"
+       id="text25">find_library may fork</text>
+    <text
+       x="705"
+       y="242"
+       class="code"
+       id="text26">ldconfig</text>
+    <text
+       x="705"
+       y="267"
+       class="small"
+       id="text27">while SQLite cleans up</text>
+    <rect
+       x="955"
+       y="170"
+       width="175"
+       height="100"
+       rx="24"
+       fill="#3b1727"
+       stroke="#ff4d6d"
+       id="rect27" />
+    <text
+       x="990"
+       y="214"
+       class="danger"
+       id="text28">Heap</text>
+    <text
+       x="990"
+       y="240"
+       class="danger"
+       id="text29">corruption</text>
+    <rect
+       x="675"
+       y="355"
+       width="455"
+       height="145"
+       rx="24"
+       fill="url(#fix)"
+       stroke="#20c997"
+       id="rect29" />
+    <text
+       x="705"
+       y="398"
+       class="lane"
+       id="text30">The shared fix</text>
+    <circle
+       cx="720"
+       cy="432"
+       r="7"
+       fill="#20c997"
+       id="circle30" />
+    <text
+       x="740"
+       y="438"
+       class="fixText"
+       id="text31">Memoize the SpatiaLite library lookup</text>
+    <circle
+       cx="720"
+       cy="469"
+       r="7"
+       fill="#20c997"
+       id="circle31" />
+    <text
+       x="740"
+       y="475"
+       class="fixText"
+       id="text32">Serialize SQLite and SpatiaLite open and close</text>
+  </g>
+  <path
+     d="m 555,241 c 65,0 72.02997,-30.13487 112.02997,-30.13487"
+     stroke="#f7941d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrowOrange)"
+     id="path32"
+     sodipodi:nodetypes="cc" />
+  <path
+     d="m 555,456 c 70,0 22.80861,-210.55809 112.02997,-218.1049"
+     stroke="#ff4d6d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrowRed)"
+     id="path33"
+     sodipodi:nodetypes="cc" />
+  <path
+     d="m 925,220 h 24.09228"
+     stroke="#ff4d6d"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrowRed)"
+     id="path34"
+     sodipodi:nodetypes="cc" />
+  <path
+     d="M1042 275C1042 320 1015 342 974 352"
+     stroke="#20c997"
+     stroke-width="3"
+     fill="none"
+     marker-end="url(#arrowGreen)"
+     id="path35" />
+  <path
+     d="M 845,355 C 804.56122,336.22693 784.89959,342.70253 785.51675,293.74163"
+     stroke="#20c997"
+     stroke-width="3"
+     stroke-dasharray="7, 7"
+     fill="none"
+     marker-end="url(#arrowGreen)"
+     id="path36"
+     sodipodi:nodetypes="cc" />
+  <rect
+     x="70"
+     y="535"
+     width="1060"
+     height="48"
+     rx="18"
+     fill="#0b2234"
+     stroke="#2e617f"
+     id="rect36" />
+  <text
+     x="100"
+     y="565"
+     class="small"
+     id="text36">Result: the crash rate dropped from about 7% to zero across repeated local stress runs and CI reruns.</text>
+</svg>
