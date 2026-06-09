@@ -977,14 +977,14 @@ article.blog {
     margin: 1.5rem auto;
   }
 
-  object[type="image/svg+xml"] {
+  .content object[type="image/svg+xml"] {
     display: block;
     width: 100%;
     inline-size: 100%;
     max-width: 100%;
     max-inline-size: 100%;
     height: auto;
-    aspect-ratio: 3 / 1;
+    aspect-ratio: auto;
     object-fit: contain;
     margin: 1.5rem auto;
   }
