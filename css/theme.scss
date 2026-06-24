@@ -433,11 +433,6 @@ body {
 .navbar-brand a:active {
   outline: 0 none;
 }
-.navbar-brand a:hover,
-.navbar-brand a:focus,
-.navbar-brand a:active {
-  filter: brightness(115%);
-}
 #main-menu .navbar-center a,
 #main-menu .navbar-center span.navbar-link {
   font-size: 15px;
