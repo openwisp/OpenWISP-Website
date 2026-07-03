@@ -81,7 +81,7 @@ post_build_cleanup:
 		sed -i 's/\.\.\///g' $(OUTPUTDIR)/index.html; \
 	fi
 	cp $(BASEDIR)/theme/templates/redirect.html $(OUTPUTDIR)/index/index.html
-	cp $(OUTPUTDIR)/theme/images/favicon.png $(OUTPUTDIR)/favicon.ico
+	cp $(OUTPUTDIR)/theme/images/favicon.svg $(OUTPUTDIR)/favicon.svg
 	cp $(OUTPUTDIR)/theme/robots.txt $(OUTPUTDIR)/robots.txt
 
 .PHONY: html help clean regenerate serve serve-global devserver devserver-global publish moveindex
