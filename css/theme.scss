@@ -152,6 +152,32 @@ html[data-theme="light"] {
     color: var(--bulma-orange);
     background-color: var(--bulma-orange-light);
   }
+
+  // Pygments syntax highlighting: light theme token colors
+  --pyg-bg: #f8f9fa;
+  --pyg-border: rgba(0, 0, 0, 0.08);
+  --pyg-c1: #60a0b0;
+  --pyg-k: #007020;
+  --pyg-kc: #007020;
+  --pyg-kn: #007020;
+  --pyg-ow: #007020;
+  --pyg-nb: #007020;
+  --pyg-bp: #007020;
+  --pyg-nc: #0e84b5;
+  --pyg-ne: #c82829;
+  --pyg-nf: #06287e;
+  --pyg-fm: #06287e;
+  --pyg-nn: #0e84b5;
+  --pyg-s1: #4070a0;
+  --pyg-s2: #4070a0;
+  --pyg-sa: #70a0d0;
+  --pyg-se: #70a0d0;
+  --pyg-si: #70a0d0;
+  --pyg-mi: #40a070;
+  --pyg-o: #666666;
+  --pyg-p: #333333;
+  --pyg-n: inherit;
+  --pyg-w: inherit;
 }
 
 /*! purgecss start ignore */
@@ -332,6 +358,32 @@ html[data-theme="dark"]:root {
       filter: grayscale(100%) invert(100%) brightness(200%);
     }
   }
+
+  // Pygments syntax highlighting: dark theme token colors
+  --pyg-bg: #1a1b26;
+  --pyg-border: rgba(255, 255, 255, 0.08);
+  --pyg-c1: #565f89;
+  --pyg-k: #bb9af7;
+  --pyg-kc: #bb9af7;
+  --pyg-kn: #bb9af7;
+  --pyg-ow: #bb9af7;
+  --pyg-nb: #7dcfff;
+  --pyg-bp: #7dcfff;
+  --pyg-nc: #e0af68;
+  --pyg-ne: #f44747;
+  --pyg-nf: #7aa2f7;
+  --pyg-fm: #7aa2f7;
+  --pyg-nn: #e0af68;
+  --pyg-s1: #9ece6a;
+  --pyg-s2: #9ece6a;
+  --pyg-sa: #9ece6a;
+  --pyg-se: #9ece6a;
+  --pyg-si: #9ece6a;
+  --pyg-mi: #ff9e64;
+  --pyg-o: #89b4fa;
+  --pyg-p: #a6adc8;
+  --pyg-n: inherit;
+  --pyg-w: inherit;
 }
 /*! purgecss end ignore */
 
@@ -380,11 +432,6 @@ body {
 .navbar-brand a:focus,
 .navbar-brand a:active {
   outline: 0 none;
-}
-.navbar-brand a:hover,
-.navbar-brand a:focus,
-.navbar-brand a:active {
-  filter: brightness(115%);
 }
 #main-menu .navbar-center a,
 #main-menu .navbar-center span.navbar-link {
@@ -903,8 +950,37 @@ article.blog {
     font-weight: $weight-semibold;
   }
 
+  .content :not(pre) > code,
+  .content code.docutils.literal,
+  .content tt.docutils.literal {
+    padding: 0.16em .4em;
+    border-radius: 0.25em;
+    background-color: var(--bulma-orange-light);
+    color: var(--bulma-orange-dark);
+    font-size: 1.1em;
+    font-weight: $weight-medium;
+  }
+
+  .content code.docutils.literal .pre,
+  .content tt.docutils.literal .pre {
+    color: inherit;
+    font-size: inherit;
+  }
+
   img {
     display: block;
+    margin: 1.5rem auto;
+  }
+
+  .content object[type="image/svg+xml"] {
+    display: block;
+    width: 100%;
+    inline-size: 100%;
+    max-width: 100%;
+    max-inline-size: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
     margin: 1.5rem auto;
   }
 
@@ -1016,6 +1092,51 @@ article.blog {
   }
 }
 /* purgecss end ignore */
+
+/*! purgecss start ignore */
+// Pygments code block container
+.highlight {
+  background: var(--pyg-bg);
+  border-radius: 6px;
+  border: 1px solid var(--pyg-border);
+  margin: 0 0 var(--bulma-content-block-margin-bottom);
+  overflow: hidden;
+}
+
+// Pygments code block inner <pre>
+.highlight pre {
+  background: transparent;
+  border: none;
+  padding: 1em;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+// Pygments token colors (light/dark via CSS custom properties)
+.highlight .c1 { color: var(--pyg-c1); font-style: italic; }
+.highlight .k { color: var(--pyg-k); }
+.highlight .kc { color: var(--pyg-kc); }
+.highlight .kn { color: var(--pyg-kn); }
+.highlight .ow { color: var(--pyg-ow); }
+.highlight .nb { color: var(--pyg-nb); }
+.highlight .bp { color: var(--pyg-bp); }
+.highlight .nc { color: var(--pyg-nc); }
+.highlight .ne { color: var(--pyg-ne); }
+.highlight .nf { color: var(--pyg-nf); }
+.highlight .fm { color: var(--pyg-fm); }
+.highlight .nn { color: var(--pyg-nn); }
+.highlight .s1 { color: var(--pyg-s1); }
+.highlight .s2 { color: var(--pyg-s2); }
+.highlight .sa { color: var(--pyg-sa); }
+.highlight .se { color: var(--pyg-se); }
+.highlight .si { color: var(--pyg-si); }
+.highlight .mi { color: var(--pyg-mi); }
+.highlight .o { color: var(--pyg-o); }
+.highlight .p { color: var(--pyg-p); }
+.highlight .n { color: var(--pyg-n); }
+.highlight .w { color: var(--pyg-w); }
+/*! purgecss end ignore */
 
 @media screen and (max-width: 900px) and (min-width: 800px) {
   .navbar-end .button.is-orange.with-text {
