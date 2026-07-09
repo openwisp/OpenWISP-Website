@@ -53,7 +53,9 @@ jobs:
           path: output/
 
   deploy:
-    if: github.repository == 'openwisp/OpenWISP-Website' && github.event_name == 'push'
+    if: >
+      github.repository == 'openwisp/OpenWISP-Website' &&
+      github.event_name == 'push'
     runs-on: ubuntu-24.04
     needs: build
     steps:
@@ -81,7 +83,9 @@ jobs:
 
   invalidate-cache:
     runs-on: ubuntu-latest
-    if: github.repository == 'openwisp/OpenWISP-Website' && github.event_name == 'push'
+    if: >
+      github.repository == 'openwisp/OpenWISP-Website' &&
+      github.event_name == 'push'
     needs: deploy
 
     steps:
