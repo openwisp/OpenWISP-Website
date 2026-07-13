@@ -114,7 +114,39 @@ Add more timeseries database clients to OpenWISP Monitoring
 
 Video.
 
-Summary of progress.
+OpenWISP Monitoring currently uses InfluxDB 1.8 for storing metrics and
+rendering time series charts. This work adds InfluxDB 2.9 support while
+keeping the existing monitoring APIs and chart behavior compatible with the
+current backend. The main challenge is that InfluxDB2 is not a drop-in
+replacement because it uses buckets instead of databases, token-based
+authentication, a different Python client and Flux instead of InfluxQL.
+
+**InfluxDB2 backend** (`PR #801
+<https://github.com/openwisp/openwisp-monitoring/pull/801>`_): Added a new
+InfluxDB2 client responsible for connection setup, bucket management,
+metric writes, reads, deletes and query execution. Since InfluxDB2 uses
+Flux instead of InfluxQL, the query layer now includes Flux templates for
+the existing chart visualizations, while ``QueryResultSet`` normalizes
+InfluxDB2 responses into the format expected by the rest of OpenWISP
+Monitoring. This allows higher-level monitoring code to keep using the
+same read and chart interfaces regardless of which time series backend is
+configured.
+
+The backend also handles InfluxDB2-specific details such as creating the
+main and short-retention buckets, translating common read operations into
+Flux filters and formatting chart queries with the correct bucket, fields,
+aggregation and grouping windows. Existing visualizations such as uptime,
+packet loss, RTT, traffic, WiFi clients, CPU, memory and disk charts now
+have Flux equivalents so they can be rendered from InfluxDB2 data.
+
+The PR adds backend-specific tests for configuration, writes, reads,
+deletes, query generation, chart queries and result parsing. The test
+runner and CI flow were updated to run InfluxDB1 and InfluxDB2 checks
+against the correct backend, and local setup can switch between time series
+databases with ``TIMESERIES_BACKEND=influxdb`` or
+``TIMESERIES_BACKEND=influxdb2``. Review feedback has also led to fixes in
+timezone handling, chart range queries and test isolation so both backends
+remain consistent while still respecting their different query languages.
 
 X.509 Certificate Generator Templates
 -------------------------------------
