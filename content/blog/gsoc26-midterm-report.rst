@@ -2,7 +2,7 @@ OpenWISP 26 Midterm Report
 ==========================
 
 :date: 2026-07-07
-:authors: Federico Capoano, Deepanshu Sahu, Mohammed Atif, Sarthak Tyagi
+:authors: Federico Capoano, Deepanshu Sahu, Mohammed Atif, Sarthak Tyagi, Eeshu Yadav
 :tags: gsoc, new-features
 :category: gsoc
 :lang: en
@@ -62,7 +62,59 @@ Persistent & Scheduled Firmware Upgrades
 
 Video.
 
-Summary of progress.
+A mass firmware upgrade only works cleanly when the target devices are
+online. Today, if a device is offline when the upgrade runs, the
+operation fails straight away and the device is left behind: someone has
+to notice it later and start the upgrade again by hand. On a large
+network, where a few devices are almost always down for a reboot or a
+flaky link, this means a rollout rarely reaches everything in one go.
+
+Persistent Mass Upgrades (`issue #379
+<https://github.com/openwisp/openwisp-firmware-upgrader/issues/379>`_)
+fixes this. With persistence turned on, an upgrade that cannot reach a
+device is no longer counted as a failure; it is kept in a new ``pending``
+state and quietly retried in the background until the device comes back
+online, or until an operator cancels it. The operator launches the
+rollout once and OpenWISP takes care of the stragglers on its own.
+
+**Persistence and the retry loop** (`PR #436
+<https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_):
+Every upgrade now remembers whether it is persistent, how many times it
+has been retried and when the next attempt is due. When a persistent
+upgrade runs out of its immediate connection attempts it goes back to
+``pending`` instead of failing, and schedules the next try for later,
+waiting a little longer after each attempt so an unreachable device is
+not hammered. A background task regularly picks up the upgrades that are
+due and starts them again, with a guard that makes sure the same upgrade
+can never run twice even if two things trigger it at the same time.
+
+**Faster recovery with openwisp-monitoring** (`PR #436
+<https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_): When
+`openwisp-monitoring <https://github.com/openwisp/openwisp-monitoring>`_
+is installed, OpenWISP does not have to wait for the next scheduled check.
+The moment a device is reported back online its pending upgrade is woken
+up right away, so a device is updated as soon as it returns rather than on
+the next scan.
+
+**Admin, REST API and reminders** (`PR #436
+<https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_):
+Persistence is a simple checkbox when you launch a mass upgrade, and it
+applies to every device in the batch. Each operation shows its retry
+state — persistent or not, how many times it has retried and when it will
+try next — right above the log, and the batch counts progress as "N
+complete, M pending" so devices that are still waiting are not mistaken
+for finished ones. A pending upgrade can be cancelled at any time from the
+admin or the REST API, and OpenWISP keeps reminding administrators about
+the devices still waiting, linking them straight to the pending list.
+Making that reminder open the right page from the notifications panel
+needed a small companion change in openwisp-notifications (`PR #490
+<https://github.com/openwisp/openwisp-notifications/pull/490>`_).
+
+This is the persistence half of the project. The next few weeks move on
+to scheduled mass upgrades, which will let operators pick a date and time
+for a rollout; since it reuses the same machinery, a scheduled upgrade
+will be persistent too and keep retrying whatever devices are offline
+when it runs.
 
 Automatic Extraction of OpenWrt Firmware Image Metadata
 -------------------------------------------------------
