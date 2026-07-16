@@ -1,254 +1,275 @@
-OpenWISP 26 Midterm Report
-==========================
+OpenWISP 2026 Midterm Report
+============================
 
-:date: 2026-07-07
-:authors: Federico Capoano, Deepanshu Sahu, Mohammed Atif, Sarthak Tyagi, Eeshu Yadav
+:date: 2026-07-16
+:authors: Federico Capoano, Deepanshu Sahu, Eeshu Yadav, Mohammed Atif,
+    Sarthak Tyagi, Pushpit Kamboj
 :tags: gsoc, new-features
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc26/openwisp-10-years-google-summer-of-code.webp
-:image_width: 798
-:image_height: 532
+:image_url: https://openwisp.org/images/blog/gsoc26/midterm-report.webp
+:image_width: 1920
+:image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/openwisp-10-years-google-summer-of-code.webp
-    :alt: TODO this will be changed
+.. image:: {static}/images/blog/gsoc26/midterm-report.webp
+    :alt: OpenWISP 2026 Midterm Report
     :align: center
-    :target: /blog/openwisp-is-celebrating-10-years-of-google-summer-of-code/
+    :target: /blog/openwisp-2026-midterm-report/
 
-Intro text here.
+We are halfway through Google Summer of Code 2026 and the OpenWISP
+projects are already taking shape.
+
+This post gives a quick tour of what has landed so far, what is still
+being reviewed, and what each project is going to make easier for OpenWISP
+users in the next iterations.
 
 Mass Commands
 -------------
 
-Video.
+.. raw:: html
 
-In OpenWISP, running the same command on multiple devices currently
-requires navigating to each device's page and triggering the command
-individually. This repetitive process is time-consuming and inefficient
-for large networks. Mass Commands solves this by letting operators run
-commands across multiple devices simultaneously with flexible targeting by
-organization, device group, location, or manual selection.
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/_tTgIYIUqIo?vq=hd1080"
+            title="OpenWISP Mass Commands demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
-**Backend execution pipeline** (`PR #1395
+Running the same command on many devices is still too manual in OpenWISP.
+Today, an operator has to open each device page and trigger the command
+one device at a time. That is fine for a handful of routers, but not for a
+large network.
+
+Mass Commands changes this by letting operators run a command on many
+devices at once. They can target devices by organization, device group,
+location, or by selecting devices manually.
+
+**Command batches and API** (`PR #1395
 <https://github.com/openwisp/openwisp-controller/pull/1395>`_): A new
-``BatchCommand`` model tracks batches with fields for status, command type
-and input, label, notes, and ``skipped_devices``. The ``POST
-/api/v1/controller/batch-command/execute/`` endpoint accepts targeting
-parameters and spawns a Celery task (``launch_batch_command``) that
-resolves devices, creates individual ``Command`` records with an
-idempotency guard, and aggregates status via
-``calculate_and_update_status()``. A ``GET`` dry-run endpoint returns the
-list of devices that would be affected without executing. The model also
-computes ``total_devices``, ``successful``, and ``failed`` counts as
-aggregated properties.
+``BatchCommand`` model keeps track of each batch, including its status,
+label, notes and skipped devices. The new ``POST
+/api/v1/controller/batch-command/execute/`` endpoint accepts the targeting
+options, starts a background task, creates the individual ``Command``
+objects and keeps the batch status updated. A ``GET`` dry-run endpoint
+shows which devices would be affected before the command is actually run.
 
-**Django admin interface** (`PR #1420
+**Django admin view** (`PR #1420
 <https://github.com/openwisp/openwisp-controller/pull/1420>`_): A custom
-admin change form displays an inline, paginated commands table with
-colored status indicators and a real-time polling mechanism that refreshes
-progress for in-progress batches. The changelist uses ``affected_devices``
-(excluding skipped) as a computed column and replaces the ID with the
-``label`` field as the clickable link for easier identification.
-``Skipped_devices`` are merged into the commands table with error details,
-and custom CSS provides consistent status styling.
+admin page shows the commands that belong to a batch, with pagination,
+status colors and automatic refresh while a batch is still running. The
+admin list now shows the batch label and the number of affected devices,
+so operators can understand what happened without opening every command
+one by one. Skipped devices are shown with the related error message.
 
-Currently, execution is triggered via the REST API (``POST
-/api/v1/controller/batch-command/execute/``). A dedicated admin view to
-initiate batch commands from the admin panel will be added in the coming
-weeks.
+For now, batches are started from the REST API. A dedicated admin page for
+launching them from the browser is planned for the coming weeks.
 
 Persistent & Scheduled Firmware Upgrades
 ----------------------------------------
 
-Video.
+.. raw:: html
 
-A mass firmware upgrade only works cleanly when the target devices are
-online. Today, if a device is offline when the upgrade runs, the
-operation fails straight away and the device is left behind: someone has
-to notice it later and start the upgrade again by hand. On a large
-network, where a few devices are almost always down for a reboot or a
-flaky link, this means a rollout rarely reaches everything in one go.
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/sQdoR9JEAi4?vq=hd1080"
+            title="OpenWISP persistent firmware upgrades demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
+
+A mass firmware upgrade works best when all target devices are online. In
+real networks, that is not always the case. Some devices may be rebooting,
+temporarily disconnected, or sitting behind an unstable link. When that
+happens today, the upgrade fails for those devices and someone has to
+retry it later by hand.
 
 Persistent Mass Upgrades (`issue #379
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/379>`_)
-fixes this. With persistence turned on, an upgrade that cannot reach a
-device is no longer counted as a failure; it is kept in a new ``pending``
-state and quietly retried in the background until the device comes back
-online, or until an operator cancels it. The operator launches the
-rollout once and OpenWISP takes care of the stragglers on its own.
+fixes this. With persistence turned on, an unreachable device is not
+treated as a final failure. Its upgrade stays ``pending`` and OpenWISP
+keeps retrying in the background until the device comes back online, or
+until an operator cancels it. The operator launches the rollout once and
+OpenWISP takes care of the stragglers.
 
-**Persistence and the retry loop** (`PR #436
-<https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_):
-Every upgrade now remembers whether it is persistent, how many times it
-has been retried and when the next attempt is due. When a persistent
-upgrade runs out of its immediate connection attempts it goes back to
-``pending`` instead of failing, and schedules the next try for later,
-waiting a little longer after each attempt so an unreachable device is
-not hammered. A background task regularly picks up the upgrades that are
-due and starts them again, with a guard that makes sure the same upgrade
-can never run twice even if two things trigger it at the same time.
+**Persistence and retries** (`PR #436
+<https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_): Each
+upgrade now records whether it is persistent, how many times it has been
+retried and when the next attempt should happen. When a persistent upgrade
+cannot reach a device, it goes back to ``pending`` instead of failing. A
+background task picks it up later and waits a little longer after each
+failed attempt, so unreachable devices are not hammered.
 
 **Faster recovery with openwisp-monitoring** (`PR #436
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_): When
 `openwisp-monitoring <https://github.com/openwisp/openwisp-monitoring>`_
-is installed, OpenWISP does not have to wait for the next scheduled check.
-The moment a device is reported back online its pending upgrade is woken
-up right away, so a device is updated as soon as it returns rather than on
-the next scan.
+is installed, OpenWISP can retry sooner. As soon as a device is reported
+online again, its pending upgrade is started instead of waiting for the
+next scheduled check.
 
 **Admin, REST API and reminders** (`PR #436
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_):
-Persistence is a simple checkbox when you launch a mass upgrade, and it
-applies to every device in the batch. Each operation shows its retry
-state — persistent or not, how many times it has retried and when it will
-try next — right above the log, and the batch counts progress as "N
-complete, M pending" so devices that are still waiting are not mistaken
-for finished ones. A pending upgrade can be cancelled at any time from the
-admin or the REST API, and OpenWISP keeps reminding administrators about
-the devices still waiting, linking them straight to the pending list.
-Making that reminder open the right page from the notifications panel
-needed a small companion change in openwisp-notifications (`PR #490
-<https://github.com/openwisp/openwisp-notifications/pull/490>`_).
+Persistence is a checkbox when launching a mass upgrade. The upgrade page
+shows whether retrying is enabled, how many attempts have already happened
+and when the next attempt will run. Batch progress also shows pending
+devices separately, so waiting devices are not confused with completed
+ones. A pending upgrade can be cancelled from the admin or the REST API. A
+small companion change in openwisp-notifications (`PR #490
+<https://github.com/openwisp/openwisp-notifications/pull/490>`_) makes the
+reminder link open the right filtered page.
 
-This is the persistence half of the project. The next few weeks move on
-to scheduled mass upgrades, which will let operators pick a date and time
-for a rollout; since it reuses the same machinery, a scheduled upgrade
-will be persistent too and keep retrying whatever devices are offline
-when it runs.
+This is the persistence half of the project. The next step is scheduled
+mass upgrades, so operators can choose when a rollout should start. Since
+it builds on the same retry work, scheduled upgrades will also keep
+waiting for devices that are offline when the rollout begins.
 
 Automatic Extraction of OpenWrt Firmware Image Metadata
 -------------------------------------------------------
 
-Video.
+.. raw:: html
 
-In OpenWISP, matching a firmware image to the devices it can upgrade
-relied on a hardcoded mapping (``hardware.py``) between device models and
-image types. Every new board had to be added to this file by hand, which
-meant adding support for new devices was slow and required a code change
-every time. Automatic metadata extraction removes this static map by
-reading the information directly from the firmware image at upload time.
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/9NwzAI6bypw?vq=hd1080"
+            title="OpenWISP firmware metadata extraction demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
-**Extraction foundation and OpenWrt pipeline** (`PR #421
+OpenWISP needs to know which devices a firmware image can upgrade. Until
+now, that depended on a hardcoded mapping between device models and image
+types. Every new board had to be added by hand, so supporting new devices
+was slower than it needed to be.
+
+Automatic metadata extraction removes that manual step. When a firmware
+image is uploaded, OpenWISP reads the useful details directly from the
+image and stores them with the upload.
+
+**Reading OpenWrt image metadata** (`PR #421
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/421>`_): A
-``BaseMetadataExtractor`` abstract base class defines a two-path
-extraction lifecycle so support for other embedded operating systems can
-be added later. The ``OpenWrtMetadataExtractor`` reads the ``fwtool``
-metadata trailer appended to sysupgrade images as a fast path, and falls
-back to scanning the image's device tree blob (DTB) for images that have
-no trailer (e.g. sunxi, ipq40xx initramfs). Extraction is guarded against
-decompression bombs through chunked reading with ratio and size limits,
-and files that are clearly not firmware images (such as JPEG, PNG or PDF)
-are rejected on upload.
+new extractor reads the ``fwtool`` metadata found in many OpenWrt
+sysupgrade images. If that metadata is missing, it can fall back to the
+device tree data inside the image. Upload checks reject files that are
+clearly not firmware images, such as JPEG, PNG or PDF files, and include
+safety limits while reading compressed data.
 
-**Metadata fields, state machine and async task** (`PR #437
+**Storing and reviewing metadata** (`PR #437
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/437>`_): The
-``FirmwareImage`` model gains the extracted fields (board, target,
-compatible, firmware version, source) and an extraction status that moves
-an image from ``Unconfirmed`` to ``In Progress`` and finally to
-``Success`` or ``Failed`` as a Celery task processes it after upload. Once
-an image is confirmed, its metadata becomes read-only and a
-``unique_together`` constraint prevents duplicate uploads. When extraction
-cannot fully populate the metadata, a notification links the administrator
-to a manual input page where the missing fields can be filled in by hand.
-Device pairing is migrated off the hardcoded image type map and now uses
-the extracted board field instead.
+``FirmwareImage`` model now stores the extracted board, target, compatible
+devices, firmware version and source. Extraction runs in the background
+after upload and the admin shows whether it is still running, succeeded or
+failed. Once an image is confirmed, its metadata becomes read-only and
+duplicate uploads are blocked. If OpenWISP cannot extract everything it
+needs, the administrator gets a notification with a link to fill in the
+missing fields manually.
 
-Currently, device pairing matches an image's board field against the
-device model, which only works when the device matches the image's primary
-board. In the coming weeks, pairing will move to the ``compatible`` field,
-which lists every board an image supports, so images that cover multiple
-boards pair correctly. A data migration will also run extraction
-automatically for images that predate the feature, so administrators do
-not have to trigger it manually.
+Device pairing now uses the extracted board field instead of the old
+hardcoded map. The next step is to use the ``compatible`` field, which
+lists all boards supported by an image. That will make images that support
+multiple boards match correctly. Existing firmware images will also be
+processed automatically, so administrators do not have to update old
+uploads by hand.
 
 Add more timeseries database clients to OpenWISP Monitoring
 -----------------------------------------------------------
 
-Video.
+.. raw:: html
 
-OpenWISP Monitoring currently uses InfluxDB 1.8 for storing metrics and
-rendering time series charts. This work adds InfluxDB 2.9 support while
-keeping the existing monitoring APIs and chart behavior compatible with the
-current backend. The main challenge is that InfluxDB2 is not a drop-in
-replacement because it uses buckets instead of databases, token-based
-authentication, a different Python client and Flux instead of InfluxQL.
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/o7VB-4fIZuI?vq=hd1080"
+            title="OpenWISP timeseries database clients demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
+
+OpenWISP Monitoring stores metrics and renders time series charts with
+InfluxDB 1.8 today. The goal of this project is to add support for
+InfluxDB 2.9 without forcing the rest of OpenWISP Monitoring to change how
+it asks for data or builds charts.
+
+That sounds simple, but InfluxDB 2 is different in several important ways:
+it uses buckets, token-based authentication, a different Python client and
+Flux queries instead of InfluxQL.
 
 **InfluxDB2 backend** (`PR #801
-<https://github.com/openwisp/openwisp-monitoring/pull/801>`_): Added a new
-InfluxDB2 client responsible for connection setup, bucket management,
-metric writes, reads, deletes and query execution. Since InfluxDB2 uses
-Flux instead of InfluxQL, the query layer now includes Flux templates for
-the existing chart visualizations, while ``QueryResultSet`` normalizes
-InfluxDB2 responses into the format expected by the rest of OpenWISP
-Monitoring. This allows higher-level monitoring code to keep using the
-same read and chart interfaces regardless of which time series backend is
-configured.
+<https://github.com/openwisp/openwisp-monitoring/pull/801>`_): A new
+InfluxDB2 client handles connections, buckets, metric writes, reads,
+deletes and queries. The existing charts now have Flux versions, so
+uptime, packet loss, RTT, traffic, WiFi clients, CPU, memory and disk
+charts can be rendered from InfluxDB2 data. The response parser also
+converts InfluxDB2 results into the format that the rest of OpenWISP
+Monitoring already expects.
 
-The backend also handles InfluxDB2-specific details such as creating the
-main and short-retention buckets, translating common read operations into
-Flux filters and formatting chart queries with the correct bucket, fields,
-aggregation and grouping windows. Existing visualizations such as uptime,
-packet loss, RTT, traffic, WiFi clients, CPU, memory and disk charts now
-have Flux equivalents so they can be rendered from InfluxDB2 data.
-
-The PR adds backend-specific tests for configuration, writes, reads,
-deletes, query generation, chart queries and result parsing. The test
-runner and CI flow were updated to run InfluxDB1 and InfluxDB2 checks
-against the correct backend, and local setup can switch between time series
-databases with ``TIMESERIES_BACKEND=influxdb`` or
-``TIMESERIES_BACKEND=influxdb2``. Review feedback has also led to fixes in
-timezone handling, chart range queries and test isolation so both backends
-remain consistent while still respecting their different query languages.
+The PR includes tests for configuration, writes, reads, deletes, generated
+queries, charts and response parsing. Local setups can switch between the
+two backends with ``TIMESERIES_BACKEND=influxdb`` or
+``TIMESERIES_BACKEND=influxdb2``. Review feedback has already helped clean
+up timezone handling, chart ranges and test isolation.
 
 X.509 Certificate Generator Templates
 -------------------------------------
 
-Video.
+.. raw:: html
 
-In OpenWISP, provisioning X.509 certificates for each device has
-traditionally been a manual process where operators had to create
-certificates individually through the PKI module. This becomes impractical
-at scale. Certificate Generator Templates solves this by introducing a new
-``cert`` template type that automatically generates and manages X.509
-certificates when assigned to devices, with support for blueprint-based
-configuration, context injection, and automatic regeneration on hardware
-changes.
+    <iframe width="560" height="315"
+            style="width:100%; height:700px;"
+            src="https://www.youtube.com/embed/q3JS9hhrTdY?vq=hd1080"
+            title="OpenWISP X.509 certificate generator templates demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
-**Template model and DeviceCertificate lifecycle** (`PR #1378
+Creating X.509 certificates one device at a time does not scale well.
+Operators should be able to attach a certificate template to a device and
+let OpenWISP generate the right certificate automatically.
+
+Certificate Generator Templates add a new ``cert`` template type for that
+workflow. When the template is assigned to a device, OpenWISP creates and
+manages the certificate for it.
+
+**Certificate templates** (`PR #1378
 <https://github.com/openwisp/openwisp-controller/pull/1378>`_): A new
-``cert`` type is added to the Template model with ``ca`` and
-``blueprint_cert`` ForeignKeys referencing a Certification Authority and a
-blueprint certificate. The ``DeviceCertificate`` through-model links
-Config, Template and Cert with an idempotent lifecycle: when a cert
-template is assigned to a device, a certificate is generated automatically
-from the blueprint; when the template is removed, the certificate is
-revoked but preserved in the database. Active templates are locked against
-type, CA, and blueprint changes.
+``cert`` type has been added to the Template model. It points to a
+Certification Authority and a blueprint certificate. When the template is
+assigned to a device, OpenWISP generates a certificate from that
+blueprint. When the template is removed, the certificate is revoked but
+kept in the database for auditability. Active certificate templates are
+locked against changes that would make existing device certificates
+inconsistent.
 
-**Context configuration injection** (`PR #1378
+**Using certificates in configurations** (`PR #1378
 <https://github.com/openwisp/openwisp-controller/pull/1378>`_): Operators
-can reference generated certificates in device configuration using Jinja2
-template variables such as ``{{ cert_<uuid>_path }}`` for the file path,
-``{{ cert_<uuid>_pem }}`` for the PEM-encoded certificate, and ``{{
-cert_<uuid>_key }}`` for the private key. These are resolved at
-configuration preview and generation time.
+can reference generated certificates in device configuration with template
+variables such as ``cert_<uuid>_path`` for the file path,
+``cert_<uuid>_pem`` for the certificate and ``cert_<uuid>_key`` for the
+private key. These values are filled in when OpenWISP previews or
+generates the configuration.
 
-**Certificate regeneration on hardware drift** (`PR #1378
+**Certificate regeneration** (`PR #1378
 <https://github.com/openwisp/openwisp-controller/pull/1378>`_): When a
-device's name or MAC address changes, a Celery task automatically revokes
-the existing certificate and issues a replacement. This can be disabled
-per deployment via the ``REGENERATE_CERTS_ON_HARDWARE_CHANGE`` setting.
+device's name or MAC address changes, OpenWISP can revoke the old
+certificate and issue a replacement automatically. Deployments that do not
+want this behavior can disable it with the
+``REGENERATE_CERTS_ON_HARDWARE_CHANGE`` setting.
 
-**Custom X.509 extensions with ASN.1 DER encoding** (`PR #228
+**Custom certificate extensions** (`PR #228
 <https://github.com/openwisp/django-x509/pull/228>`_): The django-x509
-library adds support for custom Object Identifiers (OIDs) in certificate
-extensions. An ASN.1 DER encoder validates and wraps values using the
-``ASN1:<TYPE>:<KIND>:<VALUE>`` syntax. Reserved standard OIDs are
-protected from overriding. Generated device certificates automatically
-include custom extensions for the device MAC address
-(``1.3.6.1.4.1.65901.1``) and UUID (``1.3.6.1.4.1.65901.2``).
+library now supports custom Object Identifiers (OIDs) in certificate
+extensions. Generated device certificates can include the device MAC
+address (``1.3.6.1.4.1.65901.1``) and UUID (``1.3.6.1.4.1.65901.2``),
+which makes certificates easier to trace back to the device they belong
+to.
 
-In the coming weeks, we will focus on refining the implementation and
-generalizing the certificate template system so it can be relied upon for
-``VpnClient`` as well, ensuring a consistent certificate provisioning
-experience across the entire device configuration pipeline.
+In the coming weeks, we will polish this work and make the same
+certificate template system usable by ``VpnClient`` too.
