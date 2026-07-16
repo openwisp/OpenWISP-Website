@@ -2,7 +2,7 @@ OpenWISP 26 Midterm Report
 ==========================
 
 :date: 2026-07-07
-:authors: Federico Capoano, Deepanshu Sahu, Mohammed Atif, Eeshu Yadav
+:authors: Federico Capoano, Deepanshu Sahu, Mohammed Atif, Sarthak Tyagi, Eeshu Yadav
 :tags: gsoc, new-features
 :category: gsoc
 :lang: en
@@ -166,11 +166,89 @@ Add more timeseries database clients to OpenWISP Monitoring
 
 Video.
 
-Summary of progress.
+OpenWISP Monitoring currently uses InfluxDB 1.8 for storing metrics and
+rendering time series charts. This work adds InfluxDB 2.9 support while
+keeping the existing monitoring APIs and chart behavior compatible with the
+current backend. The main challenge is that InfluxDB2 is not a drop-in
+replacement because it uses buckets instead of databases, token-based
+authentication, a different Python client and Flux instead of InfluxQL.
+
+**InfluxDB2 backend** (`PR #801
+<https://github.com/openwisp/openwisp-monitoring/pull/801>`_): Added a new
+InfluxDB2 client responsible for connection setup, bucket management,
+metric writes, reads, deletes and query execution. Since InfluxDB2 uses
+Flux instead of InfluxQL, the query layer now includes Flux templates for
+the existing chart visualizations, while ``QueryResultSet`` normalizes
+InfluxDB2 responses into the format expected by the rest of OpenWISP
+Monitoring. This allows higher-level monitoring code to keep using the
+same read and chart interfaces regardless of which time series backend is
+configured.
+
+The backend also handles InfluxDB2-specific details such as creating the
+main and short-retention buckets, translating common read operations into
+Flux filters and formatting chart queries with the correct bucket, fields,
+aggregation and grouping windows. Existing visualizations such as uptime,
+packet loss, RTT, traffic, WiFi clients, CPU, memory and disk charts now
+have Flux equivalents so they can be rendered from InfluxDB2 data.
+
+The PR adds backend-specific tests for configuration, writes, reads,
+deletes, query generation, chart queries and result parsing. The test
+runner and CI flow were updated to run InfluxDB1 and InfluxDB2 checks
+against the correct backend, and local setup can switch between time series
+databases with ``TIMESERIES_BACKEND=influxdb`` or
+``TIMESERIES_BACKEND=influxdb2``. Review feedback has also led to fixes in
+timezone handling, chart range queries and test isolation so both backends
+remain consistent while still respecting their different query languages.
 
 X.509 Certificate Generator Templates
 -------------------------------------
 
 Video.
 
-Summary of progress.
+In OpenWISP, provisioning X.509 certificates for each device has
+traditionally been a manual process where operators had to create
+certificates individually through the PKI module. This becomes impractical
+at scale. Certificate Generator Templates solves this by introducing a new
+``cert`` template type that automatically generates and manages X.509
+certificates when assigned to devices, with support for blueprint-based
+configuration, context injection, and automatic regeneration on hardware
+changes.
+
+**Template model and DeviceCertificate lifecycle** (`PR #1378
+<https://github.com/openwisp/openwisp-controller/pull/1378>`_): A new
+``cert`` type is added to the Template model with ``ca`` and
+``blueprint_cert`` ForeignKeys referencing a Certification Authority and a
+blueprint certificate. The ``DeviceCertificate`` through-model links
+Config, Template and Cert with an idempotent lifecycle: when a cert
+template is assigned to a device, a certificate is generated automatically
+from the blueprint; when the template is removed, the certificate is
+revoked but preserved in the database. Active templates are locked against
+type, CA, and blueprint changes.
+
+**Context configuration injection** (`PR #1378
+<https://github.com/openwisp/openwisp-controller/pull/1378>`_): Operators
+can reference generated certificates in device configuration using Jinja2
+template variables such as ``{{ cert_<uuid>_path }}`` for the file path,
+``{{ cert_<uuid>_pem }}`` for the PEM-encoded certificate, and ``{{
+cert_<uuid>_key }}`` for the private key. These are resolved at
+configuration preview and generation time.
+
+**Certificate regeneration on hardware drift** (`PR #1378
+<https://github.com/openwisp/openwisp-controller/pull/1378>`_): When a
+device's name or MAC address changes, a Celery task automatically revokes
+the existing certificate and issues a replacement. This can be disabled
+per deployment via the ``REGENERATE_CERTS_ON_HARDWARE_CHANGE`` setting.
+
+**Custom X.509 extensions with ASN.1 DER encoding** (`PR #228
+<https://github.com/openwisp/django-x509/pull/228>`_): The django-x509
+library adds support for custom Object Identifiers (OIDs) in certificate
+extensions. An ASN.1 DER encoder validates and wraps values using the
+``ASN1:<TYPE>:<KIND>:<VALUE>`` syntax. Reserved standard OIDs are
+protected from overriding. Generated device certificates automatically
+include custom extensions for the device MAC address
+(``1.3.6.1.4.1.65901.1``) and UUID (``1.3.6.1.4.1.65901.2``).
+
+In the coming weeks, we will focus on refining the implementation and
+generalizing the certificate template system so it can be relied upon for
+``VpnClient`` as well, ensuring a consistent certificate provisioning
+experience across the entire device configuration pipeline.
