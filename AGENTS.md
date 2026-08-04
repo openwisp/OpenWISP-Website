@@ -31,7 +31,9 @@ If instructions conflict, repository configuration and CI workflows win first, d
 
 ## Testing and QA
 
-- For website behavior changes, use `make html` and `./run-qa-checks`.
+- For content-only or Pelican logic changes that do not affect frontend assets, run `make html SKIP_YARN=1` while iterating.
+- Run `make html` when CSS, JavaScript, frontend dependencies, or generated frontend assets need rebuilding.
+- Run `./run-qa-checks` as the full QA command before considering the change complete.
 
 ## Security Notes
 
@@ -46,7 +48,6 @@ If instructions conflict, repository configuration and CI workflows win first, d
 
 - Before editing, inspect the relevant implementation, tests, documentation, and configuration. Follow existing repository patterns and do not invent behavior or requirements.
 - Keep each contribution focused and change only the lines necessary for its goal. Do not include unrelated refactors, formatting churn, or generated and dependency-file changes unless explicitly required.
-- Add or update focused tests for every behavior change. In repositories without a dedicated automated test suite, use the documented build and QA workflow as the equivalent behavior verification. For bug fixes, first reproduce the failure with a regression test when the repository's test setup allows it.
 - Run the relevant targeted tests, builds, and documented QA checks, including `./run-qa-checks` when provided. Do not claim a change is complete when verification fails; report the failure or blocker.
 - When requirements, intended behavior, or an unexpected failure are unclear, stop and seek clarification instead of making speculative changes.
 - When starting work on a new issue, create a new branch from `master`. Use `issues/<issue-number>-<short-title>` for issue work; otherwise, use a short, descriptive branch name.
