@@ -9,6 +9,7 @@ Core website inputs are organized as follows:
 - `content/` contains pages, blog posts, and other published content.
 - `theme/` contains Pelican templates and theme resources.
 - `css/` and `js/` contain frontend source files.
+- `theme/static/` and `output/` contain generated website assets and pages.
 - `pelicanconf.py`, `publishconf.py`, `Makefile`, and `package.json` define website builds and configuration.
 
 ## Source of Truth
@@ -27,14 +28,14 @@ If instructions conflict, repository configuration and CI workflows win first, d
 - Run the relevant targeted tests, builds, and documented QA checks, including `./run-qa-checks` when provided. Do not claim a change is complete when verification fails; report the failure or blocker.
 - When requirements, intended behavior, or an unexpected failure are unclear, stop and seek clarification instead of making speculative changes.
 - When starting work on a new issue, create a new branch from `master`. Use `issues/<issue-number>-<short-title>` for issue work; otherwise, use a short, descriptive branch name.
-- Commit messages must be descriptive and use past tense. Past tense is a writing guideline that agents and contributors must follow; it is not checked automatically. For issue work, use an allowed prefix and a capitalized, past-tense subject ending with `#<issue-number>`, for example `[fix] Fixed perennial "modified" state #213`. Repeat the issue reference in the body with `Fixes`, `Closes`, `Resolves`, or `Related to` as appropriate. Use `openwisp-commit --check` to validate the structural commit convention and `cz -n cz_openwisp info` to view the allowed prefixes and message structure.
+- Commit messages must be descriptive and use past tense. Past tense is a writing guideline that agents and contributors must follow; it is not checked automatically. For issue work, use an allowed prefix and a capitalized, past-tense subject ending with `#<issue-number>`, for example `[fix] Fixed perennial "modified" state #213`. Repeat the issue reference in the body with `Fixes`, `Closes`, `Resolves`, or `Related to` as appropriate. After creating a commit, use `openwisp-commit --check` to validate the current `HEAD`; it cannot validate a proposed message. Use `openwisp-commit --check --rev-range <range>` for an existing commit range, and `cz -n cz_openwisp info` to view allowed prefixes and message structure.
 - Add an explanatory commit body only for substantial changes, new features, or non-obvious bug fixes. The releaser automatically publishes the subject of `[feature]`, `[change]`, `[change!]`, `[deps]`, and `[fix]` commits, including scoped variants, in the changelog. Write those subjects in clear, user-friendly language suitable for release notes.
 - Send new commits in response to review feedback instead of amending existing commits.
 
 ## Development Notes
 
 - Treat `css/theme.scss` as the source stylesheet for website CSS changes.
-- Do not edit generated CSS under `theme/static/css/` or generated output under `output/` as source changes.
+- Do not edit generated `theme/static/css/`, `theme/static/js/`, Font Awesome `theme/static/webfonts/fa-*`, or `output/`; edit their source inputs and rebuild them with the documented commands.
 - After changing `css/theme.scss`, rebuild CSS with `npm run build:css` or run the full website build with `make html`.
 - Keep generated and dependency directories out of source fixes unless explicitly requested.
 - Update content, templates, configuration, and documentation together when website behavior, navigation, setup, or published information changes.
