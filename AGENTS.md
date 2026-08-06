@@ -46,6 +46,7 @@ If instructions conflict, repository configuration and CI workflows win first, d
 
 - For content-only or Pelican logic changes that do not affect frontend assets, run `make html SKIP_YARN=1` while iterating.
 - Run `make html` when CSS, JavaScript, frontend dependencies, or generated frontend assets need rebuilding.
+- Keep helpers and classes used by only one test method inside that method. Promote them to class or module scope only when genuinely reused.
 
 ## Security Notes
 
