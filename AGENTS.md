@@ -32,7 +32,7 @@ If instructions conflict, repository configuration and CI workflows win first, d
 - Add an explanatory commit body only for substantial changes, new features, or non-obvious bug fixes. The releaser automatically publishes the subject of `[feature]`, `[change]`, `[change!]`, `[deps]`, and `[fix]` commits, including scoped variants, in the changelog. Write those subjects in clear, user-friendly language suitable for release notes.
 - Send new commits in response to review feedback instead of amending existing commits.
 
-## Development Notes
+## Development Rules
 
 - Treat `css/theme.scss` as the source stylesheet for website CSS changes.
 - Do not edit generated `theme/static/css/`, `theme/static/js/`, Font Awesome `theme/static/webfonts/fa-*`, or `output/`; edit their source inputs and rebuild them with the documented commands.
@@ -48,7 +48,7 @@ If instructions conflict, repository configuration and CI workflows win first, d
 - Run `make html` when CSS, JavaScript, frontend dependencies, or generated frontend assets need rebuilding.
 - Keep helpers and classes used by only one test method inside that method. Promote them to class or module scope only when genuinely reused.
 
-## Security Notes
+## Security Rules
 
 - Preserve safe browser-facing behavior in templates and content: escape untrusted values, review embeds and generated assets, validate redirects, and use safe external links.
 - Do not expose configuration secrets or credentials in content, templates, generated assets, or repository configuration.
