@@ -34,6 +34,7 @@ If instructions conflict, repository configuration and CI workflows win first, d
 
 ## Development Rules
 
+- Follow the DRY principle: do not duplicate information or code across files.
 - Treat `css/theme.scss` as the source stylesheet for website CSS changes.
 - Do not edit generated `theme/static/css/`, `theme/static/js/`, Font Awesome `theme/static/webfonts/fa-*`, or `output/`; edit their source inputs and rebuild them with the documented commands.
 - After changing `css/theme.scss`, rebuild CSS with `npm run build:css` or run the full website build with `make html`.
