@@ -30,7 +30,7 @@
     "bulma": "^1.0.4",
     "concat-cli": "^4.0.0",
     "concurrently": "^10.0.1",
-    "cssnano": "^8.0.1",
+    "cssnano": "^9.0.1",
     "http-server": "^14.1.1",
     "mermaid": "^11.15.0",
     "postcss-cli": "^11.0.0",
