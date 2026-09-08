@@ -1,5 +1,5 @@
 const postcssUrl = require("postcss-url");
-const { purgeCSSPlugin } = require("@fullhuman/postcss-purgecss");
+const purgeCSSPlugin = require("@fullhuman/postcss-purgecss");
 const pruneVar = require("postcss-prune-var");
 const varCompress = require("postcss-variable-compress");
 const cssnano = require("cssnano");
