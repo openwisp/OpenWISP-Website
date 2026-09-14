@@ -32,12 +32,12 @@ needs.
 About the Project
 -----------------
 
-`OpenWISP Monitoring
-<https://github.com/openwisp/openwisp-monitoring>`_ is the OpenWISP module
-responsible for collecting device metrics, running monitoring checks,
-storing time-series data, rendering charts, and generating alerts. Since
-monitoring data grows continuously over time, it is stored in a
-time-series database rather than in the main relational database.
+`OpenWISP Monitoring <https://github.com/openwisp/openwisp-monitoring>`_
+is the OpenWISP module responsible for collecting device metrics, running
+monitoring checks, storing time-series data, rendering charts, and
+generating alerts. Since monitoring data grows continuously over time, it
+is stored in a time-series database rather than in the main relational
+database.
 
 Before this project, OpenWISP Monitoring primarily relied on InfluxDB 1.8
 for storing time-series data. While this worked well, modern deployments
@@ -48,9 +48,9 @@ of their infrastructure or better suited to their operational needs.
 The objective of this project was to add more time-series database options
 to OpenWISP Monitoring while keeping the codebase maintainable. The
 original GSoC idea focused on completing the Elasticsearch support that
-had unfortunately been abandoned six years ago, and on adding InfluxDB
-2.9 as a new supported backend, so OpenWISP could support both InfluxDB
-1.8 and newer alternatives without breaking existing behavior.
+had unfortunately been abandoned six years ago, and on adding InfluxDB 2.9
+as a new supported backend, so OpenWISP could support both InfluxDB 1.8
+and newer alternatives without breaking existing behavior.
 
 This required more than simply adding two new clients. The time-series
 database layer had to become more extensible, chart queries had to work
@@ -87,11 +87,11 @@ write data to InfluxDB 2.9. However, once the implementation started, it
 became clear that InfluxDB 2.9 is not just a drop-in replacement for the
 older InfluxDB 1.8 backend. It felt like I had opened a Pandora's box.
 
-InfluxDB 1.8 uses InfluxQL and retention policies, while InfluxDB 2.9
-uses Flux queries and buckets. This meant that the existing chart queries
-could not simply be reused. The new backend needed its own query layer,
-while still returning data in the shape expected by the existing
-OpenWISP Monitoring charts, checks, and alert logic.
+InfluxDB 1.8 uses InfluxQL and retention policies, while InfluxDB 2.9 uses
+Flux queries and buckets. This meant that the existing chart queries could
+not simply be reused. The new backend needed its own query layer, while
+still returning data in the shape expected by the existing OpenWISP
+Monitoring charts, checks, and alert logic.
 
 One of the most challenging parts was working with **Flux queries**.
 Writing the first queries was manageable, but translating all the chart
@@ -110,9 +110,9 @@ implementation.
 
 The backend also had to map OpenWISP's existing retention policy model to
 InfluxDB 2.9 buckets. Since InfluxDB 2.9 does not support multiple
-retention policies inside the same bucket in the same way as InfluxDB
-1.8, the implementation uses bucket naming conventions to preserve the
-behavior expected by OpenWISP Monitoring.
+retention policies inside the same bucket in the same way as InfluxDB 1.8,
+the implementation uses bucket naming conventions to preserve the behavior
+expected by OpenWISP Monitoring.
 
 During staging and review, a few additional issues surfaced around query
 escaping, read/delete behavior, UDP writes through Telegraf, test
@@ -224,16 +224,15 @@ For the full technical discussion and implementation details, see
 Deployment Support
 ~~~~~~~~~~~~~~~~~~
 
-The final part of the feature work was making the new time-series
-backends easier to deploy outside the development environment. In
-`docker-openwisp <https://github.com/openwisp/docker-openwisp>`_, I added
-configurable ``TIMESERIES_BACKEND`` support, optional Docker Compose
-services for InfluxDB 2.9 and Elasticsearch, Telegraf support for InfluxDB
-2.9 UDP writes, default environment variables, and tests for backend
-selection.
+The final part of the feature work was making the new time-series backends
+easier to deploy outside the development environment. In `docker-openwisp
+<https://github.com/openwisp/docker-openwisp>`_, I added configurable
+``TIMESERIES_BACKEND`` support, optional Docker Compose services for
+InfluxDB 2.9 and Elasticsearch, Telegraf support for InfluxDB 2.9 UDP
+writes, default environment variables, and tests for backend selection.
 
-In `ansible-openwisp2 <https://github.com/openwisp/ansible-openwisp2>`_,
-I updated the monitoring time-series configuration to be backend-agnostic,
+In `ansible-openwisp2 <https://github.com/openwisp/ansible-openwisp2>`_, I
+updated the monitoring time-series configuration to be backend-agnostic,
 documented examples for switching between InfluxDB 1.8, InfluxDB 2.9, and
 Elasticsearch, and added Molecule verification for rendered backend
 settings. The related work is tracked in `docker-openwisp pull request
