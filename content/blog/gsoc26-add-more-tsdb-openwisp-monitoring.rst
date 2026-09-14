@@ -22,8 +22,9 @@ flexibility of `OpenWISP Monitoring
 more time-series database backends.
 
 With the guidance of my mentors `Federico Capoano (nemesifier)
-<https://github.com/nemesifier>`_ and `Gagan Deep (pandafy)
-<https://github.com/pandafy>`_, along with the OpenWISP community, I had
+<https://github.com/nemesifier>`_, `Gagan Deep (pandafy)
+<https://github.com/pandafy>`_, and `Clément Beaujoin (cbeaujoin)
+<https://github.com/cbeaujoin>`_, along with the OpenWISP community, I had
 the opportunity to work on a core part of the monitoring system,
 understand how OpenWISP stores and queries device metrics, and contribute
 changes that make the project more adaptable for different deployment
