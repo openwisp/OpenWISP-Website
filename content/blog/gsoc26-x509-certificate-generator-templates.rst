@@ -23,9 +23,9 @@ being tied exclusively to VPN tunnels, turning it into a general-purpose
 capability. None of this would have been possible without the steady
 guidance and expertise of my mentors `Federico Capoano (nemesifier)
 <https://github.com/nemesifier>`_ and `Aryaman (Aryamanz29)
-<https://github.com/Aryamanz29>`_. Their thoughtful feedback, patience, and
-generous mentorship were invaluable in helping me grow both as a developer
-and as an open-source contributor.
+<https://github.com/Aryamanz29>`_. Their thoughtful feedback, patience,
+and generous mentorship were invaluable in helping me grow both as a
+developer and as an open-source contributor.
 
 About the Project
 -----------------
@@ -77,14 +77,14 @@ Certificate Template Model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A new ``cert`` type was added to the existing ``AbstractTemplate`` model,
-exposed in the admin as *Certificate generator*, together with
-two new relational fields:
+exposed in the admin as *Certificate generator*, together with two new
+relational fields:
 
 - ``ca``, a required ``ForeignKey`` to the ``django_x509.Ca`` model that
   signs the generated certificates;
-- ``blueprint_cert``, an optional ``ForeignKey`` to the ``django_x509.Cert``
-  model whose non-unique properties are copied to every newly generated
-  certificate.
+- ``blueprint_cert``, an optional ``ForeignKey`` to the
+  ``django_x509.Cert`` model whose non-unique properties are copied to
+  every newly generated certificate.
 
 Certificate generator templates always provision certificates
 automatically, so their ``auto_cert`` value is implicitly enabled and is
@@ -100,9 +100,9 @@ A new ``DeviceCertificate`` intermediate Many-To-Many model acts as a
 strict relational bridge between the device configuration, the template
 and the generated certificate. It stores a ``config`` and a ``template``
 foreign key, a ``cert`` one-to-one relationship and an ``auto_cert`` flag,
-and enforces a ``unique_together`` constraint on ``(config, template)``
-so that a single configuration can never generate conflicting
-certificates from the same template.
+and enforces a ``unique_together`` constraint on ``(config, template)`` so
+that a single configuration can never generate conflicting certificates
+from the same template.
 
 Provisioning and Revocation Lifecycle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,8 +111,8 @@ Certificate generation follows the same lifecycle semantics as the
 existing OpenVPN client certificates, but for standalone certificates:
 
 - **Assignment generates a certificate.** When a certificate template is
-  added to a device configuration, a ``DeviceCertificate`` relationship
-  is created and an X.509 certificate is generated and signed in the same
+  added to a device configuration, a ``DeviceCertificate`` relationship is
+  created and an X.509 certificate is generated and signed in the same
   database transaction. The subject and extensions are copied from the
   blueprint certificate when one is provided, otherwise they fall back to
   the CA defaults, and the certificate's common name is built from the
@@ -178,6 +178,7 @@ of the template, which avoids collisions when multiple certificate
 templates are assigned to the same device:
 
 {% raw %}
+
 - ``{{ cert_<template_uuid_hex>_pem }}``: the public certificate;
 - ``{{ cert_<template_uuid_hex>_key }}``: the private key;
 - ``{{ cert_<template_uuid_hex>_id }}``: the ID of the generated
@@ -186,6 +187,7 @@ templates are assigned to the same device:
   file is installed on the device;
 - ``{{ cert_<template_uuid_hex>_key_path }}``: the path where the private
   key file is installed on the device.
+
 {% endraw %}
 
 Administrators can reference these variables inside the JSON payload of
@@ -196,15 +198,15 @@ Django Admin and REST API
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Django admin was updated so that certificate templates can actually be
-configured: the new *Certificate generator* type appears in the
-type dropdown, the *Certificate Authority* and
-*Blueprint Certificate* fields are shown or hidden based on the
-selected type, and both foreign keys use ``raw_id_fields`` to stay
-scalable in large deployments. The blueprint dropdown is filtered to show
-only unassigned, non-revoked certificates and is scoped to the template's
-organization. The device admin gained a dedicated certificate tab that
-lists the certificates generated for a device, and links the template name
-to its detail page, opening in a new tab.
+configured: the new *Certificate generator* type appears in the type
+dropdown, the *Certificate Authority* and *Blueprint Certificate* fields
+are shown or hidden based on the selected type, and both foreign keys use
+``raw_id_fields`` to stay scalable in large deployments. The blueprint
+dropdown is filtered to show only unassigned, non-revoked certificates and
+is scoped to the template's organization. The device admin gained a
+dedicated certificate tab that lists the certificates generated for a
+device, and links the template name to its detail page, opening in a new
+tab.
 
 Because changing the core parameters of a template that is already in use
 would break the binding with the devices, an **Active Template Mutation
@@ -216,10 +218,10 @@ protection applies to the API.
 The certificate template type is fully supported by the existing REST API:
 the ``type`` field accepts the ``cert`` enumeration, ``ca`` and
 ``blueprint_cert`` are writable on ``/api/v1/controller/template/``, and
-patching the ``templates`` array of a device triggers the same
-creation and revocation lifecycle described above. Requesting an
-already-assigned or revoked certificate as a blueprint, or attempting a
-locked mutation, returns a ``400 Bad Request``.
+patching the ``templates`` array of a device triggers the same creation
+and revocation lifecycle described above. Requesting an already-assigned
+or revoked certificate as a blueprint, or attempting a locked mutation,
+returns a ``400 Bad Request``.
 
 Current State
 -------------
@@ -249,7 +251,7 @@ request:
   <https://github.com/openwisp/openwisp-controller/issues/1362>`_
 - `Show automatically generated x509 certificates in device admin
   <https://github.com/openwisp/openwisp-controller/issues/1410>`_
-- `Added X.509 Certificate Generator Templates 
+- `Added X.509 Certificate Generator Templates
   <https://github.com/openwisp/openwisp-controller/pull/1486>`_
 
 The dedicated documentation page is `X.509 Certificate Generator Templates
@@ -258,8 +260,8 @@ The dedicated documentation page is `X.509 Certificate Generator Templates
 My Experience
 -------------
 
-Summer of Code with OpenWISP turned out to be an enriching experience,
-and building something that spans cryptography, the database, the
+Summer of Code with OpenWISP turned out to be an enriching experience, and
+building something that spans cryptography, the database, the
 configuration engine and the user interface all at once stretched me in
 ways I had not anticipated. Watching an idea from the GSoC ideas page
 become a merged feature, more than five thousand lines of code spread
@@ -277,12 +279,12 @@ up in production. I learned a great deal, and I am keenly aware of how
 much is still left to learn.
 
 Getting the certificate lifecycle right, keeping generated certificates in
-sync with the device hardware, and keeping context injection collision-free
-for devices that use multiple certificate templates were the toughest
-challenges. Working through them taught me how to split a large feature
-into pieces that can each be reviewed and merged on their own, and how
-much it matters to write tests that exercise the real database and signal
-paths instead of mocking them away.
+sync with the device hardware, and keeping context injection
+collision-free for devices that use multiple certificate templates were
+the toughest challenges. Working through them taught me how to split a
+large feature into pieces that can each be reviewed and merged on their
+own, and how much it matters to write tests that exercise the real
+database and signal paths instead of mocking them away.
 
 Beyond the code, joining in the community's discussions was, once again,
 something I truly enjoyed. I hope to remain involved and give back to the
@@ -291,23 +293,23 @@ community even more over the coming years.
 What's Next?
 ------------
 
-I plan to keep contributing actively to OpenWISP, working on
-bug fixes, adding new enhancements and supporting new contributors in
-their open-source journey. Now that I have an in-depth understanding of
-the OpenWISP codebase, I am also interested in maintaining and evolving
-the features I developed during GSoC.
+I plan to keep contributing actively to OpenWISP, working on bug fixes,
+adding new enhancements and supporting new contributors in their
+open-source journey. Now that I have an in-depth understanding of the
+OpenWISP codebase, I am also interested in maintaining and evolving the
+features I developed during GSoC.
 
-One direction I would like to explore is making the standalone
-certificate templates the underlying base for VPN client certificate
-management as well. Today ``VpnClient`` still handles certificate
-creation, renewal and revocation through its own tied-in logic and signal
-handlers, while the new ``DeviceCertificate`` model provides a generalized
-framework for the same operations. Keeping these two parallel paths means
-duplicated code and the risk that fixes or improvements made to one never
-reach the other, so the goal is to refactor ``VpnClient`` to reuse the
-standalone infrastructure: moving the shared lifecycle into a common
-layer, standardizing signal handlers and transaction atomicity,
-synchronizing CRL updates across both implementations, and reusing the
-same renewal and regeneration behavior on both sides. This work is tracked
-in `openwisp-controller issue #1449
+One direction I would like to explore is making the standalone certificate
+templates the underlying base for VPN client certificate management as
+well. Today ``VpnClient`` still handles certificate creation, renewal and
+revocation through its own tied-in logic and signal handlers, while the
+new ``DeviceCertificate`` model provides a generalized framework for the
+same operations. Keeping these two parallel paths means duplicated code
+and the risk that fixes or improvements made to one never reach the other,
+so the goal is to refactor ``VpnClient`` to reuse the standalone
+infrastructure: moving the shared lifecycle into a common layer,
+standardizing signal handlers and transaction atomicity, synchronizing CRL
+updates across both implementations, and reusing the same renewal and
+regeneration behavior on both sides. This work is tracked in
+`openwisp-controller issue #1449
 <https://github.com/openwisp/openwisp-controller/issues/1449>`_.
