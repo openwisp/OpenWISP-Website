@@ -66,14 +66,6 @@
               width="142"
               height="60"
             />
-            <img
-              src="{static}/images/partners/a2a.svg"
-              class="a2a"
-              alt="A2A"
-              title="A2A"
-              width="171"
-              height="60"
-            />
           {% endif %}
           {% if contributors %}
             <img
@@ -111,12 +103,12 @@
               height="54"
             />
             <img
-              src="{static}/images/partners/sponsors/db-audiotechnik.svg"
-              class="db"
-              alt="d&b audiotechnik"
-              title="D&B Audiotechnik"
-              width="200"
-              height="43"
+              src="{static}/images/partners/github.svg"
+              class="github"
+              alt="GitHub"
+              title="GitHub"
+              width="175"
+              height="40"
             />
           {% endif %}
         </a>
