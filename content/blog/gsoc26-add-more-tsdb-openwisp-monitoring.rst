@@ -182,8 +182,8 @@ review comments, see `openwisp-monitoring pull request #829
 
 Both backend changes were later combined in the ``gsoc26-add-more-tsdb``
 branch. The final `pull request #868
-<https://github.com/openwisp/openwisp-monitoring/pull/868>`_ brings the
-combined work to ``master``.
+<https://github.com/openwisp/openwisp-monitoring/pull/868>`_ proposes
+bringing the combined work to ``master``.
 
 OpenWISP RADIUS Monitoring Integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
