@@ -1,0 +1,4 @@
+[tool.black]
+extend-exclude = '''
+/(node_modules|\.venv|venv)/
+'''

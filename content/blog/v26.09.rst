@@ -1,0 +1,48 @@
+OpenWISP v26.09 is out!
+=======================
+
+:date: 2026-09-07
+:author: Federico Capoano
+:category: news
+:tags: releases
+:lang: en
+:image_url: https://openwisp.org/images/blog/v26.09.webp
+:image_width: 1800
+:image_height: 1013
+
+.. image:: {static}/images/blog/v26.09.webp
+    :alt: OpenWISP 26.09 released!
+
+We are excited to announce that the latest release of OpenWISP is now
+available!
+
+This release brings major improvements to maps, firmware management,
+device location data, more consistency, more REST API endpoints, and loads
+of bug fixes.
+
+Highlights
+----------
+
+**Better geographic and indoor map experience**
+
+- `Improved the map experience with indoor maps, real-time mobile device
+  tracking, and shareable URLs
+  </blog/gsoc-2025-better-map-ux-indoor-mobile-linkable-urls/>`_.
+
+**More flexible firmware upgrades**
+
+- `Added real-time progress updates, upgrade cancellation, and targeted
+  mass upgrades by device group or location
+  </blog/gsoc-2025-improve-ux-and-flexibility-of-the-firmware-upgrader-module/>`_.
+
+**Richer device location data**
+
+- `Added WHOIS information and estimated geographic locations based on
+  device IP addresses
+  </blog/gsoc-2025-whois-info-and-estimated-geographic-locations/>`_.
+
+Full Release Notes
+------------------
+
+For detailed information about the updates, refer to the `OpenWISP 26.09
+Release Notes <https://openwisp.io/docs/26.09/releases/26.09.html>`_.
