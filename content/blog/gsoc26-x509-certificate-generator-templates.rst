@@ -38,21 +38,25 @@ authenticating devices against an internal API, or using device identities
 with 802.1x or captive portals, was forced to attach an unnecessary VPN
 configuration just to obtain one.
 
-The project makes certificate generation a first-class, general-purpose
-feature. Administrators can now create a *Certificate generator* template,
-pick the Certificate Authority that will sign the certificates and,
-optionally, an existing certificate to use as a reusable blueprint. The
-certificate is then generated automatically for every device the template
-is assigned to, is bound to the device's cryptographic identity, can be
-consumed by the configuration engine and is revoked automatically when it
-is no longer needed.
+The project makes certificate generation a **first-class, general-purpose
+feature**. Administrators can now create a *Certificate generator*
+template, choose the Certificate Authority that signs the certificates
+and, optionally, an existing certificate to reuse as a blueprint. OpenWISP
+then generates a certificate automatically for every device the template
+is assigned to. That certificate is bound to the device's cryptographic
+identity, can be consumed by the configuration engine, and is revoked
+automatically when it is no longer needed.
 
 The work adds a set of enhancements to `openwisp-controller
-<https://github.com/openwisp/openwisp-controller>`_: a new template type
-and relational model, an automated provisioning and revocation lifecycle,
-custom device identification OIDs, context variables for configuration
-templates, hardware-drift regeneration, Django admin and REST API
-integration, and the documentation which ties everything together.
+<https://github.com/openwisp/openwisp-controller>`_:
+
+- a new template type and relational model;
+- an automated provisioning and revocation lifecycle;
+- custom device identification OIDs;
+- context variables for configuration templates;
+- hardware-drift regeneration;
+- Django admin and REST API integration;
+- documentation that ties everything together.
 
 Building X.509 Certificate Generator Templates
 ----------------------------------------------
@@ -80,21 +84,25 @@ A new ``cert`` type was added to the existing ``AbstractTemplate`` model,
 exposed in the admin as *Certificate generator*, together with two new
 relational fields:
 
-- ``ca``, a required ``ForeignKey`` to the ``django_x509.Ca`` model that
-  signs the generated certificates;
-- ``blueprint_cert``, an optional ``ForeignKey`` to the
-  ``django_x509.Cert`` model whose non-unique properties are copied to
-  every newly generated certificate.
+- ``ca``, a required ``ForeignKey`` to the ``pki.Ca`` model that signs the
+  generated certificates;
+- ``blueprint_cert``, an optional ``ForeignKey`` to the ``pki.Cert`` model
+  whose non-unique properties are copied to every newly generated
+  certificate.
 
 Certificate generator templates always provision certificates
 automatically, so their ``auto_cert`` value is implicitly enabled and is
 not configurable. A set of validation rules protects the cryptographic
-integrity of the templates: the CA is strictly required for ``cert``
-templates, the blueprint must be signed by the selected CA and must not
-already be assigned to a device, and both the CA and the blueprint must
-belong to the same organization as the template, or be shared. When the
-template type is not ``cert``, the two certificate fields are cleared
-automatically.
+integrity of the templates:
+
+- the CA is strictly required for ``cert`` templates;
+- the blueprint must be signed by the selected CA;
+- the blueprint must not already be assigned to a device;
+- the CA and the blueprint must belong to the same organization as the
+  template, or be shared.
+
+When the template type is not ``cert``, the two certificate fields are
+cleared automatically.
 
 A new ``DeviceCertificate`` intermediate Many-To-Many model acts as a
 strict relational bridge between the device configuration, the template
@@ -190,8 +198,8 @@ templates are assigned to the same device:
 
 {% endraw %}
 
-Administrators can reference these variables inside the JSON payload of
-any configuration template, and OpenWISP replaces them with the exact
+Administrators can reference these variables inside the JSON configuration
+payload of any template, and OpenWISP replaces them with the exact
 certificate and private key generated for that specific device.
 
 Django Admin and REST API
@@ -211,9 +219,9 @@ tab.
 Because changing the core parameters of a template that is already in use
 would break the binding with the devices, an **Active Template Mutation
 Lock** blocks changes to the type, organization, CA and blueprint of a
-template while it is assigned to non-deactivated configurations. The lock
-is enforced both in the admin and at the serializer level, so the same
-protection applies to the API.
+template while it is assigned to active devices. The lock is enforced both
+in the admin and at the serializer level, so the same protection applies
+to the API.
 
 The certificate template type is fully supported by the existing REST API:
 the ``type`` field accepts the ``cert`` enumeration, ``ca`` and
@@ -260,10 +268,10 @@ The dedicated documentation page is `X.509 Certificate Generator Templates
 My Experience
 -------------
 
-Summer of Code with OpenWISP turned out to be an enriching experience, and
-building something that spans cryptography, the database, the
-configuration engine and the user interface all at once stretched me in
-ways I had not anticipated. Watching an idea from the GSoC ideas page
+Google Summer of Code with OpenWISP turned out to be an enriching
+experience, and building something that spans cryptography, the database,
+the configuration engine and the user interface all at once stretched me
+in ways I had not anticipated. Watching an idea from the GSoC ideas page
 become a merged feature, more than five thousand lines of code spread
 across four dozen files, is something I am genuinely proud of.
 
