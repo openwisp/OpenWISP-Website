@@ -7,8 +7,8 @@ GSoC 2026: Automatic Extraction of OpenWrt Firmware Image Metadata
 :category: gsoc
 :lang: en
 :image_url: https://openwisp.org/images/blog/gsoc26/automatic-metadata-extraction.png
-:image_width: 1920
-:image_height: 1080
+:image_width: 733
+:image_height: 738
 
 .. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction.png
     :alt: Google Summer of Code, Automatic Metadata Extraction of OpenWrt Firmware Image Metadata in OpenWISP
@@ -27,8 +27,8 @@ of understanding firmware images and OpenWrt's internals.
 I had an amazing time working on the `OpenWISP Firmware Upgrader
 <https://github.com/openwisp/openwisp-firmware-upgrader>`_ module, where I
 implemented the automatic extraction pipeline for OpenWrt firmware image
-metadata, which helped me understand firmware internals and how OpenWrt
-images are structured far more deeply than I expected going in.
+metadata, which helped me understand how OpenWrt images are structured far
+more deeply than I expected going in.
 
 About the Project
 -----------------
@@ -99,10 +99,9 @@ Features Implemented
 Automatic Metadata Extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-..
-    TODO: add screenshot once ready, e.g.
-    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/firmwareimage-admin-extracted.png
-        :alt: FirmwareImage admin change form showing board, compatible and target populated after extraction
+.. image:: {static}/images/blog/gsoc26/firmwareimage-admin-extracted-info.png
+    :alt: FirmwareImage admin change form showing board, compatible and target populated after extraction
+    :align: center
 
 Most OpenWrt sysupgrade images are built with fwtool, which appends a
 small trailer of JSON metadata to the end of the image file: the board
@@ -111,10 +110,9 @@ image supports. Extraction looks for this trailer first, since it's the
 most direct and reliable source when it's present, no guessing or
 pattern-matching required, the image describes itself.
 
-..
-    TODO: add screenshot once ready, e.g.
-    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/extraction-log-dtb-fallback.png
-        :alt: Extraction log showing a DTB fallback after the fwtool trailer was missing or unusable
+.. image:: {static}/images/blog/gsoc26/extraction-log-dtb-fallback.png
+    :alt: Extraction log showing a DTB fallback after the fwtool trailer was missing or unusable
+    :align: center
 
 Not every image carries an fwtool trailer, and some are compressed in ways
 that make locating it unreliable. For these cases, extraction falls back
@@ -131,7 +129,7 @@ New Model Fields
     .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/extraction-status-badge.png
         :alt: extraction_status badges shown in the FirmwareImage changelist
 
-Several new fields on FirmwareImage carry the result of extraction:
+Several new fields on ``FirmwareImage`` carry the result of extraction:
 
 - board, the identifier used to pair the image with a device, replacing
   the old hardware-map lookup
@@ -154,10 +152,9 @@ admin interface.
 Safety Guards in the Extraction Pipeline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-..
-    TODO: add screenshot once ready, e.g.
-    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/extraction-failed-incomplete.png
-        :alt: Extraction log showing a failed status with the reason, e.g. decompression limit exceeded
+.. image:: {static}/images/blog/gsoc26/extraction-failed-incomplete.png
+    :alt: Extraction log showing a failed status with the reason, e.g. decompression limit exceeded
+    :align: center
 
 Firmware uploads are untrusted binary input, so the extraction pipeline
 enforces limits at every stage: caps on raw file size, decompressed size,
@@ -195,14 +192,36 @@ even one of its images is still unconfirmed, in progress, failed, or
 invalid, so a single stuck extraction can hold up an entire rollout until
 it's recovered.
 
+.. image:: {static}/images/blog/gsoc26/build-status-badge.png
+    :alt: Build changelist showing the aggregate extraction status badge for each build
+    :align: center
+
+Each build also carries its own aggregate extraction status, rolled up
+from every image that belongs to it: if any image is still unconfirmed or
+in progress the build shows as analyzing, otherwise the worst outstanding
+state wins, invalid, then failed, then incomplete, then manually
+confirmed, and only once every image has fully resolved does the build
+itself show success. This gives an admin a single badge to check before
+attempting a mass upgrade, instead of opening every image individually to
+see whether it's ready.
+
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+..
+    TODO: add gif once ready, e.g.
+    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/device-firmware-image-dropdown.png
+        :alt: Device firmware image dropdown showing only images eligible for pairing
 
 When an extraction fails or comes back incomplete, an admin can fill in
 board and the other metadata fields by hand directly in the change form.
 Saving those changes automatically confirms the image, extraction status
 moves to 'Manually Confirmed' and the build's own status updates to
 reflect it, without a separate confirm step.
+
+.. image:: {static}/images/blog/gsoc26/re-extract-metadata-action.png
+    :alt: Re-extract metadata bulk action in the FirmwareImage changelist, with a failed image selected
+    :align: center
 
 A bulk **Re-extract metadata** action is also available for images where
 the underlying file changed or extraction needs to be retried. It skips,
@@ -259,19 +278,17 @@ admin can set the correct one manually.
 Current State
 -------------
 
-The work is split across two pull requests merged into the
-`gsoc26-metadata-extraction
+The work is complete and merged into the `gsoc26-metadata-extraction
 <https://github.com/openwisp/openwisp-firmware-upgrader/tree/gsoc26-metadata-extraction>`_
 feature branch of `openwisp-firmware-upgrader
-<https://github.com/openwisp/openwisp-firmware-upgrader>`_: `#421
+<https://github.com/openwisp/openwisp-firmware-upgrader>`_ across two pull
+requests: `#421
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/421>`_, which
-laid the extractor pipeline and the safety limits, has already been
-merged. `#437
+laid the extractor pipeline and the safety limits, and `#437
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/437>`_, which
-adds the model fields, the migration, and the admin and REST API workflow
-described above, is still open and under review. Once it lands, the
-feature branch will be proposed for merging into **master** in a follow-up
-pull request.
+added the model fields, the migration, and the admin and REST API workflow
+described above. The feature branch will now be proposed for merging into
+**master** in a follow-up pull request.
 
 My Experience
 -------------
