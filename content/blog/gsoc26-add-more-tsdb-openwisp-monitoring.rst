@@ -40,6 +40,14 @@ generating alerts. Since monitoring data grows continuously over time, it
 is stored in a time-series database rather than in the main relational
 database.
 
+.. image:: {static}/images/blog/gsoc26/tsdb-technical-diagram.png
+    :alt: OpenWISP Monitoring time-series database abstraction diagram
+    :align: center
+
+The abstract base class and type hints keeps monitoring logic independent
+of the underlying TSDB, so new backends can be added without changing the
+core monitoring system.
+
 Before this project, OpenWISP Monitoring primarily relied on InfluxDB 1.8
 for storing time-series data. While this worked well, modern deployments
 may need more flexibility. Some users may want to use newer versions of
@@ -179,6 +187,15 @@ The final implementation added:
 For the full technical discussion, implementation details, and maintainer
 review comments, see `openwisp-monitoring pull request #829
 <https://github.com/openwisp/openwisp-monitoring/pull/829>`_.
+
+At runtime, device data moves through the monitoring API and Celery tasks
+before reaching the common client interface. Each backend adapter handles
+its own storage and query language, while the monitoring layer receives
+the same output for charts, alerts, and API responses.
+
+.. image:: {static}/images/blog/gsoc26/tsdb-workflow.png
+    :alt: OpenWISP Monitoring data flow from devices to time-series backends
+    :align: center
 
 Both backend changes were later combined in the ``gsoc26-add-more-tsdb``
 branch. The final `pull request #868

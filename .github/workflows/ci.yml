@@ -87,7 +87,6 @@ jobs:
       github.repository == 'openwisp/OpenWISP-Website' &&
       github.event_name == 'push'
     needs: deploy
-
     steps:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
