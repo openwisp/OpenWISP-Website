@@ -7,9 +7,11 @@ GSoC 2026: Automatic Extraction of OpenWrt Firmware Image Metadata
 :category: gsoc
 :lang: en
 
-.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction.png
-    :alt: Google Summer of Code, Automatic Metadata Extraction of OpenWrt Firmware Image Metadata in OpenWISP
-    :align: center
+..
+    TODO: add the cover image once ready, e.g.
+    .. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction.png
+        :alt: Google Summer of Code, Automatic Metadata Extraction of OpenWrt Firmware Image Metadata in OpenWISP
+        :align: center
 
 Still feels unreal sometimes that I got to work with OpenWISP during
 Google Summer of Code. These past 5 months have taught me a lot about how
@@ -301,10 +303,6 @@ I think about untrusted input even outside this project.
 What's Next?
 ------------
 
-I plan to keep contributing to this module and keep improving what we have
-worked towards till this point, and also explore other parts of OpenWISP
-while supporting new contributors whenever I can.
-
 The next step is to get these changes ready for production use, beyond
 that, the natural continuation is compatible-based device pairing: adding
 a ``board_name`` field to devices so multi-board images can pair
@@ -316,3 +314,7 @@ new device field, `openwisp-config issue #282
 from the device, and `openwisp-firmware-upgrader issue #493
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/493>`_ for
 the pairing logic itself.
+
+I plan to keep contributing to this module and keep improving what we have
+worked towards till this point, and also explore other parts of OpenWISP
+while supporting new contributors whenever I can.

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
+  <title id="title">AI-assisted debugging of a flaky CI crash</title>
+  <desc id="desc">A stylized CI pipeline showing a red Python 3.13 SQLite crash being investigated by an AI agent and resolved into a green build.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#061526"/>
+      <stop offset="0.45" stop-color="#09283d"/>
+      <stop offset="1" stop-color="#0a1f2f"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#71f7b1"/>
+      <stop offset="1" stop-color="#20c997"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff7a7a"/>
+      <stop offset="1" stop-color="#ff3b5f"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="400" fill="url(#bg)"/>
+  <rect width="1200" height="400" fill="url(#grid)"/>
+
+  <g opacity="0.28" stroke="#8be9ff" stroke-width="2" fill="none">
+    <path d="M46 312 C190 260 235 350 352 292 S575 231 686 280 850 355 1024 232 1121 198 1174 220"/>
+    <path d="M66 92 C171 125 255 42 367 92 S553 168 684 95 868 27 1013 82 1126 122 1170 102"/>
+  </g>
+
+  <g transform="translate(72 76)">
+    <rect x="0" y="0" width="325" height="226" rx="18" fill="#0d2235" stroke="#2f4f68" stroke-width="2"/>
+    <rect x="0" y="0" width="325" height="44" rx="18" fill="#102f49"/>
+    <circle cx="27" cy="22" r="6" fill="#ff5f57"/>
+    <circle cx="48" cy="22" r="6" fill="#ffbd2e"/>
+    <circle cx="69" cy="22" r="6" fill="#28c840"/>
+    <text x="26" y="74" fill="#b7d6e8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">CI matrix</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">
+      <text x="26" y="111" fill="#69f0ae">python 3.10: pass</text>
+      <text x="26" y="139" fill="#69f0ae">python 3.11: pass</text>
+      <text x="26" y="167" fill="#69f0ae">python 3.12: pass</text>
+      <text x="26" y="195" fill="#ff6b7d">python 3.13: double free</text>
+    </g>
+  </g>
+
+  <g transform="translate(454 52)">
+    <circle cx="122" cy="122" r="102" fill="#10283d" stroke="#315d75" stroke-width="2"/>
+    <circle cx="122" cy="122" r="76" fill="none" stroke="#37d6ff" stroke-width="3" stroke-dasharray="8 10" opacity="0.8"/>
+    <path d="M86 84h72a22 22 0 0 1 22 22v58a22 22 0 0 1-22 22H86a22 22 0 0 1-22-22v-58a22 22 0 0 1 22-22Z" fill="#15364f" stroke="#70e3ff" stroke-width="3"/>
+    <path d="M122 62v22M96 62h52" stroke="#70e3ff" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="98" cy="126" r="10" fill="#70e3ff"/>
+    <circle cx="146" cy="126" r="10" fill="#70e3ff"/>
+    <path d="M93 158c20 16 49 16 68 0" fill="none" stroke="#70e3ff" stroke-width="4" stroke-linecap="round"/>
+    <text x="122" y="247" text-anchor="middle" fill="#d9f5ff" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">AI debugging loop</text>
+    <text x="122" y="274" text-anchor="middle" fill="#9bc7da" font-family="Inter, Arial, sans-serif" font-size="15">reproduce, test, disprove</text>
+  </g>
+
+  <g transform="translate(754 74)">
+    <rect x="0" y="0" width="360" height="228" rx="18" fill="#0d2235" stroke="#2f4f68" stroke-width="2"/>
+    <text x="28" y="52" fill="#d9f5ff" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Root cause</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16">
+      <text x="28" y="91" fill="#8be9ff">find_library("spatialite")</text>
+      <text x="28" y="121" fill="#ffbd6e">forks ldconfig</text>
+      <text x="28" y="151" fill="#ff6b7d">SQLite close in another thread</text>
+    </g>
+    <path d="M58 179h244" stroke="#2f4f68" stroke-width="3" stroke-linecap="round"/>
+    <path d="M64 179h96" stroke="url(#red)" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M182 179h118" stroke="url(#green)" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+    <text x="58" y="207" fill="#ff8ca0" font-family="Inter, Arial, sans-serif" font-size="14">race</text>
+    <text x="239" y="207" fill="#82f7ba" font-family="Inter, Arial, sans-serif" font-size="14">serialized</text>
+  </g>
+
+  <g transform="translate(70 332)">
+    <rect x="0" y="0" width="1060" height="42" rx="21" fill="#0d2235" stroke="#24475d"/>
+    <circle cx="30" cy="21" r="10" fill="#ff3b5f" filter="url(#glow)"/>
+    <text x="52" y="26" fill="#cfe8f3" font-family="Inter, Arial, sans-serif" font-size="16">flaky crash</text>
+    <path d="M176 21h150" stroke="#3b6077" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="362" cy="21" r="10" fill="#37d6ff" filter="url(#glow)"/>
+    <text x="384" y="26" fill="#cfe8f3" font-family="Inter, Arial, sans-serif" font-size="16">brute-force reproduction</text>
+    <path d="M574 21h150" stroke="#3b6077" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="760" cy="21" r="10" fill="#20c997" filter="url(#glow)"/>
+    <text x="782" y="26" fill="#cfe8f3" font-family="Inter, Arial, sans-serif" font-size="16">memoize and serialize</text>
+  </g>
+</svg>
