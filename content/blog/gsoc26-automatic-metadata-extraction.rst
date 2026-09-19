@@ -6,6 +6,7 @@ GSoC 2026: Automatic Extraction of OpenWrt Firmware Image Metadata
 :tags: gsoc, openwisp-firmware-upgrader, new-features
 :category: gsoc
 :lang: en
+:mermaid: true
 :image_url: https://openwisp.org/images/blog/gsoc26/automatic-metadata-extraction.png
 :image_width: 733
 :image_height: 738
@@ -49,13 +50,13 @@ About the Project
 
 Previously, when a firmware image was uploaded to
 openwisp-firmware-upgrader, the admin had to manually enter important
-metadata. This was obviously a tedious task in a lot of cases, and the
-module also relied on a manually maintained lookup table, hardware.py,
-mapping image filenames to a static list of compatible boards. This worked
-while the number of supported OpenWrt targets was small, but it does not
-scale: every new device or firmware naming convention meant a manual code
-change, and the map could go stale as OpenWrt's own hardware support
-evolved.
+metadata. This was obviously a tedious task in a lot of cases and error
+prone, and the module also relied on a manually maintained lookup table,
+hardware.py, mapping image filenames to a static list of compatible
+boards. This worked while the number of supported OpenWrt targets was
+small, but it does not scale: every new device or firmware naming
+convention meant a manual code change, and the map could go stale as
+OpenWrt's own hardware support evolved.
 
 This project replaces that manual overhead with automatic metadata
 extraction, reading the information directly from the firmware file itself
@@ -96,11 +97,35 @@ file itself, covered next.
 Features Implemented
 --------------------
 
-Automatic Metadata Extraction
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Automatic Metadata Extraction Pipeline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/firmwareimage-admin-extracted-info.png
-    :alt: FirmwareImage admin change form showing board, compatible and target populated after extraction
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart LR
+         A["Try fwtool extraction"] -- Unsupported type or too large --> B["Stop no metadata"]
+         A -- Fails, no trailer --> C["Use DTB result only"]
+         A -- Succeeds --> D["Check DTB for a better model name"]
+         D -- DTB has model --> E["Override model"]
+         D -- DTB fails or no model --> F["Keep fwtool result"]
+         E --> F
+         F --> G["Return final result"]
+         C --> G
+
+         B:::hardstop
+         C:::replace
+         D:::enrich
+         E:::enrich
+         F:::enrich
+         G:::enrich
+        classDef hardstop fill:#f8d7da,stroke:#b02a37,color:#58151c
+        classDef replace fill:#fff3cd,stroke:#997404,color:#664d03
+        classDef enrich fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+    </pre>
+
+.. image:: {static}/images/blog/gsoc26/automatic-extraction.gif
+    :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
     :align: center
 
 Most OpenWrt sysupgrade images are built with fwtool, which appends a
@@ -121,13 +146,50 @@ kernel uses at boot to describe the hardware it's running on. A DTB
 carries model and compatible properties that identify the board just as
 directly, just from a different part of the image.
 
-New Model Fields
-~~~~~~~~~~~~~~~~
+The Extraction State Machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-..
-    TODO: add screenshot once ready, e.g.
-    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/extraction-status-badge.png
-        :alt: extraction_status badges shown in the FirmwareImage changelist
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart TB
+        subgraph Statuses["extraction_status"]
+            direction LR
+            s1["unconfirmed"]
+            s2["in_progress"]
+            s3["failed"]
+            s5["invalid"]
+            s4["incomplete"]
+            s6["success"]
+            s7["manually_confirmed"]
+        end
+
+        subgraph Capabilities["What it unlocks"]
+            direction LR
+            c0["No functionality yet"]
+            c3["Can be manually confirmed"]
+            c1["Eligible for device pairing"]
+            c2["Locked: fields uneditable"]
+        end
+
+        s1 --> c0
+        s2 --> c0
+        s3 --> c3
+        s5 --> c3
+        s4 --> c3
+        s4 --> c1
+        s6 --> c1
+        s6 --> c2
+        s7 --> c1
+        s7 --> c2
+
+        c0:::neutral
+        c1:::unlock
+        c2:::unlock
+        c3:::unlock
+        classDef unlock fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+        classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
+    </pre>
 
 Several new fields on ``FirmwareImage`` carry the result of extraction:
 
@@ -137,35 +199,119 @@ Several new fields on ``FirmwareImage`` carry the result of extraction:
 - target, the OpenWrt target platform the image was built for
 - fw_version, the firmware version extracted from the image, shown
   whenever it differs from the build's own version
+- compat_version, an internal compatibility marker that blocks device
+  pairing outright when it exceeds 1.0, independent of extraction_status
 - source, recording which method produced the metadata, fwtool, dtb, or
   manual, so an admin can tell at a glance how much to trust a given value
-- extraction_status, recording whether extraction succeeded outright, fell
-  back to the DTB scan, came back incomplete, or failed, backed by a
-  failure_reason for the failed case and a full extraction_log for the
-  details
+- extraction_status, tracking the image through the pipeline shown below,
+  backed by a failure_reason and a full extraction_log for the details
 
-extraction_status doubles as an observability layer. Rather than an image
-silently failing to pair with any device and leaving the admin to guess
-why, the status, reason, and log make the cause visible directly in the
-admin interface.
+Only success, manually confirmed, and incomplete images are eligible for
+device pairing. success and manually confirmed additionally lock the
+metadata fields from further edits, while failed, incomplete, and invalid
+images can be corrected by hand at any time. Rather than an image silently
+failing to pair with any device and leaving the admin to guess why, the
+status, reason, and log make the cause visible directly in the admin
+interface.
 
 Safety Guards in the Extraction Pipeline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart TB
+        subgraph Reject["Reject"]
+            direction LR
+            A["Upload received"] --> B{"Bad file type?"}
+            B -- Yes --> X["failed: unsupported type"]
+        end
+
+        subgraph SizeGuard["Size Limits"]
+            direction LR
+            C{"Raw file too large?"}
+            C -- Yes --> Y["failed: decompression limit"]
+            C -- No --> D["Decompress"]
+            D -- Cap tripped --> Y
+        end
+
+        subgraph Scan["Scanning"]
+            direction LR
+            E["Scan fwtool trailer"] --> F["Fallback: DTB scan"]
+            F --> G["Return result"]
+            E -- Too large --> Y
+        end
+
+        B -- No --> C
+        D -- OK --> E
+
+        X:::fail
+        Y:::fail
+        G:::ok
+        classDef fail fill:#f8d7da,stroke:#b02a37,color:#58151c
+        classDef ok fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+    </pre>
 
 .. image:: {static}/images/blog/gsoc26/extraction-failed-incomplete.png
     :alt: Extraction log showing a failed status with the reason, e.g. decompression limit exceeded
     :align: center
 
 Firmware uploads are untrusted binary input, so the extraction pipeline
-enforces limits at every stage: caps on raw file size, decompressed size,
-and compression ratio guard against decompression-bomb-style uploads, and
-a separate cap on the fwtool trailer's claimed metadata size prevents an
-oversized JSON payload from being parsed even after it passes checksum
-validation. Any image that trips these limits is marked as failed with a
-clear reason, and the admin can inspect the extraction log if needed.
+enforces limits at every stage, not just one. The raw file size is capped
+before it's even copied into a working file, decompressed size and
+compression ratio are capped during actual decompression to block
+decompression-bomb-style uploads, and a separate cap on the fwtool
+trailer's claimed metadata size stops an oversized JSON payload from being
+parsed even after it passes checksum validation. On top of the size
+limits, the number of trailer probes, CRC computations, and DTB scan
+attempts are all bounded too, so a file crafted with many fake trailers or
+DTB-like magic bytes can't force excessive CPU work by itself. Certain
+image types are rejected upfront by filename, before any parsing happens
+at all. Finally, the whole task carries its own hard time limit as a
+backstop, in case something still runs long despite every guard above.
+
+Any image that trips one of these limits is marked failed with a specific
+reason, decompression limit, unsupported type, or task timeout, and the
+admin can inspect the extraction log for the exact detail if needed.
 
 Recovering from Extraction Failures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart TB
+        subgraph Q["queue_unconfirmed_extractions"]
+            direction LR
+            Q1["Celery Beat (periodic)"]
+            Q2["Worker startup (deduped)"]
+            Q3["Find all unconfirmed images"]
+            Q4["Queue extraction"]
+            Q1 --> Q3
+            Q2 --> Q3
+            Q3 --> Q4
+        end
+
+        subgraph R["reclaim_stale_extractions"]
+            direction LR
+            R1["Celery Beat (periodic)"]
+            R2["Find in_progress images past timeout"]
+            R3["Mark failed: timeout"]
+            R1 --> R2
+            R2 --> R3
+            R1 -.-> RC["Not scheduled? Django system check warns"]
+        end
+
+        Q4 --> Q5["Back into the pipeline: in_progress"]
+        R3 --> R4["Same failed state as any other: manual confirmation available"]
+
+        Q4:::queued
+        R3:::failed
+        RC:::warn
+        classDef queued fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+        classDef failed fill:#f8d7da,stroke:#b02a37,color:#58151c
+        classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
+    </pre>
 
 Extraction runs in the background via Celery, and the background workers
 can fail in ways ordinary exception handling can't catch, a worker killed
@@ -173,19 +319,26 @@ by an out-of-memory condition, or one that hits Celery's hard time limit
 mid-extraction, both leave affected images stuck in progress indefinitely,
 with nothing coming back to retry it.
 
-Two tasks handle recovery: reclaim_stale_extractions finds images stuck in
-progress past a configurable timeout and marks them failed so they can be
-manually re-extracted or corrected, and queue_unconfirmed_extractions
-picks up any image still sitting unconfirmed and queues it for extraction.
-The second one also runs automatically every time a worker starts, so
-images left unconfirmed after a deploy or a crash get requeued without
-anyone noticing, guarded by a short-lived cache lock so multiple workers
-restarting together don't all queue the same backlog at once.
+Two tasks handle recovery: ``reclaim_stale_extractions`` finds images
+stuck in progress past a configurable timeout and marks them failed so
+they can be manually re-extracted or corrected, and
+``queue_unconfirmed_extractions`` picks up any image still sitting
+unconfirmed and queues it for extraction. The second one also runs
+automatically every time a worker starts, so images left unconfirmed after
+a deploy or a crash get requeued without anyone noticing, guarded by a
+short-lived cache lock so multiple workers restarting together don't all
+queue the same backlog at once.
 
 Both tasks are idempotent and safe to run concurrently with themselves, so
-the recommended setup schedules them periodically via Celery Beat, a
-missing schedule is flagged directly by a Django system check, the same
-one you'd see in your deployment logs if you forget to wire it up.
+the recommended setup schedules them periodically via Celery Beat.
+reclaim_stale_extractions specifically is checked by a Django system
+check, since it has no other trigger, if it's missing from your
+CELERY_BEAT_SCHEDULE, you'll see a warning in your deployment logs.
+queue_unconfirmed_extractions isn't checked the same way, since the
+worker-startup trigger already covers it as a fallback. One more thing
+worth getting right: the stale-claim timeout must be set to at least the
+task's own time limit, otherwise the reaper can mark a still-running
+extraction as failed before it's actually had a chance to finish.
 
 This isn't just cleanup: a build's mass upgrade is blocked entirely if
 even one of its images is still unconfirmed, in progress, failed, or
@@ -208,10 +361,9 @@ see whether it's ready.
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-..
-    TODO: add gif once ready, e.g.
-    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/device-firmware-image-dropdown.png
-        :alt: Device firmware image dropdown showing only images eligible for pairing
+.. image:: {static}/images/blog/gsoc26/admin-manual-metadata-workflow.gif
+    :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
+    :align: center
 
 When an extraction fails or comes back incomplete, an admin can fill in
 board and the other metadata fields by hand directly in the change form.
@@ -237,11 +389,6 @@ working state:
 Device Pairing via board
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-..
-    TODO: add screenshot once ready, e.g.
-    .. image:: {static}/images/blog/gsoc26/firmware-upgrader-metadata/device-firmware-image-dropdown.png
-        :alt: Device firmware image dropdown showing only images eligible for pairing
-
 An image only becomes eligible for pairing once its extraction_status
 reaches success, manually confirmed or incomplete, images still
 unconfirmed, mid-extraction, or failed are excluded, so a device can never
@@ -250,6 +397,21 @@ exact match: ``device.model == image.board``. Once an image reaches
 success or manually confirmed, its metadata fields are locked and can no
 longer be edited, protecting a working pairing from being silently
 invalidated.
+
+**How it works:**
+
+- Make sure the extraction status of your firmware image is one of the
+  following: **Success, Manually Confirmed, or Incomplete**.
+- Go to Devices, create a device and fill in the required fields, set up
+  credentials and then click on **Save** (make sure the **Model** field on
+  the device page matches the **Board** field you see in the firmware
+  inline)
+- Go to the Firmware tab on the Device page and you will see the drop down
+  populated with the firmware image
+
+.. image:: {static}/images/blog/gsoc26/device-pairing-dropdown.png
+    :alt: Firmware tab in the Device page showing the paired firmware image
+    :align: center
 
 REST API Support
 ~~~~~~~~~~~~~~~~
@@ -264,6 +426,27 @@ integrations, not just the browser.
 
 Migrating Away from the Static Hardware Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart LR
+        A["Built-in hardware map entries"] --> C{"Image: board empty & unconfirmed?"}
+        B["Custom OPENWISP_CUSTOM_OPENWRT_IMAGES entries"] --> C
+        C -- No --> Z["Left untouched"]
+        C -- "Single board" --> D["Set board + source, status: success"]
+        C -- "Multiple boards" --> E["Log all compatible boards, status: incomplete"]
+        D --> F["Recompute build status immediately"]
+        E --> F
+        E --> G["Notify admin after migration completes"]
+
+        D:::success
+        E:::warn
+        Z:::neutral
+        classDef success fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+        classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
+        classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
+    </pre>
 
 A migration backfills board on every pre-existing firmware image that was
 uploaded before the new extraction pipeline was in place. This is done by
@@ -287,8 +470,9 @@ requests: `#421
 laid the extractor pipeline and the safety limits, and `#437
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/437>`_, which
 added the model fields, the migration, and the admin and REST API workflow
-described above. The feature branch will now be proposed for merging into
-**master** in a follow-up pull request.
+described above. The feature branch is now proposed for merging into
+**master** in `#494
+<https://github.com/openwisp/openwisp-firmware-upgrader/pull/494>`_.
 
 My Experience
 -------------
