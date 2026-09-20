@@ -41,7 +41,7 @@ About the Project
         <iframe width="560" height="315"
                 style="width:100%; height:700px;"
                 src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
-                title="OpenWISP Mass Commands demo"
+                title="OpenWISP Automatic Metadata Extraction Demo"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
@@ -79,9 +79,10 @@ Some limits of this approach became clearer as the project progressed:
 - Custom, self-hosted deployments with their own device catalogs had to
   maintain their own separate mapping, duplicating the same maintenance
   burden
-- The map only ever captured human-readable board names, with no path
-  toward the more precise device-tree-based identifiers modern OpenWrt
-  firmware actually embeds
+- The map was keyed by filename, and its board identifiers were almost
+  entirely human-readable labels rather than the device-tree-compatible
+  strings modern OpenWrt firmware actually embeds, with no systematic path
+  toward using them
 - Pairing itself was opaque: if a filename didn't match any entry in the
   map, or a device's model wasn't listed against it, the image simply
   never paired with that device, with no status field or log explaining
@@ -270,9 +271,13 @@ image types are rejected upfront by filename, before any parsing happens
 at all. Finally, the whole task carries its own hard time limit as a
 backstop, in case something still runs long despite every guard above.
 
-Any image that trips one of these limits is marked failed with a specific
-reason, decompression limit, unsupported type, or task timeout, and the
-admin can inspect the extraction log for the exact detail if needed.
+Tripping the raw file size cap, the upfront filename rejection, the task's
+own time limit, or the decompression cap during a full DTB fallback marks
+the image **failed** with a specific reason in the log. The trailer size,
+probe, and DTB scan limits behave differently: hitting one of them just
+makes that step give up and fall through to whatever comes next in the
+pipeline, so if DTB still finds a board afterward, the image ends up
+**incomplete** rather than failed.
 
 Recovering from Extraction Failures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -365,11 +370,15 @@ Admin Workflow: Manual Confirmation and Bulk Re-extraction
     :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
     :align: center
 
-When an extraction fails or comes back incomplete, an admin can fill in
-board and the other metadata fields by hand directly in the change form.
-Saving those changes automatically confirms the image, extraction status
-moves to 'Manually Confirmed' and the build's own status updates to
-reflect it, without a separate confirm step.
+When an extraction fails, or comes back incomplete, an admin can fill in
+the missing metadata by hand directly in the change form. If DTB was the
+only source (fwtool found nothing), board and compatible are already
+locked, only target and fw_version need filling in; if fwtool found a
+board that DTB never confirmed, board and compatible stay editable too.
+Saving confirms the image automatically, as long as board isn't empty,
+extraction status moves to 'Manually Confirmed' and the build's status
+updates to reflect it, without a separate confirm step. Leaving board
+empty shows a warning instead, and the image keeps its current status.
 
 .. image:: {static}/images/blog/gsoc26/re-extract-metadata-action.png
     :alt: Re-extract metadata bulk action in the FirmwareImage changelist, with a failed image selected
@@ -416,13 +425,14 @@ invalidated.
 REST API Support
 ~~~~~~~~~~~~~~~~
 
-Extraction fields are read-only through the API in the same way they are
-in the admin: supplying board, compatible, or extraction_status on
-creation is silently ignored, since they can only come from real
-extraction. Manual confirmation works the same way as in the admin too,
-PATCH-ing the metadata fields of a failed or incomplete image confirms it
-automatically, so the same workflow is available to automation scripts and
-integrations, not just the browser.
+Extraction-derived fields (extraction_status, failure_reason, source, and
+similar) are always read-only through the API. board, compatible, target,
+and fw_version are read-only too, but only while the image's status keeps
+them locked in the admin, on creation, or while success/manually
+confirmed/unconfirmed/in progress. PATCH-ing those fields on a failed,
+invalid, or incomplete image writes them and confirms the image
+automatically, the same workflow available in the admin, so automation
+scripts and integrations can do it too, not just the browser.
 
 Migrating Away from the Static Hardware Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
