@@ -145,7 +145,10 @@ that make locating it unreliable. For these cases, extraction falls back
 to scanning the image for an embedded DTB, the same structure the Linux
 kernel uses at boot to describe the hardware it's running on. A DTB
 carries model and compatible properties that identify the board just as
-directly, just from a different part of the image.
+directly, just from a different part of the image. Even when fwtool
+succeeds, a DTB scan still runs afterward, since it can confirm or
+override the model with a more precise, human-readable name than the raw
+identifier fwtool provides on its own.
 
 The Extraction State Machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -307,8 +310,8 @@ Recovering from Extraction Failures
             R1 -.-> RC["Not scheduled? Django system check warns"]
         end
 
-        Q4 --> Q5["Back into the pipeline: in_progress"]
-        R3 --> R4["Same failed state as any other: manual confirmation available"]
+        Q4 --> Q5["Back into the pipeline:<br/>in_progress"]
+        R3 --> R4["Just another failed image:<br/>can be confirmed manually"]
 
         Q4:::queued
         R3:::failed
@@ -458,15 +461,18 @@ Migrating Away from the Static Hardware Map
         classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
     </pre>
 
-A migration backfills board on every pre-existing firmware image that was
-uploaded before the new extraction pipeline was in place. This is done by
-using the old hardware map, so upgrading doesn't leave existing images
-unpaired. Most images resolve to a single board automatically, but a small
-number of legacy images matched more than one board in the old map, since
-one file could serve several hardware variants, and for those the
-migration can't guess which one a given deployment actually has: they're
-marked Incomplete with a log entry listing every compatible board, so an
-admin can set the correct one manually.
+A migration backfills board on every pre-existing firmware image it
+recognizes from the old hardware map. Most resolve to a single board
+automatically, but a small number of legacy images matched more than one
+board in the old map, since one file could serve several hardware
+variants, and for those the migration can't guess which one a given
+deployment actually has: they're marked **Incomplete** with a log entry
+listing every compatible board, so an admin can set the correct one
+manually. Any image the old map doesn't recognize at all is left untouched
+by this step; those get queued for real extraction once the migration
+finishes, going through the same fwtool/DTB pipeline as a fresh upload, so
+nothing is left permanently stuck unconfirmed with no attempt made to
+resolve it.
 
 Current State
 -------------
