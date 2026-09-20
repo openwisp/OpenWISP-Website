@@ -125,10 +125,10 @@ cleared automatically.
 A new ``DeviceCertificate`` intermediate Many-To-Many model acts as a
 strict relational bridge between the device configuration, the template
 and the generated certificate. It stores a ``config`` and a ``template``
-foreign key, a ``cert`` one-to-one relationship and an ``auto_cert`` flag,
-and enforces a ``unique_together`` constraint on ``(config, template)`` so
-that a single configuration can never generate conflicting certificates
-from the same template.
+foreign key and a ``cert`` one-to-one relationship, and enforces a
+``unique_together`` constraint on ``(config, template)`` so that a single
+configuration can never generate conflicting certificates from the same
+template.
 
 Provisioning and Revocation Lifecycle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,8 +147,9 @@ existing OpenVPN client certificates, but for standalone certificates:
 - **Unassignment revokes the certificate.** When the template is removed
   from a configuration, the ``DeviceCertificate`` relationship is deleted
   and the underlying certificate is automatically revoked, adding it to
-  the CA's Certificate Revocation List so that compromised or
-  decommissioned devices immediately lose their cryptographic access.
+  the CA's Certificate Revocation List, so that relying parties that
+  obtain and check current revocation information can reject the
+  certificate.
 - **Renewal regenerates the certificate.** Renewing a standalone
   certificate through the PKI endpoint regenerates the certificate and
   private key, and the dependency registered in
@@ -256,12 +257,12 @@ returns a ``400 Bad Request``.
 Current State
 -------------
 
-The whole feature has been merged into `openwisp-controller
-<https://github.com/openwisp/openwisp-controller>`_ and is documented in
-the official documentation, both for the admin workflow and for the REST
-API. The project was delivered incrementally through a series of focused
-issues and pull requests, all of which converged into the final pull
-request:
+The complete work is available in `openwisp-controller
+<https://github.com/openwisp/openwisp-controller>`_ and is documented,
+both for the admin workflow and for the REST API. The project was
+delivered incrementally through a series of focused issues and pull
+requests, all of which were gathered in the implementation pull request
+and consolidated into the final pull request:
 
 - `Extend AbstractTemplate for X.509 Certificates
   <https://github.com/openwisp/openwisp-controller/issues/1356>`_
@@ -281,7 +282,9 @@ request:
   <https://github.com/openwisp/openwisp-controller/issues/1362>`_
 - `Show automatically generated x509 certificates in device admin
   <https://github.com/openwisp/openwisp-controller/issues/1410>`_
-- `Added X.509 Certificate Generator Templates
+- `Added X.509 Certificate Generator Templates (implementation)
+  <https://github.com/openwisp/openwisp-controller/pull/1378>`_
+- `Added X.509 Certificate Generator Templates (final)
   <https://github.com/openwisp/openwisp-controller/pull/1486>`_
 
 The dedicated documentation page is `X.509 Certificate Generator Templates
@@ -294,8 +297,8 @@ Google Summer of Code with OpenWISP turned out to be an enriching
 experience, and building something that spans cryptography, the database,
 the configuration engine and the user interface all at once stretched me
 in ways I had not anticipated. Watching an idea from the GSoC ideas page
-become a merged feature, more than five thousand lines of code spread
-across four dozen files, is something I am genuinely proud of.
+become a fully working feature, more than five thousand lines of code
+spread across four dozen files, is something I am genuinely proud of.
 
 The most valuable part of the program was working alongside `Federico
 Capoano (nemesifier) <https://github.com/nemesifier>`_ and `Aryaman
