@@ -30,6 +30,20 @@ developer and as an open-source contributor.
 About the Project
 -----------------
 
+..
+    TODO: embed the final demo video of the project
+    .. raw:: html
+
+        <iframe width="560" height="315"
+                style="width:100%; height:700px;"
+                src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
+                title="OpenWISP X.509 Certificate Generator Templates Demo"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+        </iframe>
+
 Until now, OpenWISP could generate X.509 certificates only for OpenVPN
 clients, where each VPN client template produces a certificate signed by
 the CA linked to the corresponding VPN server. Anyone who needed a
@@ -54,7 +68,7 @@ The work adds a set of enhancements to `openwisp-controller
 - an automated provisioning and revocation lifecycle;
 - custom device identification OIDs;
 - context variables for configuration templates;
-- hardware-drift regeneration;
+- automatic regeneration on hardware changes;
 - Django admin and REST API integration;
 - documentation that ties everything together.
 
@@ -69,10 +83,10 @@ produced it. The lifecycle engine followed, so that assigning a template
 generates a certificate in the same transaction, unassigning it revokes
 the certificate, and renewing it triggers a configuration update. With the
 backend in place, the certificate payload was exposed to the configuration
-engine as UUID-namespaced variables, hardware-drift regeneration was added
-to keep certificates in sync with the devices, and finally the Django
-admin and the REST API were updated to make the whole feature usable from
-the browser and from automation scripts.
+engine as UUID-namespaced variables, automatic regeneration on hardware
+changes was added to keep certificates in sync with the devices, and
+finally the Django admin and the REST API were updated to make the whole
+feature usable from the browser and from automation scripts.
 
 Features Implemented
 --------------------
@@ -89,6 +103,10 @@ relational fields:
 - ``blueprint_cert``, an optional ``ForeignKey`` to the ``pki.Cert`` model
   whose non-unique properties are copied to every newly generated
   certificate.
+
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/template-type.png
+    :alt: Adding a Certificate generator template in the Django admin, showing the Certificate Authority and Blueprint Certificate fields
+    :align: center
 
 Certificate generator templates always provision certificates
 automatically, so their ``auto_cert`` value is implicitly enabled and is
@@ -174,6 +192,10 @@ new one with the updated identity attributes. A ``generic_message``
 notification is sent to the administrator once the regeneration is
 complete, and the whole behavior can be disabled with the
 ``OPENWISP_CONTROLLER_REGENERATE_CERTS_ON_HARDWARE_CHANGE`` setting.
+
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/notification.png
+    :alt: OpenWISP notification reporting that a device's X.509 certificate was regenerated after its identity fields changed
+    :align: center
 
 Context Injection
 ~~~~~~~~~~~~~~~~~
