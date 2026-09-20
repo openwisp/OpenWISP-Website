@@ -6,9 +6,10 @@ GSoC 2026: Adding More Time-Series Database Backends to OpenWISP Monitoring
 :tags: gsoc, monitoring, timeseries, influxdb, elasticsearch, new-features
 :category: gsoc
 :lang: en
+:mermaid: true
 :image_url: https://openwisp.org/images/blog/gsoc26/add-more-tsdb-openwisp-monitoring.png
-:image_width: 713
-:image_height: 297
+:image_width: 1942
+:image_height: 809
 
 .. image:: {static}/images/blog/gsoc26/add-more-tsdb-openwisp-monitoring.png
     :alt: Google Summer of Code, OpenWISP Monitoring Time-Series Database Backends
@@ -40,9 +41,21 @@ generating alerts. Since monitoring data grows continuously over time, it
 is stored in a time-series database rather than in the main relational
 database.
 
-.. image:: {static}/images/blog/gsoc26/tsdb-technical-diagram.png
-    :alt: OpenWISP Monitoring time-series database abstraction diagram
-    :align: center
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart TD
+        CORE["OpenWISP Monitoring core logic<br/>(metrics, checks, charts, alerts)"]
+        ABC["BaseTimeseriesClient<br/>abstraction layer"]
+        INFLUX1["InfluxDB 1.8 adapter"]
+        INFLUX2["InfluxDB 2.9 adapter"]
+        ES["Elasticsearch 9 adapter"]
+
+        CORE --> ABC
+        ABC --> INFLUX1
+        ABC --> INFLUX2
+        ABC --> ES
+    </pre>
 
 The abstract base class and type hints keeps monitoring logic independent
 of the underlying TSDB, so new backends can be added without changing the
@@ -193,9 +206,29 @@ before reaching the common client interface. Each backend adapter handles
 its own storage and query language, while the monitoring layer receives
 the same output for charts, alerts, and API responses.
 
-.. image:: {static}/images/blog/gsoc26/tsdb-workflow.png
-    :alt: OpenWISP Monitoring data flow from devices to time-series backends
-    :align: center
+.. raw:: html
+
+    <pre class="mermaid">
+    flowchart LR
+        ROUTER["OpenWrt router"] --> API["Monitoring API"]
+        API --> CELERY["Celery tasks"]
+        CELERY --> MODELS["Metric / Chart / DeviceData"]
+        MODELS --> ABC["BaseTimeseriesClient"]
+
+        SETUP["Database and retention setup"] --> ABC
+
+        ABC --> INFLUX1_ADAPTER["InfluxDB 1 adapter"]
+        ABC --> INFLUX2_ADAPTER["InfluxDB 2 adapter"]
+        ABC --> ES_ADAPTER["Elasticsearch adapter"]
+
+        INFLUX1_ADAPTER --> INFLUX1["InfluxDB 1.8"]
+        INFLUX2_ADAPTER --> INFLUX2["InfluxDB 2.9"]
+        ES_ADAPTER --> ES["Elasticsearch 9"]
+
+        INFLUX1 --> OUTPUT["Charts, alerts and API responses"]
+        INFLUX2 --> OUTPUT
+        ES --> OUTPUT
+    </pre>
 
 Both backend changes were later combined in the ``gsoc26-add-more-tsdb``
 branch. The final `pull request #868
