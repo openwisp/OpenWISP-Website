@@ -205,8 +205,9 @@ Several new fields on ``FirmwareImage`` carry the result of extraction:
   whenever it differs from the build's own version
 - compat_version, an internal compatibility marker that blocks device
   pairing outright when it exceeds 1.0, independent of extraction_status
-- source, recording which method produced the metadata, fwtool, dtb, or
-  manual, so an admin can tell at a glance how much to trust a given value
+- source, recording which method produced the metadata, fwtool, dtb,
+  manual, or the legacy hardware map (built-in or custom), so an admin can
+  tell at a glance how much to trust a given value
 - extraction_status, tracking the image through the pipeline shown below,
   backed by a failure_reason and a full extraction_log for the details
 
@@ -337,6 +338,11 @@ a deploy or a crash get requeued without anyone noticing, guarded by a
 short-lived cache lock so multiple workers restarting together don't all
 queue the same backlog at once.
 
+An admin doesn't have to wait for the periodic reaper either: selecting a
+stuck in_progress image and running the bulk re-extract action forces an
+immediate reset and retry, safely, since a stray old task's result is
+silently discarded once a fresh claim has replaced it.
+
 Both tasks are idempotent and safe to run concurrently with themselves, so
 the recommended setup schedules them periodically via Celery Beat.
 reclaim_stale_extractions specifically is checked by a Django system
@@ -361,10 +367,11 @@ Each build also carries its own aggregate extraction status, rolled up
 from every image that belongs to it: if any image is still unconfirmed or
 in progress the build shows as analyzing, otherwise the worst outstanding
 state wins, invalid, then failed, then incomplete, then manually
-confirmed, and only once every image has fully resolved does the build
-itself show success. This gives an admin a single badge to check before
-attempting a mass upgrade, instead of opening every image individually to
-see whether it's ready.
+confirmed, and the build only shows success once every one of its images
+is success itself, a single manually confirmed image keeps the whole build
+at manually confirmed even if every other image succeeded outright. This
+gives an admin a single badge to check before attempting a mass upgrade,
+instead of opening every image individually to see whether it's ready.
 
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -434,8 +441,10 @@ and fw_version are read-only too, but only while the image's status keeps
 them locked in the admin, on creation, or while success/manually
 confirmed/unconfirmed/in progress. PATCH-ing those fields on a failed,
 invalid, or incomplete image writes them and confirms the image
-automatically, the same workflow available in the admin, so automation
-scripts and integrations can do it too, not just the browser.
+automatically, as long as the resulting board isn't empty, otherwise the
+whole request fails validation and nothing is saved, the same workflow
+available in the admin, so automation scripts and integrations can do it
+too, not just the browser.
 
 Migrating Away from the Static Hardware Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
