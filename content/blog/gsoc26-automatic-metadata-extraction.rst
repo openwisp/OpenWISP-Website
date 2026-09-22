@@ -272,7 +272,7 @@ limits, the number of trailer probes, CRC computations, and DTB scan
 attempts are all bounded too, so a file crafted with many fake trailers or
 DTB-like magic bytes can't force excessive CPU work by itself. Certain
 image types are rejected upfront by filename, before any parsing happens
-at all. Finally, the whole task carries its own hard time limit as a
+at all. Finally, the whole task carries its own soft time limit as a
 backstop, in case something still runs long despite every guard above.
 
 Tripping the raw file size cap, the upfront filename rejection, the task's
@@ -323,10 +323,11 @@ Recovering from Extraction Failures
     </pre>
 
 Extraction runs in the background via Celery, and the background workers
-can fail in ways ordinary exception handling can't catch, a worker killed
-by an out-of-memory condition, or one that hits Celery's hard time limit
-mid-extraction, both leave affected images stuck in progress indefinitely,
-with nothing coming back to retry it.
+can fail in ways ordinary exception handling can't catch: a worker killed
+by an out-of-memory condition, or one that hits a hard time limit
+configured at the deployment level (beyond this package's own soft limit),
+both leave affected images stuck in progress indefinitely, with nothing
+coming back to retry it.
 
 Two tasks handle recovery: ``reclaim_stale_extractions`` finds images
 stuck in progress past a configurable timeout and marks them failed so
@@ -365,13 +366,15 @@ it's recovered.
 
 Each build also carries its own aggregate extraction status, rolled up
 from every image that belongs to it: if any image is still unconfirmed or
-in progress the build shows as analyzing, otherwise the worst outstanding
-state wins, invalid, then failed, then incomplete, then manually
-confirmed, and the build only shows success once every one of its images
-is success itself, a single manually confirmed image keeps the whole build
-at manually confirmed even if every other image succeeded outright. This
-gives an admin a single badge to check before attempting a mass upgrade,
-instead of opening every image individually to see whether it's ready.
+in progress the build shows as analyzing, unless the build had already
+reached a final status before that image showed up, in which case the
+existing status is preserved rather than pulled back to analyzing, so a
+newly added image doesn't downgrade a build that's already resolved.
+Otherwise the worst outstanding state wins, invalid, then failed, then
+incomplete, then manually confirmed, and the build only shows success once
+every one of its images is success itself, a single manually confirmed
+image keeps the whole build at manually confirmed even if every other
+image succeeded outright.
 
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
