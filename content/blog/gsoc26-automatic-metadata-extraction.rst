@@ -206,8 +206,9 @@ Several new fields on ``FirmwareImage`` carry the result of extraction:
 - compat_version, an internal compatibility marker that blocks device
   pairing outright when it exceeds 1.0, independent of extraction_status
 - source, recording which method produced the metadata, fwtool, dtb,
-  manual, or the legacy hardware map (built-in or custom), so an admin can
-  tell at a glance how much to trust a given value
+  manual, or (for images migrated from before this feature existed) the
+  legacy hardware map, built-in or custom, so an admin can tell at a
+  glance how much to trust a given value
 - extraction_status, tracking the image through the pipeline shown below,
   backed by a failure_reason and a full extraction_log for the details
 
@@ -365,16 +366,14 @@ it's recovered.
     :align: center
 
 Each build also carries its own aggregate extraction status, rolled up
-from every image that belongs to it: if any image is still unconfirmed or
-in progress the build shows as analyzing, unless the build had already
-reached a final status before that image showed up, in which case the
-existing status is preserved rather than pulled back to analyzing, so a
-newly added image doesn't downgrade a build that's already resolved.
-Otherwise the worst outstanding state wins, invalid, then failed, then
-incomplete, then manually confirmed, and the build only shows success once
-every one of its images is success itself, a single manually confirmed
-image keeps the whole build at manually confirmed even if every other
-image succeeded outright.
+from every image that belongs to it. Adding a new image to a build, or
+re-extracting any of its images, sets the build back to analyzing
+immediately, even if it had already reached a final status before. Once
+every image resolves again, the worst outstanding state wins, invalid,
+then failed, then incomplete, then manually confirmed, and the build only
+shows success once every one of its images is success itself, a single
+manually confirmed image keeps the whole build at manually confirmed even
+if every other image succeeded outright.
 
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
