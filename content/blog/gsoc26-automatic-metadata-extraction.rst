@@ -38,7 +38,7 @@ About the Project
 
 .. raw:: html
 
-    <iframe width="560" height="315"
+    <iframe width="560" height="315" loading="lazy"
             style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/2Lny3pJwB1Y?vq=hd1080"
             title="OpenWISP Automatic Metadata Extraction demo"
@@ -114,12 +114,13 @@ The Automatic Metadata Extraction Pipeline
       "edgeLabelBackground": "#f1f3f5"
     }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
-         A["Read fwtool metadata"] -->|"Unsupported or too large"| B["Stop without metadata"]
+         A["Read fwtool metadata"] -->|"Unsupported input"| B["Stop without metadata"]
          A -->|"No trailer"| C["Use DTB result"]
+         A -->|"Trailer too large"| C
          A -->|"Success"| D["Check DTB model"]
          D -->|"Better model found"| E["Use DTB model"]
          D -->|"No model found"| F["Use fwtool result"]
-         E --> F
+         E --> G["Return result"]
          F --> G["Return result"]
          C --> G
 

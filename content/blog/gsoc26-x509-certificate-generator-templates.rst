@@ -33,7 +33,7 @@ About the Project
 
 .. raw:: html
 
-    <iframe width="560" height="315"
+    <iframe width="560" height="315" loading="lazy"
             style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/fO0Wg_9Q6P4?vq=hd1080"
             title="OpenWISP X.509 Certificate Generator Templates demo"

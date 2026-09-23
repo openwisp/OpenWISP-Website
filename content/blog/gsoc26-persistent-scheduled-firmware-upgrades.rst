@@ -32,7 +32,7 @@ About the Project
 
 .. raw:: html
 
-    <iframe width="560" height="315"
+    <iframe width="560" height="315" loading="lazy"
             style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/rtkR-BTJoyM?vq=hd1080"
             title="OpenWISP persistent and scheduled firmware upgrades demo"
@@ -267,7 +267,7 @@ rather than letting the two collide.
 
 - `[feature] Scheduled Mass Upgrades #460
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/460>`_
-- `[docs] Add scheduled mass upgrades screenshots (1.4) #481 #481
+- `[docs] Add scheduled mass upgrades screenshots (1.4) #481
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/481>`_
 
 Current state

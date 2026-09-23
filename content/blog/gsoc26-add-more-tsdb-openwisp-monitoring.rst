@@ -58,16 +58,13 @@ database.
         ABC["BaseTimeseriesClient<br/>abstraction layer"]
 
         subgraph BACKENDS[" "]
-            direction LR
             INFLUX1["InfluxDB 1.8 adapter"]
             INFLUX2["InfluxDB 2.9 adapter"]
             ES["Elasticsearch 9 adapter"]
         end
 
         CORE --> ABC
-        ABC --> INFLUX1
-        ABC --> INFLUX2
-        ABC --> ES
+        ABC --> INFLUX1 & INFLUX2 & ES
 
         classDef core fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
         classDef interface fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
@@ -246,7 +243,6 @@ the same output for charts, alerts, and API responses.
         end
 
         subgraph MONITORING["OpenWISP Monitoring"]
-            direction LR
             API --> CELERY["Celery tasks"]
             CELERY --> MODELS["Metric / Chart / DeviceData"]
             SETUP["Database and retention setup"] --> ABC["BaseTimeseriesClient"]
@@ -254,12 +250,12 @@ the same output for charts, alerts, and API responses.
         end
 
         subgraph BACKENDS[" "]
-            direction LR
-            ABC --> INFLUX1_ADAPTER["InfluxDB 1 adapter"] --> INFLUX1["InfluxDB 1.8"]
-            ABC --> INFLUX2_ADAPTER["InfluxDB 2 adapter"] --> INFLUX2["InfluxDB 2.9"]
-            ABC --> ES_ADAPTER["Elasticsearch adapter"] --> ES["Elasticsearch 9"]
+            INFLUX1_ADAPTER["InfluxDB 1 adapter"] --> INFLUX1["InfluxDB 1.8"]
+            INFLUX2_ADAPTER["InfluxDB 2 adapter"] --> INFLUX2["InfluxDB 2.9"]
+            ES_ADAPTER["Elasticsearch adapter"] --> ES["Elasticsearch 9"]
         end
 
+        ABC --> INFLUX1_ADAPTER & INFLUX2_ADAPTER & ES_ADAPTER
         INFLUX1 --> OUTPUT["Charts, alerts and API responses"]
         INFLUX2 --> OUTPUT
         ES --> OUTPUT
