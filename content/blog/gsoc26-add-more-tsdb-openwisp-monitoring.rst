@@ -14,6 +14,7 @@ GSoC 2026: Adding More Time-Series Database Backends to OpenWISP Monitoring
 .. image:: {static}/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.webp
     :alt: Google Summer of Code, OpenWISP Monitoring Time-Series Database Backends
     :align: center
+    :target: /blog/gsoc-2026-adding-more-time-series-database-backends-to-openwisp-monitoring/
 
 Participating in Google Summer of Code had been a dream of mine since my
 freshman year, and I am glad that I got to live that dream with
@@ -43,35 +44,54 @@ database.
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart TD
+    <style>
+    pre.gsoc26-tsdb-diagram { text-align: center; }
+    pre.gsoc26-tsdb-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid gsoc26-tsdb-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TB
         CORE["OpenWISP Monitoring core logic<br/>(metrics, checks, charts, alerts)"]
         ABC["BaseTimeseriesClient<br/>abstraction layer"]
-        INFLUX1["InfluxDB 1.8 adapter"]
-        INFLUX2["InfluxDB 2.9 adapter"]
-        ES["Elasticsearch 9 adapter"]
 
-         CORE --> ABC
-         ABC --> INFLUX1
-         ABC --> INFLUX2
-         ABC --> ES
-         classDef core fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-         classDef interface fill:#fff3cd,stroke:#997404,color:#664d03
-         classDef backend fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-         class CORE core
-         class ABC interface
-         class INFLUX1,INFLUX2,ES backend
+        subgraph BACKENDS["Supported backends"]
+            direction LR
+            INFLUX1["InfluxDB 1.8 adapter"]
+            INFLUX2["InfluxDB 2.9 adapter"]
+            ES["Elasticsearch 9 adapter"]
+        end
+
+        CORE --> ABC
+        ABC --> INFLUX1
+        ABC --> INFLUX2
+        ABC --> ES
+
+        classDef core fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef interface fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef legacy fill:#e2e3e5,stroke:#41464b,color:#1f2933
+        classDef influx fill:#d1e7dd,stroke:#0f5132,color:#0f5132,font-weight:bold
+        classDef elastic fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        class CORE core
+        class ABC interface
+        class INFLUX1 legacy
+        class INFLUX2 influx
+        class ES elastic
     </pre>
 
 The ``BaseTimeseriesClient`` abstract base class and type hints keep
 monitoring logic independent of the underlying TSDB, so new backends can
 be added without changing the core monitoring system.
 
-Before this project, OpenWISP Monitoring primarily relied on InfluxDB 1.8
-for storing time-series data. While this worked well, modern deployments
-may need more flexibility. Some users may want to use newer versions of
-InfluxDB, while others may prefer Elasticsearch because it is already part
-of their infrastructure or better suited to their operational needs.
+Before this project, OpenWISP Monitoring primarily relied on `InfluxDB 1.8
+<https://www.influxdata.com/>`_ for storing time-series data. While this
+worked well, modern deployments may need more flexibility. Some users may
+want to use newer versions of InfluxDB, while others may prefer
+`Elasticsearch <https://www.elastic.co/elasticsearch/>`_ because it is
+already part of their infrastructure or better suited to their operational
+needs.
 
 The objective of this project was to add more time-series database options
 to OpenWISP Monitoring while keeping the codebase maintainable. The
@@ -96,8 +116,8 @@ The main goals of this project were:
   backend.
 - Refactor the time-series layer so different backends can be configured
   and maintained cleanly.
-- Update the development setup, tests, Docker services, and documentation
-  for the new backends.
+- Update the development setup, tests, `Docker <https://www.docker.com/>`_
+  services, and documentation for the new backends.
 
 Features Implemented
 --------------------
@@ -143,7 +163,8 @@ the implementation uses bucket naming conventions to preserve the behavior
 expected by OpenWISP Monitoring.
 
 During staging and review, a few additional issues surfaced around query
-escaping, read/delete behavior, UDP writes through Telegraf, test
+escaping, read/delete behavior, UDP writes through `Telegraf
+<https://www.influxdata.com/time-series-platform/telegraf/>`_, test
 stability, and compatibility with existing imports. These issues were
 resolved iteratively with feedback from the maintainers, making the
 backend more robust and closer to production-ready behavior.
@@ -189,10 +210,10 @@ charts without changing the higher-level monitoring code.
 This involved implementing write, batch write, read, delete, device data,
 retention policy, chart query, and summary query support. We also had to
 handle Elasticsearch-specific details such as stable operation IDs for
-Celery retries, type-safe mappings for values like MAC addresses,
-timestamp precision for deleting individual points, exact distinct counts
-where OpenWISP needs them for health checks, and safe cleanup of resources
-created by the backend.
+`Celery <https://docs.celeryq.dev/>`_ retries, type-safe mappings for
+values like MAC addresses, timestamp precision for deleting individual
+points, exact distinct counts where OpenWISP needs them for health checks,
+and safe cleanup of resources created by the backend.
 
 The final implementation added:
 
@@ -214,34 +235,51 @@ the same output for charts, alerts, and API responses.
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
-        ROUTER["OpenWrt router"] --> API["Monitoring API"]
-        API --> CELERY["Celery tasks"]
-        CELERY --> MODELS["Metric / Chart / DeviceData"]
-        MODELS --> ABC["BaseTimeseriesClient"]
+    <pre class="mermaid gsoc26-tsdb-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TB
+        subgraph COLLECTION["Metric collection"]
+            ROUTER["OpenWrt router"] --> API["Monitoring API"]
+        end
 
-        SETUP["Database and retention setup"] --> ABC
+        subgraph MONITORING["OpenWISP Monitoring"]
+            direction LR
+            API --> CELERY["Celery tasks"]
+            CELERY --> MODELS["Metric / Chart / DeviceData"]
+            SETUP["Database and retention setup"] --> ABC["BaseTimeseriesClient"]
+            MODELS --> ABC
+        end
 
-        ABC --> INFLUX1_ADAPTER["InfluxDB 1 adapter"]
-        ABC --> INFLUX2_ADAPTER["InfluxDB 2 adapter"]
-        ABC --> ES_ADAPTER["Elasticsearch adapter"]
+        subgraph BACKENDS["Time-series backends"]
+            direction LR
+            ABC --> INFLUX1_ADAPTER["InfluxDB 1 adapter"] --> INFLUX1["InfluxDB 1.8"]
+            ABC --> INFLUX2_ADAPTER["InfluxDB 2 adapter"] --> INFLUX2["InfluxDB 2.9"]
+            ABC --> ES_ADAPTER["Elasticsearch adapter"] --> ES["Elasticsearch 9"]
+        end
 
-        INFLUX1_ADAPTER --> INFLUX1["InfluxDB 1.8"]
-        INFLUX2_ADAPTER --> INFLUX2["InfluxDB 2.9"]
-        ES_ADAPTER --> ES["Elasticsearch 9"]
+        INFLUX1 --> OUTPUT["Charts, alerts and API responses"]
+        INFLUX2 --> OUTPUT
+        ES --> OUTPUT
 
-         INFLUX1 --> OUTPUT["Charts, alerts and API responses"]
-         INFLUX2 --> OUTPUT
-         ES --> OUTPUT
-         classDef source fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-         classDef processing fill:#fff3cd,stroke:#997404,color:#664d03
-         classDef storage fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-         classDef output fill:#e2e3e5,stroke:#41464b,color:#41464b
-         class ROUTER source
-         class API,CELERY,MODELS,ABC,SETUP processing
-         class INFLUX1_ADAPTER,INFLUX2_ADAPTER,ES_ADAPTER,INFLUX1,INFLUX2,ES storage
-         class OUTPUT output
+        classDef source fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef processing fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef setup fill:#e2e3e5,stroke:#41464b,color:#1f2933
+        classDef adapter fill:#f6f7f9,stroke:#8b949e,color:#1f2933
+        classDef legacy fill:#e2e3e5,stroke:#41464b,color:#1f2933
+        classDef influx fill:#d1e7dd,stroke:#0f5132,color:#0f5132,font-weight:bold
+        classDef elastic fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef output fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        class ROUTER source
+        class API,CELERY,MODELS,ABC processing
+        class SETUP setup
+        class INFLUX1_ADAPTER,INFLUX2_ADAPTER,ES_ADAPTER adapter
+        class INFLUX1 legacy
+        class INFLUX2 influx
+        class ES elastic
+        class OUTPUT output
     </pre>
 
 Both backend changes were later combined in the ``gsoc26-add-more-tsdb``
@@ -304,10 +342,11 @@ writes, default environment variables, and tests for backend selection.
 In `ansible-openwisp2 <https://github.com/openwisp/ansible-openwisp2>`_, I
 updated the monitoring time-series configuration to be backend-agnostic,
 documented examples for switching between InfluxDB 1.8, InfluxDB 2.9, and
-Elasticsearch, and added Molecule verification for rendered backend
-settings. The related work is tracked in `docker-openwisp pull request
-#672 <https://github.com/openwisp/docker-openwisp/pull/672>`_ and
-`ansible-openwisp2 pull request #645
+Elasticsearch, and added `Molecule
+<https://ansible.readthedocs.io/projects/molecule/>`_ verification for
+rendered backend settings. The related work is tracked in `docker-openwisp
+pull request #672 <https://github.com/openwisp/docker-openwisp/pull/672>`_
+and `ansible-openwisp2 pull request #645
 <https://github.com/openwisp/ansible-openwisp2/pull/645>`_.
 
 My Experience
@@ -323,11 +362,11 @@ The journey itself was nothing short of a roller-coaster ride: from
 opening my first pull request in mid-January, to spending weeks juggling
 with GitHub Actions while working on the changelog bot `PR
 <https://github.com/openwisp/openwisp-utils/pull/584>`_, to struggling
-with setting up an OpenWrt router through a virtual machine. I still have
-not fully mastered that setup, so I shifted my battleground to Docker and
-faced my fair share of Docker battles there. Each step came with its own
-surprises, but each one also helped me understand the OpenWISP ecosystem a
-little better.
+with setting up an `OpenWrt <https://openwrt.org/>`_ router through a
+virtual machine. I still have not fully mastered that setup, so I shifted
+my battleground to Docker and faced my fair share of Docker battles there.
+Each step came with its own surprises, but each one also helped me
+understand the OpenWISP ecosystem a little better.
 
 The review process was one of the most valuable parts of the experience.
 Feedback from the maintainers helped me catch issues I would not have
@@ -346,7 +385,8 @@ The next step is to get these changes ready for production use and move
 them through the release process carefully. Since this work touches the
 core monitoring storage layer, the focus is not only on merging the code,
 but also on validating it across real deployment paths, including Docker,
-Ansible, RADIUS monitoring, and existing InfluxDB 1.8 installations.
+`Ansible <https://www.ansible.com/>`_, RADIUS monitoring, and existing
+InfluxDB 1.8 installations.
 
 Once everything goes well, I would like to explore different areas within
 OpenWISP, continue improving the monitoring stack, and contribute to other

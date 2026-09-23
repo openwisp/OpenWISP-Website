@@ -14,6 +14,7 @@ GSoC 2026: Persistent and Scheduled Mass Firmware Upgrades
 .. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/gsoc-26-persistent-scheduled-firmware-upgrades.webp
     :alt: Google Summer of Code, Persistent and Scheduled Firmware Upgrades in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-persistent-and-scheduled-mass-firmware-upgrades/
 
 For this year's Google Summer of Code I worked with OpenWISP on the
 firmware upgrader, mentored by `Federico Capoano (nemesifier)
@@ -30,14 +31,15 @@ About the Project
 -----------------
 
 Until now, a mass firmware upgrade ran the moment you launched it, one
-Celery task per device. As long as every target was reachable, that worked
-fine. The catch is that a real deployment almost never is: on a large
-network there are always a few devices you cannot reach the instant you
-need them, whether they are switched off, restarting, or on a link that
-keeps dropping out. When one of those is unreachable as the upgrade fires,
-its task fails then and there, and it is left for an operator to spot and
-run again. Across a few hundred access points, hunting down the ones that
-missed the rollout is slow and easy to get wrong.
+`Celery <https://docs.celeryq.dev/>`_ task per device. As long as every
+target was reachable, that worked fine. The catch is that a real
+deployment almost never is: on a large network there are always a few
+devices you cannot reach the instant you need them, whether they are
+switched off, restarting, or on a link that keeps dropping out. When one
+of those is unreachable as the upgrade fires, its task fails then and
+there, and it is left for an operator to spot and run again. Across a few
+hundred access points, hunting down the ones that missed the rollout is
+slow and easy to get wrong.
 
 There was also no way to line an upgrade up ahead of time. If you wanted
 to flash firmware at 2 a.m. during a maintenance window, you had to
@@ -277,8 +279,8 @@ Current state
 -------------
 
 Both features are complete and in final review, with the same capabilities
-in the Django admin and the REST API, `browser tests for the scheduling
-flow
+in the `Django <https://www.djangoproject.com/>`_ admin and the REST API,
+`browser tests for the scheduling flow
 <https://github.com/openwisp/openwisp-firmware-upgrader/blob/gsoc26-final-mass-upgrades/openwisp_firmware_upgrader/tests/test_selenium.py>`_,
 and documentation with screenshots. The work is tracked in `issue #379
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/379>`_ for
@@ -353,5 +355,8 @@ scheduled upgrade targets is deleted before it runs, that should fail
 loudly rather than silently widening to the whole category.
 
 The upgrader still has plenty I want to get to, so I do not plan to
-disappear once this merges. Thanks to Federico, Gagan and Oliver for the
-mentorship, and to the OpenWISP community for a genuinely good summer.
+disappear once this merges. Thanks to `Federico Capoano (nemesifier)
+<https://github.com/nemesifier>`_, `Gagan Deep (pandafy)
+<https://github.com/pandafy>`_, and `Oliver Kraitschy (okraits)
+<https://github.com/okraits>`_ for the mentorship, and to the OpenWISP
+community for a genuinely good summer.

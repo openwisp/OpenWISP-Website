@@ -13,6 +13,7 @@ GSoC 2026: X.509 Certificate Generator Templates
 .. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cover.webp
     :alt: Google Summer of Code, X.509 Certificate Generator Templates in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-x509-certificate-generator-templates/
 
 Google Summer of Code with OpenWISP has easily been one of the highlights
 of my journey as a developer. Over the last three months I worked on
@@ -44,13 +45,13 @@ About the Project
                 allowfullscreen>
         </iframe>
 
-Until now, OpenWISP could generate X.509 certificates only for OpenVPN
-clients, where each VPN client template produces a certificate signed by
-the CA linked to the corresponding VPN server. Anyone who needed a
-certificate for a different purpose, such as securing a web service,
-authenticating devices against an internal API, or using device identities
-with 802.1x or captive portals, was forced to attach an unnecessary VPN
-configuration just to obtain one.
+Until now, OpenWISP could generate X.509 certificates only for `OpenVPN
+<https://openvpn.net/>`_ clients, where each VPN client template produces
+a certificate signed by the CA linked to the corresponding VPN server.
+Anyone who needed a certificate for a different purpose, such as securing
+a web service, authenticating devices against an internal API, or using
+device identities with 802.1x or captive portals, was forced to attach an
+unnecessary VPN configuration just to obtain one.
 
 The project makes certificate generation a **first-class, general-purpose
 feature**. Administrators can now create a *Certificate generator*
@@ -69,7 +70,8 @@ The work adds a set of enhancements to `openwisp-controller
 - custom device identification OIDs;
 - context variables for configuration templates;
 - automatic regeneration on hardware changes;
-- Django admin and REST API integration;
+- `Django <https://www.djangoproject.com/>`_ admin and REST API
+  integration;
 - documentation that ties everything together.
 
 Building X.509 Certificate Generator Templates
@@ -158,8 +160,9 @@ existing OpenVPN client certificates, but for standalone certificates:
   device pulls the renewed certificate on its next check-in.
 
 Because the private keys and certificates are stored and protected using
-the existing ``django-x509`` mechanisms, no new encryption scheme, private
-key download endpoint or permission model was introduced.
+the existing `django-x509 <https://github.com/openwisp/django-x509>`_
+mechanisms, no new encryption scheme, private key download endpoint or
+permission model was introduced.
 
 Custom Device Identification OIDs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

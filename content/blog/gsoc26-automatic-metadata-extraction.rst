@@ -14,6 +14,7 @@ GSoC 2026: Automatic Extraction of OpenWrt Firmware Image Metadata
 .. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/automatic-metadata-extraction.webp
     :alt: Google Summer of Code, Automatic Metadata Extraction of OpenWrt Firmware Image Metadata in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-automatic-extraction-of-openwrt-firmware-image-metadata/
 
 Still feels unreal sometimes that I got to work with OpenWISP during
 Google Summer of Code. These past 5 months have taught me a lot about how
@@ -23,7 +24,8 @@ comment can teach you. I am grateful to my mentors, `Federico Capoano
 (asmodehn) <https://github.com/asmodehn>`_, and `Sankalp (codesankalp)
 <https://github.com/codesankalp>`_, for their insightful feedback and,
 most importantly, their patience in helping me through the learning curve
-of understanding firmware images and OpenWrt's internals.
+of understanding firmware images and `OpenWrt <https://openwrt.org/>`_'s
+internals.
 
 I had an amazing time working on the `OpenWISP Firmware Upgrader
 <https://github.com/openwisp/openwisp-firmware-upgrader>`_ module, where I
@@ -157,6 +159,7 @@ The Extraction State Machine
 .. raw:: html
 
     <pre class="mermaid">
+    %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}}}}%%
     flowchart TB
         subgraph Statuses["extraction_status"]
             direction LR
@@ -230,6 +233,7 @@ Safety Guards in the Extraction Pipeline
 .. raw:: html
 
     <pre class="mermaid">
+    %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}}}}%%
     flowchart TB
         subgraph Reject["Reject"]
             direction LR
@@ -294,6 +298,7 @@ Recovering from Extraction Failures
 .. raw:: html
 
     <pre class="mermaid">
+    %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}}}}%%
     flowchart TB
         subgraph Q["queue_unconfirmed_extractions"]
             direction LR
@@ -327,12 +332,13 @@ Recovering from Extraction Failures
         classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
     </pre>
 
-Extraction runs in the background via Celery, and the background workers
-can fail in ways ordinary exception handling can't catch: a worker killed
-by an out-of-memory condition, or one that hits a hard time limit
-configured at the deployment level (beyond this package's own soft limit),
-both leave affected images stuck in progress indefinitely, with nothing
-coming back to retry it.
+Extraction runs in the background via `Celery
+<https://docs.celeryq.dev/>`_, and the background workers can fail in ways
+ordinary exception handling can't catch: a worker killed by an
+out-of-memory condition, or one that hits a hard time limit configured at
+the deployment level (beyond this package's own soft limit), both leave
+affected images stuck in progress indefinitely, with nothing coming back
+to retry it.
 
 Two tasks handle recovery: ``reclaim_stale_extractions`` finds images
 stuck in progress past a configurable timeout and marks them failed so

@@ -14,6 +14,7 @@ GSoC 2026: Mass Commands
 .. image:: {static}/images/blog/gsoc26/mass-commands/gsoc-26-mass-commands.webp
     :alt: Google Summer of Code, Mass Commands in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-mass-commands/
 
 Coming back to Google Summer of Code for a second time has been an
 extremely rewarding experience. Over the past three months I worked with
@@ -58,8 +59,9 @@ while following the progress of every single device in real time.
 
 The work adds a set of enhancements to `openwisp-controller
 <https://github.com/openwisp/openwisp-controller>`_: a new model with an
-asynchronous execution pipeline, REST API endpoints, a multi step Django
-admin workflow, a WebSocket endpoint for real-time updates, and the
+asynchronous execution pipeline, REST API endpoints, a multi step `Django
+<https://www.djangoproject.com/>`_ admin workflow, a WebSocket endpoint
+for admin workflow, a WebSocket endpoint for real-time updates, and the
 documentation which ties everything together.
 
 Features Implemented
