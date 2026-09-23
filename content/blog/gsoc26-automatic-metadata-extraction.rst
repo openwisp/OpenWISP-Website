@@ -205,8 +205,10 @@ Several new fields on ``FirmwareImage`` carry the result of extraction:
   whenever it differs from the build's own version
 - compat_version, an internal compatibility marker that blocks device
   pairing outright when it exceeds 1.0, independent of extraction_status
-- source, recording which method produced the metadata, fwtool, dtb, or
-  manual, so an admin can tell at a glance how much to trust a given value
+- source, recording which method produced the metadata, fwtool, dtb,
+  manual, or (for images migrated from before this feature existed) the
+  legacy hardware map, built-in or custom, so an admin can tell at a
+  glance how much to trust a given value
 - extraction_status, tracking the image through the pipeline shown below,
   backed by a failure_reason and a full extraction_log for the details
 
@@ -271,7 +273,7 @@ limits, the number of trailer probes, CRC computations, and DTB scan
 attempts are all bounded too, so a file crafted with many fake trailers or
 DTB-like magic bytes can't force excessive CPU work by itself. Certain
 image types are rejected upfront by filename, before any parsing happens
-at all. Finally, the whole task carries its own hard time limit as a
+at all. Finally, the whole task carries its own soft time limit as a
 backstop, in case something still runs long despite every guard above.
 
 Tripping the raw file size cap, the upfront filename rejection, the task's
@@ -322,10 +324,11 @@ Recovering from Extraction Failures
     </pre>
 
 Extraction runs in the background via Celery, and the background workers
-can fail in ways ordinary exception handling can't catch, a worker killed
-by an out-of-memory condition, or one that hits Celery's hard time limit
-mid-extraction, both leave affected images stuck in progress indefinitely,
-with nothing coming back to retry it.
+can fail in ways ordinary exception handling can't catch: a worker killed
+by an out-of-memory condition, or one that hits a hard time limit
+configured at the deployment level (beyond this package's own soft limit),
+both leave affected images stuck in progress indefinitely, with nothing
+coming back to retry it.
 
 Two tasks handle recovery: ``reclaim_stale_extractions`` finds images
 stuck in progress past a configurable timeout and marks them failed so
@@ -336,6 +339,11 @@ automatically every time a worker starts, so images left unconfirmed after
 a deploy or a crash get requeued without anyone noticing, guarded by a
 short-lived cache lock so multiple workers restarting together don't all
 queue the same backlog at once.
+
+An admin doesn't have to wait for the periodic reaper either: selecting a
+stuck in_progress image and running the bulk re-extract action forces an
+immediate reset and retry, safely, since a stray old task's result is
+silently discarded once a fresh claim has replaced it.
 
 Both tasks are idempotent and safe to run concurrently with themselves, so
 the recommended setup schedules them periodically via Celery Beat.
@@ -358,13 +366,14 @@ it's recovered.
     :align: center
 
 Each build also carries its own aggregate extraction status, rolled up
-from every image that belongs to it: if any image is still unconfirmed or
-in progress the build shows as analyzing, otherwise the worst outstanding
-state wins, invalid, then failed, then incomplete, then manually
-confirmed, and only once every image has fully resolved does the build
-itself show success. This gives an admin a single badge to check before
-attempting a mass upgrade, instead of opening every image individually to
-see whether it's ready.
+from every image that belongs to it. Adding a new image to a build, or
+re-extracting any of its images, sets the build back to analyzing
+immediately, even if it had already reached a final status before. Once
+every image resolves again, the worst outstanding state wins, invalid,
+then failed, then incomplete, then manually confirmed, and the build only
+shows success once every one of its images is success itself, a single
+manually confirmed image keeps the whole build at manually confirmed even
+if every other image succeeded outright.
 
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -434,8 +443,10 @@ and fw_version are read-only too, but only while the image's status keeps
 them locked in the admin, on creation, or while success/manually
 confirmed/unconfirmed/in progress. PATCH-ing those fields on a failed,
 invalid, or incomplete image writes them and confirms the image
-automatically, the same workflow available in the admin, so automation
-scripts and integrations can do it too, not just the browser.
+automatically, as long as the resulting board isn't empty, otherwise the
+whole request fails validation and nothing is saved, the same workflow
+available in the admin, so automation scripts and integrations can do it
+too, not just the browser.
 
 Migrating Away from the Static Hardware Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
