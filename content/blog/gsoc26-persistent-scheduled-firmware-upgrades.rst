@@ -7,11 +7,11 @@ GSoC 2026: Persistent and Scheduled Mass Firmware Upgrades
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/firmware-upgrader/gsoc-26-persistent-scheduled-firmware-upgrades.png
+:image_url: https://openwisp.org/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/gsoc-26-persistent-scheduled-firmware-upgrades.webp
 :image_width: 1920
 :image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/gsoc-26-persistent-scheduled-firmware-upgrades.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/gsoc-26-persistent-scheduled-firmware-upgrades.webp
     :alt: Google Summer of Code, Persistent and Scheduled Firmware Upgrades in OpenWISP
     :align: center
 
@@ -77,7 +77,7 @@ off. The operation drops into a ``pending`` state and a background task
 keeps coming back to it, waiting longer between tries each time so a
 device that is down is not being poked every minute.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/retry-lifecycle.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/retry-lifecycle.gif
     :alt: A persistent mass upgrade completing: the batch goes from 0 of 2 done to 1 of 2 as a recovered device finishes
     :align: center
 
@@ -87,7 +87,7 @@ time its next try is due. In the admin you can filter the operations list
 to the ones still pending and read the persistent flag and retry count for
 each.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/pending-operations-list.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/pending-operations-list.webp
     :alt: Upgrade operations filtered to pending, showing the persistent flag and retry count
     :align: center
 
@@ -99,7 +99,7 @@ monitoring there is a fallback: a periodic task wakes pending upgrades on
 a randomized exponential backoff, so they are spread out rather than all
 firing at once.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/pending-operation.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/pending-operation.png
     :alt: A pending upgrade operation, its log showing each scheduled retry attempt
     :align: center
 
@@ -108,7 +108,7 @@ You can cancel a persistent upgrade from the admin or the REST API: a
 can still be cancelled up until firmware flashing begins — below about 65%
 progress. Once the flash is underway it runs to completion.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/cancel-upgrade.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/cancel-upgrade.gif
     :alt: Cancelling a pending persistent upgrade for one device from the admin; the operation moves to cancelled
     :align: center
 
@@ -167,7 +167,7 @@ forgotten device does not sit pending forever. The reminders in the
 screenshot below are closer together because the demo uses a shortened
 interval.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/notifications.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/notifications.webp
     :alt: Notification for a persistent upgrade that needs attention
     :align: center
 
@@ -181,7 +181,7 @@ interval.
 Scheduled Mass Upgrades
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-mass-upgrade.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-mass-upgrade.gif
     :alt: Scheduling a mass firmware upgrade for a future time
     :align: center
 
@@ -189,7 +189,7 @@ Scheduling adds one optional field to the confirmation page: a date and
 time. Leave it blank and nothing changes, the upgrade runs immediately.
 Set it and the rollout waits until then.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-mass-upgrade-confirm.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-mass-upgrade-confirm.webp
     :alt: Choosing a scheduled time on the mass upgrade confirmation page
     :align: center
 
@@ -200,7 +200,7 @@ at least ten minutes out and no more than six months away, both bounds
 configurable — so a slipped finger on the date field cannot quietly queue
 a rollout for next year.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-mass-upgrade-detail.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-mass-upgrade-detail.webp
     :alt: A scheduled batch showing its status, scheduled time and edit/cancel actions
     :align: center
 
@@ -249,7 +249,7 @@ pipeline looks like this:
     linkStyle default stroke:#8b949e,stroke-width:1.5px
     </pre>
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-to-in-progress.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-to-in-progress.gif
     :alt: A scheduled batch launching on its own, flipping to in-progress with the "has started" notification
     :align: center
 
@@ -262,7 +262,7 @@ The long horizon also means two rollouts can end up aimed at the same
 devices, so a new mass upgrade that overlaps an existing one is rejected
 rather than letting the two collide.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-upgrade-conflict.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-upgrade-conflict.webp
     :alt: OpenWISP preventing a conflicting mass upgrade
     :align: center
 

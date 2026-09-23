@@ -7,11 +7,11 @@ GSoC 2026: Adding More Time-Series Database Backends to OpenWISP Monitoring
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.png
+:image_url: https://openwisp.org/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.webp
 :image_width: 1920
 :image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.png
+.. image:: {static}/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.webp
     :alt: Google Summer of Code, OpenWISP Monitoring Time-Series Database Backends
     :align: center
 
@@ -51,15 +51,21 @@ database.
         INFLUX2["InfluxDB 2.9 adapter"]
         ES["Elasticsearch 9 adapter"]
 
-        CORE --> ABC
-        ABC --> INFLUX1
-        ABC --> INFLUX2
-        ABC --> ES
+         CORE --> ABC
+         ABC --> INFLUX1
+         ABC --> INFLUX2
+         ABC --> ES
+         classDef core fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+         classDef interface fill:#fff3cd,stroke:#997404,color:#664d03
+         classDef backend fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+         class CORE core
+         class ABC interface
+         class INFLUX1,INFLUX2,ES backend
     </pre>
 
-The abstract base class and type hints keeps monitoring logic independent
-of the underlying TSDB, so new backends can be added without changing the
-core monitoring system.
+The ``BaseTimeseriesClient`` abstract base class and type hints keep
+monitoring logic independent of the underlying TSDB, so new backends can
+be added without changing the core monitoring system.
 
 Before this project, OpenWISP Monitoring primarily relied on InfluxDB 1.8
 for storing time-series data. While this worked well, modern deployments
@@ -225,9 +231,17 @@ the same output for charts, alerts, and API responses.
         INFLUX2_ADAPTER --> INFLUX2["InfluxDB 2.9"]
         ES_ADAPTER --> ES["Elasticsearch 9"]
 
-        INFLUX1 --> OUTPUT["Charts, alerts and API responses"]
-        INFLUX2 --> OUTPUT
-        ES --> OUTPUT
+         INFLUX1 --> OUTPUT["Charts, alerts and API responses"]
+         INFLUX2 --> OUTPUT
+         ES --> OUTPUT
+         classDef source fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+         classDef processing fill:#fff3cd,stroke:#997404,color:#664d03
+         classDef storage fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+         classDef output fill:#e2e3e5,stroke:#41464b,color:#41464b
+         class ROUTER source
+         class API,CELERY,MODELS,ABC,SETUP processing
+         class INFLUX1_ADAPTER,INFLUX2_ADAPTER,ES_ADAPTER,INFLUX1,INFLUX2,ES storage
+         class OUTPUT output
     </pre>
 
 Both backend changes were later combined in the ``gsoc26-add-more-tsdb``

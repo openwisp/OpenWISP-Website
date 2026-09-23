@@ -7,11 +7,11 @@ GSoC 2026: Automatic Extraction of OpenWrt Firmware Image Metadata
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/automatic-metadata-extraction.png
+:image_url: https://openwisp.org/images/blog/gsoc26/automatic-metadata-extraction/automatic-metadata-extraction.webp
 :image_width: 733
 :image_height: 738
 
-.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/automatic-metadata-extraction.webp
     :alt: Google Summer of Code, Automatic Metadata Extraction of OpenWrt Firmware Image Metadata in OpenWISP
     :align: center
 
@@ -52,7 +52,7 @@ Previously, when a firmware image was uploaded to
 openwisp-firmware-upgrader, the admin had to manually enter important
 metadata. This was obviously a tedious task in a lot of cases and error
 prone, and the module also relied on a manually maintained lookup table,
-hardware.py, mapping image filenames to a static list of compatible
+``hardware.py``, mapping image filenames to a static list of compatible
 boards. This worked while the number of supported OpenWrt targets was
 small, but it does not scale: every new device or firmware naming
 convention meant a manual code change, and the map could go stale as
@@ -65,10 +65,11 @@ at upload time.
 The Old Approach and Its Limits
 -------------------------------
 
-hardware.py worked as a static map, where each entry mapped an OpenWrt
-image type string to the list of device boards it supported. When an admin
-uploaded a firmware image, the module looked up its filename pattern in
-this map as the sole source of truth for which devices it could pair with.
+The data structure in ``hardware.py`` worked as a static map, where each
+entry mapped an OpenWrt image type string to the list of device boards it
+supported. When an admin uploaded a firmware image, the module looked up
+its filename pattern in this map as the sole source of truth for which
+devices it could pair with.
 
 Some limits of this approach became clearer as the project progressed:
 
@@ -125,7 +126,7 @@ The Automatic Metadata Extraction Pipeline
         classDef enrich fill:#d1e7dd,stroke:#0f5132,color:#0f5132
     </pre>
 
-.. image:: {static}/images/blog/gsoc26/automatic-extraction.gif
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/automatic-extraction.gif
     :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
     :align: center
 
@@ -136,7 +137,7 @@ image supports. Extraction looks for this trailer first, since it's the
 most direct and reliable source when it's present, no guessing or
 pattern-matching required, the image describes itself.
 
-.. image:: {static}/images/blog/gsoc26/extraction-log-dtb-fallback.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/extraction-log-dtb-fallback.webp
     :alt: Extraction log showing a DTB fallback after the fwtool trailer was missing or unusable
     :align: center
 
@@ -197,28 +198,31 @@ The Extraction State Machine
 
 Several new fields on ``FirmwareImage`` carry the result of extraction:
 
-- board, the identifier used to pair the image with a device, replacing
-  the old hardware-map lookup
-- compatible, the fuller list of DTB-style identifiers an image supports
-- target, the OpenWrt target platform the image was built for
-- fw_version, the firmware version extracted from the image, shown
+- ``board``, the identifier used to pair the image with a device,
+  replacing the old hardware-map lookup
+- ``compatible``, the fuller list of DTB-style identifiers an image
+  supports
+- ``target``, the OpenWrt target platform the image was built for
+- ``fw_version``, the firmware version extracted from the image, shown
   whenever it differs from the build's own version
-- compat_version, an internal compatibility marker that blocks device
-  pairing outright when it exceeds 1.0, independent of extraction_status
-- source, recording which method produced the metadata, fwtool, dtb,
-  manual, or (for images migrated from before this feature existed) the
-  legacy hardware map, built-in or custom, so an admin can tell at a
-  glance how much to trust a given value
-- extraction_status, tracking the image through the pipeline shown below,
-  backed by a failure_reason and a full extraction_log for the details
+- ``compat_version``, an internal compatibility marker that blocks device
+  pairing outright when it exceeds ``1.0``, independent of
+  ``extraction_status``
+- ``source``, recording which method produced the metadata, ``fwtool``,
+  ``dtb``, ``manual``, or (for images migrated from before this feature
+  existed) the legacy hardware map, built-in or custom, so an admin can
+  tell at a glance how much to trust a given value
+- ``extraction_status``, tracking the image through the pipeline shown
+  below, backed by a ``failure_reason`` and a full ``extraction_log`` for
+  the details
 
-Only success, manually confirmed, and incomplete images are eligible for
-device pairing. success and manually confirmed additionally lock the
-metadata fields from further edits, while failed, incomplete, and invalid
-images can be corrected by hand at any time. Rather than an image silently
-failing to pair with any device and leaving the admin to guess why, the
-status, reason, and log make the cause visible directly in the admin
-interface.
+Only ``success``, ``manually_confirmed``, and ``incomplete`` images are
+eligible for device pairing. ``success`` and ``manually_confirmed``
+additionally lock the metadata fields from further edits, while
+``failed``, ``incomplete``, and ``invalid`` images can be corrected by
+hand at any time. Rather than an image silently failing to pair with any
+device and leaving the admin to guess why, the status, reason, and log
+make the cause visible directly in the admin interface.
 
 Safety Guards in the Extraction Pipeline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -258,7 +262,7 @@ Safety Guards in the Extraction Pipeline
         classDef ok fill:#d1e7dd,stroke:#0f5132,color:#0f5132
     </pre>
 
-.. image:: {static}/images/blog/gsoc26/extraction-failed-incomplete.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/extraction-failed-incomplete.webp
     :alt: Extraction log showing a failed status with the reason, e.g. decompression limit exceeded
     :align: center
 
@@ -341,16 +345,16 @@ short-lived cache lock so multiple workers restarting together don't all
 queue the same backlog at once.
 
 An admin doesn't have to wait for the periodic reaper either: selecting a
-stuck in_progress image and running the bulk re-extract action forces an
-immediate reset and retry, safely, since a stray old task's result is
+stuck ``in_progress`` image and running the bulk re-extract action forces
+an immediate reset and retry, safely, since a stray old task's result is
 silently discarded once a fresh claim has replaced it.
 
 Both tasks are idempotent and safe to run concurrently with themselves, so
 the recommended setup schedules them periodically via Celery Beat.
-reclaim_stale_extractions specifically is checked by a Django system
+``reclaim_stale_extractions`` specifically is checked by a Django system
 check, since it has no other trigger, if it's missing from your
-CELERY_BEAT_SCHEDULE, you'll see a warning in your deployment logs.
-queue_unconfirmed_extractions isn't checked the same way, since the
+``CELERY_BEAT_SCHEDULE``, you'll see a warning in your deployment logs.
+``queue_unconfirmed_extractions`` isn't checked the same way, since the
 worker-startup trigger already covers it as a fallback. One more thing
 worth getting right: the stale-claim timeout must be set to at least the
 task's own time limit, otherwise the reaper can mark a still-running
@@ -361,7 +365,7 @@ even one of its images is still unconfirmed, in progress, failed, or
 invalid, so a single stuck extraction can hold up an entire rollout until
 it's recovered.
 
-.. image:: {static}/images/blog/gsoc26/build-status-badge.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/build-status-badge.webp
     :alt: Build changelist showing the aggregate extraction status badge for each build
     :align: center
 
@@ -378,21 +382,22 @@ if every other image succeeded outright.
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/admin-manual-metadata-workflow.gif
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/admin-manual-metadata-workflow.gif
     :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
     :align: center
 
 When an extraction fails, or comes back incomplete, an admin can fill in
 the missing metadata by hand directly in the change form. If DTB was the
-only source (fwtool found nothing), board and compatible are already
-locked, only target and fw_version need filling in; if fwtool found a
-board that DTB never confirmed, board and compatible stay editable too.
-Saving confirms the image automatically, as long as board isn't empty,
-extraction status moves to 'Manually Confirmed' and the build's status
-updates to reflect it, without a separate confirm step. Leaving board
-empty shows a warning instead, and the image keeps its current status.
+only source (``fwtool`` found nothing), ``board`` and ``compatible`` are
+already locked, only ``target`` and ``fw_version`` need filling in; if
+``fwtool`` found a board that DTB never confirmed, ``board`` and
+``compatible`` stay editable too. Saving confirms the image automatically,
+as long as board isn't empty, extraction status moves to 'Manually
+Confirmed' and the build's status updates to reflect it, without a
+separate confirm step. Leaving board empty shows a warning instead, and
+the image keeps its current status.
 
-.. image:: {static}/images/blog/gsoc26/re-extract-metadata-action.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/re-extract-metadata-action.webp
     :alt: Re-extract metadata bulk action in the FirmwareImage changelist, with a failed image selected
     :align: center
 
@@ -410,14 +415,14 @@ working state:
 Device Pairing via board
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-An image only becomes eligible for pairing once its extraction_status
-reaches success, manually confirmed or incomplete, images still
-unconfirmed, mid-extraction, or failed are excluded, so a device can never
-be paired to metadata that hasn't been verified. Pairing itself is an
-exact match: ``device.model == image.board``. Once an image reaches
-success or manually confirmed, its metadata fields are locked and can no
-longer be edited, protecting a working pairing from being silently
-invalidated.
+An image only becomes eligible for pairing once its ``extraction_status``
+reaches ``success``, ``manually_confirmed`` or ``incomplete``, images
+still ``unconfirmed``, mid-extraction, or ``failed`` are excluded, so a
+device can never be paired to metadata that hasn't been verified. Pairing
+itself is an exact match: ``device.model == image.board``. Once an image
+reaches ``success`` or ``manually_confirmed``, its metadata fields are
+locked and can no longer be edited, protecting a working pairing from
+being silently invalidated.
 
 **How it works:**
 
@@ -430,23 +435,24 @@ invalidated.
 - Go to the Firmware tab on the Device page and you will see the drop down
   populated with the firmware image
 
-.. image:: {static}/images/blog/gsoc26/device-pairing-dropdown.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/device-pairing-dropdown.png
     :alt: Firmware tab in the Device page showing the paired firmware image
     :align: center
 
 REST API Support
 ~~~~~~~~~~~~~~~~
 
-Extraction-derived fields (extraction_status, failure_reason, source, and
-similar) are always read-only through the API. board, compatible, target,
-and fw_version are read-only too, but only while the image's status keeps
-them locked in the admin, on creation, or while success/manually
-confirmed/unconfirmed/in progress. PATCH-ing those fields on a failed,
-invalid, or incomplete image writes them and confirms the image
-automatically, as long as the resulting board isn't empty, otherwise the
-whole request fails validation and nothing is saved, the same workflow
-available in the admin, so automation scripts and integrations can do it
-too, not just the browser.
+Extraction-derived fields (``extraction_status``, ``failure_reason``,
+``source``, and similar) are always read-only through the API. ``board``,
+``compatible``, ``target``, and ``fw_version`` are read-only too, but only
+while the image's status keeps them locked in the admin, on creation, or
+while ``success``, ``manually_confirmed``, ``unconfirmed``, or
+``in_progress``. ``PATCH``-ing those fields on a ``failed``, ``invalid``,
+or ``incomplete`` image writes them and confirms the image automatically,
+as long as the resulting board isn't empty, otherwise the whole request
+fails validation and nothing is saved, the same workflow available in the
+admin, so automation scripts and integrations can do it too, not just the
+browser.
 
 Migrating Away from the Static Hardware Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

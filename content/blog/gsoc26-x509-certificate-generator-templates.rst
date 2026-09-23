@@ -6,11 +6,11 @@ GSoC 2026: X.509 Certificate Generator Templates
 :tags: gsoc, openwisp-controller, x509, certificates, new-features
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc26/x509-certificate-generator-templates/cover.png
+:image_url: https://openwisp.org/images/blog/gsoc26/x509-certificate-generator-templates/cover.webp
 :image_width: 1920
 :image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cover.png
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cover.webp
     :alt: Google Summer of Code, X.509 Certificate Generator Templates in OpenWISP
     :align: center
 
@@ -104,7 +104,7 @@ relational fields:
   whose non-unique properties are copied to every newly generated
   certificate.
 
-.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/template-type.png
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/template-type.webp
     :alt: Adding a Certificate generator template in the Django admin, showing the Certificate Authority and Blueprint Certificate fields
     :align: center
 
@@ -176,7 +176,7 @@ either reserved OpenWISP hardware OID, the inherited value is replaced
 with the value of the device using the template, so the certificate always
 reflects the actual hardware.
 
-.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cert-gen.png
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cert-gen.webp
     :alt: Generated X.509 certificate showing the custom OpenWISP device OIDs
     :align: center
 
