@@ -30,6 +30,18 @@ decide when it runs.
 About the Project
 -----------------
 
+.. raw:: html
+
+    <iframe width="560" height="315"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/rtkR-BTJoyM?vq=hd1080"
+            title="OpenWISP persistent and scheduled firmware upgrades demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
+
 Until now, a mass firmware upgrade ran the moment you launched it, one
 `Celery <https://docs.celeryq.dev/>`_ task per device. As long as every
 target was reachable, that worked fine. The catch is that a real
@@ -58,20 +70,6 @@ Features Implemented
 
 Persistent Mass Upgrades
 ~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. raw:: html
-
-    <p style="text-align:center; font-style:italic; color:#777;">Demo video coming soon.</p>
-
-..
-    Replace the note above with the combined persistent + scheduled demo
-    once it is uploaded to YouTube:
-    .. raw:: html
-
-        <iframe width="560" height="315" style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/NEW_VIDEO_ID?vq=hd1080"
-                title="OpenWISP persistent and scheduled firmware upgrades demo"
-                frameborder="0" allowfullscreen></iframe>
 
 Turning it on is a single checkbox on the confirmation page, ticked by
 default. When it is enabled, a device that does not answer is not written

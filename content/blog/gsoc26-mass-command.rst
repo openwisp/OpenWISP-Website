@@ -32,19 +32,17 @@ helping me grow as a developer and a contributor to open-source projects.
 About the Project
 -----------------
 
-..
-    TODO: embed the final demo video of the project
-    .. raw:: html
+.. raw:: html
 
-        <iframe width="560" height="315"
-                style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
-                title="OpenWISP Mass Commands demo"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-        </iframe>
+    <iframe width="560" height="315"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/skECcEAW9Rk?vq=hd1080"
+            title="OpenWISP Mass Commands demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
 Running the same command on many devices used to be a manual task in
 OpenWISP: an operator had to open each device page and trigger the command

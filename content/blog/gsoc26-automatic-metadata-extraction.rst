@@ -36,19 +36,17 @@ more deeply than I expected going in.
 About the Project
 -----------------
 
-..
-    TODO: embed the final demo video of the project
-    .. raw:: html
+.. raw:: html
 
-        <iframe width="560" height="315"
-                style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
-                title="OpenWISP Automatic Metadata Extraction Demo"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-        </iframe>
+    <iframe width="560" height="315"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/2Lny3pJwB1Y?vq=hd1080"
+            title="OpenWISP Automatic Metadata Extraction demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
 Previously, when a firmware image was uploaded to
 openwisp-firmware-upgrader, the admin had to manually enter important
