@@ -29,7 +29,7 @@ Mass Commands
 .. raw:: html
 
     <iframe width="560" height="315"
-            style="width:100%; height:700px;"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/_tTgIYIUqIo?vq=hd1080"
             title="OpenWISP Mass Commands demo"
             frameborder="0"
@@ -73,7 +73,7 @@ Persistent & Scheduled Firmware Upgrades
 .. raw:: html
 
     <iframe width="560" height="315"
-            style="width:100%; height:700px;"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/sQdoR9JEAi4?vq=hd1080"
             title="OpenWISP persistent firmware upgrades demo"
             frameborder="0"
@@ -133,7 +133,7 @@ Automatic Extraction of OpenWrt Firmware Image Metadata
 .. raw:: html
 
     <iframe width="560" height="315"
-            style="width:100%; height:700px;"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/9NwzAI6bypw?vq=hd1080"
             title="OpenWISP firmware metadata extraction demo"
             frameborder="0"
@@ -182,7 +182,7 @@ Add more timeseries database clients to OpenWISP Monitoring
 .. raw:: html
 
     <iframe width="560" height="315"
-            style="width:100%; height:700px;"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/o7VB-4fIZuI?vq=hd1080"
             title="OpenWISP timeseries database clients demo"
             frameborder="0"
@@ -221,7 +221,7 @@ X.509 Certificate Generator Templates
 .. raw:: html
 
     <iframe width="560" height="315"
-            style="width:100%; height:700px;"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/q3JS9hhrTdY?vq=hd1080"
             title="OpenWISP X.509 certificate generator templates demo"
             frameborder="0"

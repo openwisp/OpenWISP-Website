@@ -7,8 +7,8 @@ OpenWISP is Celebrating 10 Years of Google Summer of Code
 :category: gsoc
 :lang: en
 :image_url: https://openwisp.org/images/blog/gsoc26/openwisp-10-years-google-summer-of-code.webp
-:image_width: 798
-:image_height: 532
+:image_width: 1200
+:image_height: 800
 
 .. image:: {static}/images/blog/gsoc26/openwisp-10-years-google-summer-of-code.webp
     :alt: OpenWISP is Celebrating 10 Years of Google Summer of Code

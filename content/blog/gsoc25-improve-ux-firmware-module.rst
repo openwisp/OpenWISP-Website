@@ -30,7 +30,7 @@ About the Project
 .. raw:: html
 
     <iframe width="560" height="315"
-            style="width:100%; height:700px;"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
             src="https://www.youtube.com/embed/EjHTSle2zHA?si=Pj73wSr22ZScbZvc&vq=hd1080&autoplay=1"
             title="YouTube video player"
             frameborder="0"
