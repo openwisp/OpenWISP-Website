@@ -242,23 +242,20 @@ type, its input, the label, the notes and the targets are filled in.
 Running a dry run, starting a mass command, listing the mass commands
 which were sent and reading the detail of one of them are all available
 over REST, while following a rollout as it happens is done through the
-WebSocket API. They are described in the `REST API documentation
-<https://github.com/openwisp/openwisp-controller/blob/gsoc26-mass-commands/docs/user/rest-api.rst>`_
-of the branch, together with the `WebSocket API
-<https://github.com/openwisp/openwisp-controller/blob/gsoc26-mass-commands/docs/user/websocket-api.rst>`_
-used by the page which follows a rollout.
+WebSocket API. They are described in the ``docs/user/rest-api.rst`` and
+``docs/user/websocket-api.rst`` documentation of the
+``gsoc26-mass-commands`` branch used by the page which follows a rollout.
 
 Current State
 -------------
 
-We are maintaining the `gsoc26-mass-commands
-<https://github.com/openwisp/openwisp-controller/tree/gsoc26-mass-commands>`_
-branch of `openwisp-controller
-<https://github.com/openwisp/openwisp-controller>`_ as the parent branch
-of all the mass command work. The model, the REST API, the admin workflow
-and the execution from the device list have all been merged into it. The
-feature is documented in the branch documentation, both for the admin
-workflow and for the REST and WebSocket APIs.
+We are maintaining the ``gsoc26-mass-commands`` branch of
+`openwisp-controller <https://github.com/openwisp/openwisp-controller>`_
+as the parent branch of all the mass command work. The model, the REST
+API, the admin workflow and the execution from the device list have all
+been merged into it. The feature is documented in the branch
+documentation, both for the admin workflow and for the REST and WebSocket
+APIs.
 
 Mass commands are therefore not available in ``master`` yet: the feature
 branch is proposed for it in a single pull request, and once that is
@@ -271,19 +268,20 @@ details in the following pull requests.
 Merged into the feature branch:
 
 - `[feature] Mass Command model and REST APIs for async command execution
-  <https://github.com/openwisp/openwisp-controller/pull/1395>`_
+  #1395 <https://github.com/openwisp/openwisp-controller/pull/1395>`_
 - `[feature] Django admin workflow for mass commands with real-time
-  monitoring <https://github.com/openwisp/openwisp-controller/pull/1420>`_
+  monitoring #1420
+  <https://github.com/openwisp/openwisp-controller/pull/1420>`_
 - `[feature] Mass command execution from the device changelist selection
-  <https://github.com/openwisp/openwisp-controller/pull/1462>`_
-- `[chores:ui] Added the icons of the mass command menu entries
+  #1462 <https://github.com/openwisp/openwisp-controller/pull/1462>`_
+- `[chores:ui] Added the icons of the mass command menu entries #767
   <https://github.com/openwisp/openwisp-utils/pull/767>`_
-- `[ci] Enabled CI on gsoc26-mass-commands branch
+- `[ci] Enabled CI on gsoc26-mass-commands branch #1366
   <https://github.com/openwisp/openwisp-controller/pull/1366>`_
 
 Still open:
 
-- `[feature:gsoc26] Mass Commands
+- `[feature:gsoc26] Mass Commands #1490
   <https://github.com/openwisp/openwisp-controller/pull/1490>`_, which
   brings the whole feature branch into ``master``
 

@@ -285,9 +285,9 @@ and consolidated into the final pull request:
   <https://github.com/openwisp/openwisp-controller/issues/1362>`_
 - `Show automatically generated x509 certificates in device admin
   <https://github.com/openwisp/openwisp-controller/issues/1410>`_
-- `Added X.509 Certificate Generator Templates (implementation)
+- `[feature] Added X.509 Certificate Generator Templates #1378
   <https://github.com/openwisp/openwisp-controller/pull/1378>`_
-- `Added X.509 Certificate Generator Templates (final)
+- `[feature] Added X.509 Certificate Generator Templates #1486
   <https://github.com/openwisp/openwisp-controller/pull/1486>`_
 
 The dedicated documentation page is `X.509 Certificate Generator Templates

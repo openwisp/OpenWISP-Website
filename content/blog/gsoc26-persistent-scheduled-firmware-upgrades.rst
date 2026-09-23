@@ -120,42 +120,35 @@ four terminal states are the ones the upgrader already had.
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <style>
+    pre.gsoc26-upgrades-diagram { text-align: center; }
+    pre.gsoc26-upgrades-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid gsoc26-upgrades-diagram">
     %%{init: {"theme": "base", "themeVariables": {
-      "lineColor": "#8b949e", "nodeBorder": "#8b949e",
-      "stateLabelColor": "#1f2933", "transitionLabelColor": "#1f2933",
-      "edgeLabelBackground": "#f1f3f5", "labelBackgroundColor": "#f1f3f5",
-      "noteBkgColor": "#fff4e6", "noteBorderColor": "#ed7800", "noteTextColor": "#1f2933"
-    }}}%%
-    stateDiagram-v2
-    direction LR
-    state "in-progress" as IP
-    state "pending" as PE
-    state "success" as OK
-    state "failed" as FA
-    state "aborted" as AB
-    state "cancelled" as CA
-    [*] --> IP: operation created
-    IP --> OK: flash completes, device back online
-    IP --> FA: cannot reconnect after reflash, or unexpected error
-    IP --> AB: prerequisites not met, or device deactivated
-    IP --> CA: operator cancels before flashing starts
-    IP --> PE: device unreachable and operation is persistent
-    PE --> IP: backoff elapsed (Celery Beat) or device healthy again (monitoring)
-    PE --> CA: operator cancels
-    PE --> AB: device deactivated while pending
-    note right of PE
-      retry_count + 1, next_retry_at set with
-      exponential backoff: 10 min, 20 min, 40 min ...
-      capped at 12 h, with 25% random jitter
-    end note
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"rankSpacing": 80}}}%%
+    flowchart TB
+    START["Start upgrade"] --> IP["in-progress"]
+    IP -->|"Device offline"| PE["pending"]
+    PE -->|"Retry"| IP
+    IP -->|"All good"| OK["success"]
+    IP -->|"Errors"| FA["failed"]
+    IP -->|"Cannot continue"| AB["aborted"]
+    IP -->|"User cancels"| CA["cancelled"]
+    PE -->|"User cancels"| CA
+    PE -->|"Device deactivated"| AB
+    PE -.-> RETRY["Automatic retries<br/>with increasing delays"]
+    classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
     classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
     classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
     classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
     classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
     classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
+    class START entry
     class IP active
-    class PE waiting
+    class PE,RETRY waiting
     class OK success
     class FA failure
     class AB stopped
@@ -175,9 +168,9 @@ interval.
 
 **Pull Requests:**
 
-- `Persistent Mass Upgrades #436
+- `[feature] Persistent Mass Upgrades #436
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_
-- `Documentation and screenshots #448
+- `[docs] Add persistent mass upgrades screenshots (1.4) #379 #448
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/448>`_
 
 Scheduled Mass Upgrades
@@ -219,35 +212,39 @@ pipeline looks like this:
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <pre class="mermaid gsoc26-upgrades-diagram">
     %%{init: {"theme": "base", "themeVariables": {
       "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
       "edgeLabelBackground": "#f1f3f5"
-    }}}%%
+    }, "flowchart": {"wrappingWidth": 260, "nodeSpacing": 30, "rankSpacing": 25}}}%%
     graph TD
-    A(["Operator confirms a mass upgrade<br/>(admin or REST API)"]) --> Q{"Scheduled time set?"}
-    Q -->|"no"| NOW["Runs immediately:<br/>batch goes idle to in-progress"]
-    Q -->|"yes"| V{"Time inside the allowed window<br/>and no overlapping upgrade?"}
-    V -->|"no"| REJ(["Rejected with a validation error"])
-    V -->|"yes"| S["Batch saved as scheduled<br/>(time stored in UTC; the schedule can still<br/>be edited or the batch cancelled)"]
-    S -->|"operator cancels"| CAN(["Batch cancelled"])
-    S --> BEAT["Celery Beat runs execute_scheduled_upgrades<br/>every minute"]
-    BEAT -->|"scheduled_at reached"| CHK{"Re-check just before launch:<br/>eligible devices left and no conflicting batch?"}
-    CHK -->|"nothing eligible, or conflict"| FAIL(["Batch failed, no device touched<br/>'not started' notification"])
-    CHK -->|"yes"| RUN["Batch goes scheduled to in-progress<br/>'started' notification"]
-    RUN -.->|"launch never completed (worker died):<br/>back to scheduled on the next scan"| S
-    RUN --> OPS["One upgrade operation per device;<br/>offline devices go pending and are retried when persistent"]
+    A["Start mass upgrade"] --> Q{"Schedule it?"}
+    Q -->|"No"| NOW["Start now"]
+    Q -->|"Yes"| V{"Valid schedule?"}
+    V -->|"No"| REJ["Rejected"]
+    V -->|"Yes"| S["Scheduled"]
+    S -->|"User cancels"| CAN["Cancelled"]
+    S --> BEAT["Check schedule"]
+    BEAT -->|"Time reached"| CHK{"Ready to start?"}
+    CHK -->|"No eligible devices or conflict"| FAIL["Not started"]
+    CHK -->|"Yes"| RUN["Start upgrade"]
+    RUN -.->|"Retry on next scan"| S
+    RUN --> OPS["Upgrade devices"]
     NOW --> OPS
-    OPS --> DONE(["Batch ends success or failed<br/>'completed' notification"])
-    classDef default fill:#f6f7f9,stroke:#8b949e,color:#1f2933
+    OPS --> DONE["Complete"]
+    classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
     classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
     classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
     classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
     classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
-    class NOW,RUN active
+    classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+    class A,BEAT entry
+    class Q,V,CHK waiting
+    class NOW,RUN,OPS active
     class S waiting
     class FAIL,REJ failure
     class CAN stopped
+    class DONE success
     linkStyle default stroke:#8b949e,stroke-width:1.5px
     </pre>
 
@@ -270,9 +267,9 @@ rather than letting the two collide.
 
 **Pull Requests:**
 
-- `Scheduled Mass Upgrades #460
+- `[feature] Scheduled Mass Upgrades #460
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/460>`_
-- `Documentation and screenshots #481
+- `[docs] Add scheduled mass upgrades screenshots (1.4) #481 #481
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/481>`_
 
 Current state
@@ -280,13 +277,14 @@ Current state
 
 Both features are complete and in final review, with the same capabilities
 in the `Django <https://www.djangoproject.com/>`_ admin and the REST API,
-`browser tests for the scheduling flow
-<https://github.com/openwisp/openwisp-firmware-upgrader/blob/gsoc26-final-mass-upgrades/openwisp_firmware_upgrader/tests/test_selenium.py>`_,
-and documentation with screenshots. The work is tracked in `issue #379
+``openwisp_firmware_upgrader/tests/test_selenium.py`` browser tests for
+the scheduling flow, and documentation with screenshots. The work is
+tracked in `issue #379
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/379>`_ for
 the persistent retries and `issue #380
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/380>`_ for
-the scheduled execution, and is going in through `PR #492
+the scheduled execution, and is going in through `[feature] Add persistent
+and scheduled mass upgrades #492
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/492>`_ for
 the next release.
 

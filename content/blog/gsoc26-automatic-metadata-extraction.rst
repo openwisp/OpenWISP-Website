@@ -106,26 +106,35 @@ The Automatic Metadata Extraction Pipeline
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
-         A["Try fwtool extraction"] -- Unsupported type or too large --> B["Stop no metadata"]
-         A -- Fails, no trailer --> C["Use DTB result only"]
-         A -- Succeeds --> D["Check DTB for a better model name"]
-         D -- DTB has model --> E["Override model"]
-         D -- DTB fails or no model --> F["Keep fwtool result"]
+    <style>
+    pre.gsoc26-metadata-diagram { text-align: center; }
+    pre.gsoc26-metadata-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
+    flowchart TB
+         A["Read fwtool metadata"] -->|"Unsupported or too large"| B["Stop without metadata"]
+         A -->|"No trailer"| C["Use DTB result"]
+         A -->|"Success"| D["Check DTB model"]
+         D -->|"Better model found"| E["Use DTB model"]
+         D -->|"No model found"| F["Use fwtool result"]
          E --> F
-         F --> G["Return final result"]
+         F --> G["Return result"]
          C --> G
 
-         B:::hardstop
-         C:::replace
-         D:::enrich
-         E:::enrich
-         F:::enrich
-         G:::enrich
-        classDef hardstop fill:#f8d7da,stroke:#b02a37,color:#58151c
-        classDef replace fill:#fff3cd,stroke:#997404,color:#664d03
-        classDef enrich fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+         classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+         classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+         classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+         classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+         classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+         class A entry
+         class B failure
+         class C,D waiting
+         class E,F active
+         class G success
     </pre>
 
 .. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/automatic-extraction.gif
@@ -158,11 +167,14 @@ The Extraction State Machine
 
 .. raw:: html
 
-    <pre class="mermaid">
-    %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}}}}%%
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
         subgraph Statuses["extraction_status"]
-            direction LR
+            direction TB
             s1["unconfirmed"]
             s2["in_progress"]
             s3["failed"]
@@ -173,7 +185,7 @@ The Extraction State Machine
         end
 
         subgraph Capabilities["What it unlocks"]
-            direction LR
+            direction TB
             c0["No functionality yet"]
             c3["Can be manually confirmed"]
             c1["Eligible for device pairing"]
@@ -191,12 +203,20 @@ The Extraction State Machine
         s7 --> c1
         s7 --> c2
 
-        c0:::neutral
-        c1:::unlock
-        c2:::unlock
-        c3:::unlock
-        classDef unlock fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-        classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
+        class s1 entry
+        class s2 active
+        class s3,s5 failure
+        class s4 waiting
+        class s6,s7 success
+        class c0,c2 stopped
+        class c1 success
+        class c3 waiting
     </pre>
 
 Several new fields on ``FirmwareImage`` carry the result of extraction:
@@ -232,17 +252,20 @@ Safety Guards in the Extraction Pipeline
 
 .. raw:: html
 
-    <pre class="mermaid">
-    %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}}}}%%
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
         subgraph Reject["Reject"]
-            direction LR
+            direction TB
             A["Upload received"] --> B{"Bad file type?"}
             B -- Yes --> X["failed: unsupported type"]
         end
 
         subgraph SizeGuard["Size Limits"]
-            direction LR
+            direction TB
             C{"Raw file too large?"}
             C -- Yes --> Y["failed: decompression limit"]
             C -- No --> D["Decompress"]
@@ -250,7 +273,7 @@ Safety Guards in the Extraction Pipeline
         end
 
         subgraph Scan["Scanning"]
-            direction LR
+            direction TB
             E["Scan fwtool trailer"] --> F["Fallback: DTB scan"]
             F --> G["Return result"]
             E -- Too large --> Y
@@ -259,11 +282,16 @@ Safety Guards in the Extraction Pipeline
         B -- No --> C
         D -- OK --> E
 
-        X:::fail
-        Y:::fail
-        G:::ok
-        classDef fail fill:#f8d7da,stroke:#b02a37,color:#58151c
-        classDef ok fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        class A entry
+        class B,C waiting
+        class D,E,F active
+        class X,Y failure
+        class G success
     </pre>
 
 .. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/extraction-failed-incomplete.webp
@@ -297,11 +325,14 @@ Recovering from Extraction Failures
 
 .. raw:: html
 
-    <pre class="mermaid">
-    %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}}}}%%
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
         subgraph Q["queue_unconfirmed_extractions"]
-            direction LR
+            direction TB
             Q1["Celery Beat (periodic)"]
             Q2["Worker startup (deduped)"]
             Q3["Find all unconfirmed images"]
@@ -312,7 +343,7 @@ Recovering from Extraction Failures
         end
 
         subgraph R["reclaim_stale_extractions"]
-            direction LR
+            direction TB
             R1["Celery Beat (periodic)"]
             R2["Find in_progress images past timeout"]
             R3["Mark failed: timeout"]
@@ -324,12 +355,14 @@ Recovering from Extraction Failures
         Q4 --> Q5["Back into the pipeline:<br/>in_progress"]
         R3 --> R4["Just another failed image:<br/>can be confirmed manually"]
 
-        Q4:::queued
-        R3:::failed
-        RC:::warn
-        classDef queued fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-        classDef failed fill:#f8d7da,stroke:#b02a37,color:#58151c
-        classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        class Q1,Q2,R1 entry
+        class Q3,Q4,Q5,R2 active
+        class R3 failure
+        class R4,RC waiting
     </pre>
 
 Extraction runs in the background via `Celery
@@ -465,8 +498,12 @@ Migrating Away from the Static Hardware Map
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
+    flowchart TB
         A["Built-in hardware map entries"] --> C{"Image: board empty & unconfirmed?"}
         B["Custom OPENWISP_CUSTOM_OPENWRT_IMAGES entries"] --> C
         C -- No --> Z["Left untouched"]
@@ -476,12 +513,17 @@ Migrating Away from the Static Hardware Map
         E --> F
         E --> G["Notify admin after migration completes"]
 
-        D:::success
-        E:::warn
-        Z:::neutral
-        classDef success fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-        classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
-        classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
+        class A,B entry
+        class C,E waiting
+        class D success
+        class F active
+        class G entry
+        class Z stopped
     </pre>
 
 A migration backfills board on every pre-existing firmware image it
@@ -500,17 +542,20 @@ resolve it.
 Current State
 -------------
 
-The work is complete and merged into the `gsoc26-metadata-extraction
-<https://github.com/openwisp/openwisp-firmware-upgrader/tree/gsoc26-metadata-extraction>`_
+The work is complete and merged into the ``gsoc26-metadata-extraction``
 feature branch of `openwisp-firmware-upgrader
 <https://github.com/openwisp/openwisp-firmware-upgrader>`_ across two pull
-requests: `#421
+requests: `[feature] Add extractor ABC, OpenWrt fwtool/DTB pipeline, OOM
+protection and pre-upload validation #421
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/421>`_, which
-laid the extractor pipeline and the safety limits, and `#437
+laid the extractor pipeline and the safety limits, and `[feature]
+Automatic metadata extraction: model layer, async task, notifications,
+admin UI #437
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/437>`_, which
 added the model fields, the migration, and the admin and REST API workflow
 described above. The feature branch is now proposed for merging into
-**master** in `#494
+**master** in `[feature] Automated Extraction of OpenWrt Firmware Image
+Metadata #494
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/494>`_.
 
 My Experience

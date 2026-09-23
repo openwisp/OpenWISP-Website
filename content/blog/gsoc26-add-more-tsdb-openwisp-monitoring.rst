@@ -52,12 +52,12 @@ database.
     %%{init: {"theme": "base", "themeVariables": {
       "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
       "edgeLabelBackground": "#f1f3f5"
-    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    }, "flowchart": {"nodeSpacing": 50, "rankSpacing": 70}}}%%
     flowchart TB
         CORE["OpenWISP Monitoring core logic<br/>(metrics, checks, charts, alerts)"]
         ABC["BaseTimeseriesClient<br/>abstraction layer"]
 
-        subgraph BACKENDS["Supported backends"]
+        subgraph BACKENDS[" "]
             direction LR
             INFLUX1["InfluxDB 1.8 adapter"]
             INFLUX2["InfluxDB 2.9 adapter"]
@@ -72,8 +72,8 @@ database.
         classDef core fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
         classDef interface fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
         classDef legacy fill:#e2e3e5,stroke:#41464b,color:#1f2933
-        classDef influx fill:#d1e7dd,stroke:#0f5132,color:#0f5132,font-weight:bold
-        classDef elastic fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef influx fill:#4396ec,stroke:#1d5fa7,color:#ffffff,font-weight:bold
+        classDef elastic fill:#fbb111,stroke:#b36f00,color:#1f2933,font-weight:bold
         class CORE core
         class ABC interface
         class INFLUX1 legacy
@@ -178,7 +178,7 @@ The final implementation added:
   documentation for the new backend.
 
 For the full technical discussion, implementation details, and maintainer
-review comments, see `openwisp-monitoring pull request #801
+review comments, see `[feature] Added support for InfluxDB 2.x #801
 <https://github.com/openwisp/openwisp-monitoring/pull/801>`_.
 
 Elasticsearch 9 Support
@@ -225,7 +225,7 @@ The final implementation added:
   writes, deletes, tests, and documentation.
 
 For the full technical discussion, implementation details, and maintainer
-review comments, see `openwisp-monitoring pull request #829
+review comments, see `[feature] Add support for elasticsearch TSDB #829
 <https://github.com/openwisp/openwisp-monitoring/pull/829>`_.
 
 At runtime, device data moves through the monitoring API and Celery tasks
@@ -253,7 +253,7 @@ the same output for charts, alerts, and API responses.
             MODELS --> ABC
         end
 
-        subgraph BACKENDS["Time-series backends"]
+        subgraph BACKENDS[" "]
             direction LR
             ABC --> INFLUX1_ADAPTER["InfluxDB 1 adapter"] --> INFLUX1["InfluxDB 1.8"]
             ABC --> INFLUX2_ADAPTER["InfluxDB 2 adapter"] --> INFLUX2["InfluxDB 2.9"]
@@ -269,8 +269,8 @@ the same output for charts, alerts, and API responses.
         classDef setup fill:#e2e3e5,stroke:#41464b,color:#1f2933
         classDef adapter fill:#f6f7f9,stroke:#8b949e,color:#1f2933
         classDef legacy fill:#e2e3e5,stroke:#41464b,color:#1f2933
-        classDef influx fill:#d1e7dd,stroke:#0f5132,color:#0f5132,font-weight:bold
-        classDef elastic fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef influx fill:#4396ec,stroke:#1d5fa7,color:#ffffff,font-weight:bold
+        classDef elastic fill:#fbb111,stroke:#b36f00,color:#1f2933,font-weight:bold
         classDef output fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
         class ROUTER source
         class API,CELERY,MODELS,ABC processing
@@ -283,9 +283,9 @@ the same output for charts, alerts, and API responses.
     </pre>
 
 Both backend changes were later combined in the ``gsoc26-add-more-tsdb``
-branch. The final `pull request #868
-<https://github.com/openwisp/openwisp-monitoring/pull/868>`_ proposes
-bringing the combined work to ``master``.
+branch. The final `[feature] Added InfluxDB2 and Elasticsearch backend
+support #868 <https://github.com/openwisp/openwisp-monitoring/pull/868>`_
+proposes bringing the combined work to ``master``.
 
 OpenWISP RADIUS Monitoring Integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -326,8 +326,8 @@ The final implementation added:
   multiple time-series backends.
 
 For the full technical discussion and implementation details, see
-`openwisp-radius pull request #772
-<https://github.com/openwisp/openwisp-radius/pull/772>`_.
+`[feature] Updated monitoring integration to support new timeseries DBs
+#772 <https://github.com/openwisp/openwisp-radius/pull/772>`_.
 
 Deployment Support
 ~~~~~~~~~~~~~~~~~~
@@ -344,9 +344,10 @@ updated the monitoring time-series configuration to be backend-agnostic,
 documented examples for switching between InfluxDB 1.8, InfluxDB 2.9, and
 Elasticsearch, and added `Molecule
 <https://ansible.readthedocs.io/projects/molecule/>`_ verification for
-rendered backend settings. The related work is tracked in `docker-openwisp
-pull request #672 <https://github.com/openwisp/docker-openwisp/pull/672>`_
-and `ansible-openwisp2 pull request #645
+rendered backend settings. The related work is tracked in `[feature] Added
+configurable timeseries database backends #672
+<https://github.com/openwisp/docker-openwisp/pull/672>`_ and `[feature]
+Documented configurable monitoring TSDB backends #645
 <https://github.com/openwisp/ansible-openwisp2/pull/645>`_.
 
 My Experience
@@ -360,7 +361,8 @@ need to stay aligned with backend changes.
 
 The journey itself was nothing short of a roller-coaster ride: from
 opening my first pull request in mid-January, to spending weeks juggling
-with GitHub Actions while working on the changelog bot `PR
+with GitHub Actions while working on the `[feature] Added changelog entry
+bot using Gemini AI #584
 <https://github.com/openwisp/openwisp-utils/pull/584>`_, to struggling
 with setting up an `OpenWrt <https://openwrt.org/>`_ router through a
 virtual machine. I still have not fully mastered that setup, so I shifted
