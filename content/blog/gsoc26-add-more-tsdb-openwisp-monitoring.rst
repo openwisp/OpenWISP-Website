@@ -7,11 +7,11 @@ GSoC 2026: Adding More Time-Series Database Backends to OpenWISP Monitoring
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/add-more-tsdb-openwisp-monitoring.png
-:image_width: 1942
-:image_height: 809
+:image_url: https://openwisp.org/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.png
+:image_width: 1920
+:image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/add-more-tsdb-openwisp-monitoring.png
+.. image:: {static}/images/blog/gsoc26/add-more-tsdb/add-more-tsdb-openwisp-monitoring.png
     :alt: Google Summer of Code, OpenWISP Monitoring Time-Series Database Backends
     :align: center
 
