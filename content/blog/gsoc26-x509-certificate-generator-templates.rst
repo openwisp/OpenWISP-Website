@@ -205,7 +205,8 @@ existing OpenVPN client certificates, but for standalone certificates:
         D -->|"Template unassigned"| E["DeviceCertificate deleted<br/>certificate revoked"]
         E --> F["Added to the CA<br/>Certificate Revocation List"]
         D -->|"Renewal via PKI endpoint"| G["Certificate and private key<br/>regenerated"]
-        G -->|"Configuration marked outdated"| D
+        G -->|"Configuration marked outdated"| H["Device checks in"]
+        H --> D
         classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
         classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
         classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
@@ -213,7 +214,7 @@ existing OpenVPN client certificates, but for standalone certificates:
         classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
         class A entry
         class B waiting
-        class C,G active
+        class C,G,H active
         class D success
         class E,F failure
     </pre>
@@ -270,7 +271,7 @@ complete, and the whole behavior can be disabled with the
     flowchart TB
         A["Background task watches devices<br/>holding a DeviceCertificate"] --> B{"Hostname or MAC<br/>changed?"}
         B -->|"No"| A
-        B -->|"Yes"| C["REGENERATE_CERTS_ON_HARDWARE_CHANGE"]
+        B -->|"Yes"| C["Certificate regeneration"]
         C --> D["Revoke outdated certificate"]
         D --> E["Generate new certificate<br/>with updated identity"]
         E --> F["Notify administrators"]
@@ -278,8 +279,8 @@ complete, and the whole behavior can be disabled with the
         classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
         classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
         classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
-        class A,D active
-        class B,C waiting
+        class A,C,D active
+        class B waiting
         class E success
         class F entry
     </pre>
