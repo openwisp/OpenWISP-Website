@@ -6,6 +6,7 @@ GSoC 2026: X.509 Certificate Generator Templates
 :tags: gsoc, openwisp-controller, x509, certificates, new-features
 :category: gsoc
 :lang: en
+:mermaid: true
 :image_url: https://openwisp.org/images/blog/gsoc26/x509-certificate-generator-templates/cover.webp
 :image_width: 1920
 :image_height: 1080
@@ -119,6 +120,39 @@ integrity of the templates:
 - the CA and the blueprint must belong to the same organization as the
   template, or be shared.
 
+.. raw:: html
+
+    <style>
+    pre.gsoc26-x509-diagram { text-align: center; }
+    pre.gsoc26-x509-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid gsoc26-x509-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 55}}}%%
+    flowchart TB
+        A["Create Certificate generator<br/>template"] --> B{"CA selected?"}
+        B -->|"No"| X["Rejected"]
+        B -->|"Yes"| C{"Blueprint provided?"}
+        C -->|"No"| OK["Template valid"]
+        C -->|"Yes"| D{"Blueprint signed<br/>by this CA?"}
+        D -->|"No"| X
+        D -->|"Yes"| E{"Blueprint unassigned<br/>and not revoked?"}
+        E -->|"No"| X
+        E -->|"Yes"| F{"Same organization<br/>as template, or shared?"}
+        F -->|"No"| X
+        F -->|"Yes"| OK
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        class A entry
+        class B,C,D,E,F waiting
+        class OK success
+        class X failure
+    </pre>
+
 When the template type is not ``cert``, the two certificate fields are
 cleared automatically.
 
@@ -156,6 +190,34 @@ existing OpenVPN client certificates, but for standalone certificates:
   ``Config.get_cache_dependencies()`` resolves the ``DeviceCertificate``
   relationship and updates the affected configuration status, so the
   device pulls the renewed certificate on its next check-in.
+
+.. raw:: html
+
+    <pre class="mermaid gsoc26-x509-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
+    flowchart TB
+        A["Certificate template assigned<br/>to a device configuration"] --> B["DeviceCertificate<br/>link created"]
+        B --> C["X.509 certificate generated<br/>and signed by the CA"]
+        C --> D["Certificate active<br/>on the device"]
+        D -->|"Template unassigned"| E["DeviceCertificate deleted<br/>certificate revoked"]
+        E --> F["Added to the CA<br/>Certificate Revocation List"]
+        D -->|"Renewal via PKI endpoint"| G["Certificate and private key<br/>regenerated"]
+        G -->|"Configuration marked outdated"| H["Device checks in"]
+        H --> D
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        class A entry
+        class B waiting
+        class C,G,H active
+        class D success
+        class E,F failure
+    </pre>
 
 Because the private keys and certificates are stored and protected using
 the existing `django-x509 <https://github.com/openwisp/django-x509>`_
@@ -198,6 +260,30 @@ complete, and the whole behavior can be disabled with the
 .. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/notification.png
     :alt: OpenWISP notification reporting that a device's X.509 certificate was regenerated after its identity fields changed
     :align: center
+
+.. raw:: html
+
+    <pre class="mermaid gsoc26-x509-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 55}}}%%
+    flowchart TB
+        A["Background task watches devices<br/>holding a DeviceCertificate"] --> B{"Hostname or MAC<br/>changed?"}
+        B -->|"No"| A
+        B -->|"Yes"| C["Certificate regeneration"]
+        C --> D["Revoke outdated certificate"]
+        D --> E["Generate new certificate<br/>with updated identity"]
+        E --> F["Notify administrators"]
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        class A,C,D active
+        class B waiting
+        class E success
+        class F entry
+    </pre>
 
 Context Injection
 ~~~~~~~~~~~~~~~~~
