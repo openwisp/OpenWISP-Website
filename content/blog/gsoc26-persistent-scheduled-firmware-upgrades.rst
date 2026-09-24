@@ -7,13 +7,14 @@ GSoC 2026: Persistent and Scheduled Mass Firmware Upgrades
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/firmware-upgrader/gsoc-26-persistent-scheduled-firmware-upgrades.png
+:image_url: https://openwisp.org/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/gsoc-26-persistent-scheduled-firmware-upgrades.webp
 :image_width: 1920
 :image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/gsoc-26-persistent-scheduled-firmware-upgrades.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/gsoc-26-persistent-scheduled-firmware-upgrades.webp
     :alt: Google Summer of Code, Persistent and Scheduled Firmware Upgrades in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-persistent-and-scheduled-mass-firmware-upgrades/
 
 For this year's Google Summer of Code I worked with OpenWISP on the
 firmware upgrader, mentored by `Federico Capoano (nemesifier)
@@ -29,15 +30,28 @@ decide when it runs.
 About the Project
 -----------------
 
+.. raw:: html
+
+    <iframe width="560" height="315" loading="lazy"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/rtkR-BTJoyM?vq=hd1080"
+            title="OpenWISP persistent and scheduled firmware upgrades demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
+
 Until now, a mass firmware upgrade ran the moment you launched it, one
-Celery task per device. As long as every target was reachable, that worked
-fine. The catch is that a real deployment almost never is: on a large
-network there are always a few devices you cannot reach the instant you
-need them, whether they are switched off, restarting, or on a link that
-keeps dropping out. When one of those is unreachable as the upgrade fires,
-its task fails then and there, and it is left for an operator to spot and
-run again. Across a few hundred access points, hunting down the ones that
-missed the rollout is slow and easy to get wrong.
+`Celery <https://docs.celeryq.dev/>`_ task per device. As long as every
+target was reachable, that worked fine. The catch is that a real
+deployment almost never is: on a large network there are always a few
+devices you cannot reach the instant you need them, whether they are
+switched off, restarting, or on a link that keeps dropping out. When one
+of those is unreachable as the upgrade fires, its task fails then and
+there, and it is left for an operator to spot and run again. Across a few
+hundred access points, hunting down the ones that missed the rollout is
+slow and easy to get wrong.
 
 There was also no way to line an upgrade up ahead of time. If you wanted
 to flash firmware at 2 a.m. during a maintenance window, you had to
@@ -57,27 +71,13 @@ Features Implemented
 Persistent Mass Upgrades
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. raw:: html
-
-    <p style="text-align:center; font-style:italic; color:#777;">Demo video coming soon.</p>
-
-..
-    Replace the note above with the combined persistent + scheduled demo
-    once it is uploaded to YouTube:
-    .. raw:: html
-
-        <iframe width="560" height="315" style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/NEW_VIDEO_ID?vq=hd1080"
-                title="OpenWISP persistent and scheduled firmware upgrades demo"
-                frameborder="0" allowfullscreen></iframe>
-
 Turning it on is a single checkbox on the confirmation page, ticked by
 default. When it is enabled, a device that does not answer is not written
 off. The operation drops into a ``pending`` state and a background task
 keeps coming back to it, waiting longer between tries each time so a
 device that is down is not being poked every minute.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/retry-lifecycle.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/retry-lifecycle.gif
     :alt: A persistent mass upgrade completing: the batch goes from 0 of 2 done to 1 of 2 as a recovered device finishes
     :align: center
 
@@ -87,7 +87,7 @@ time its next try is due. In the admin you can filter the operations list
 to the ones still pending and read the persistent flag and retry count for
 each.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/pending-operations-list.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/pending-operations-list.webp
     :alt: Upgrade operations filtered to pending, showing the persistent flag and retry count
     :align: center
 
@@ -99,7 +99,7 @@ monitoring there is a fallback: a periodic task wakes pending upgrades on
 a randomized exponential backoff, so they are spread out rather than all
 firing at once.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/pending-operation.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/pending-operation.png
     :alt: A pending upgrade operation, its log showing each scheduled retry attempt
     :align: center
 
@@ -108,7 +108,7 @@ You can cancel a persistent upgrade from the admin or the REST API: a
 can still be cancelled up until firmware flashing begins — below about 65%
 progress. Once the flash is underway it runs to completion.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/cancel-upgrade.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/cancel-upgrade.gif
     :alt: Cancelling a pending persistent upgrade for one device from the admin; the operation moves to cancelled
     :align: center
 
@@ -118,42 +118,35 @@ four terminal states are the ones the upgrader already had.
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <style>
+    pre.gsoc26-upgrades-diagram { text-align: center; }
+    pre.gsoc26-upgrades-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid gsoc26-upgrades-diagram">
     %%{init: {"theme": "base", "themeVariables": {
-      "lineColor": "#8b949e", "nodeBorder": "#8b949e",
-      "stateLabelColor": "#1f2933", "transitionLabelColor": "#1f2933",
-      "edgeLabelBackground": "#f1f3f5", "labelBackgroundColor": "#f1f3f5",
-      "noteBkgColor": "#fff4e6", "noteBorderColor": "#ed7800", "noteTextColor": "#1f2933"
-    }}}%%
-    stateDiagram-v2
-    direction LR
-    state "in-progress" as IP
-    state "pending" as PE
-    state "success" as OK
-    state "failed" as FA
-    state "aborted" as AB
-    state "cancelled" as CA
-    [*] --> IP: operation created
-    IP --> OK: flash completes, device back online
-    IP --> FA: cannot reconnect after reflash, or unexpected error
-    IP --> AB: prerequisites not met, or device deactivated
-    IP --> CA: operator cancels before flashing starts
-    IP --> PE: device unreachable and operation is persistent
-    PE --> IP: backoff elapsed (Celery Beat) or device healthy again (monitoring)
-    PE --> CA: operator cancels
-    PE --> AB: device deactivated while pending
-    note right of PE
-      retry_count + 1, next_retry_at set with
-      exponential backoff: 10 min, 20 min, 40 min ...
-      capped at 12 h, with 25% random jitter
-    end note
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"rankSpacing": 80}}}%%
+    flowchart TB
+    START["Start upgrade"] --> IP["in-progress"]
+    IP -->|"Device offline"| PE["pending"]
+    PE -->|"Retry"| IP
+    IP -->|"All good"| OK["success"]
+    IP -->|"Errors"| FA["failed"]
+    IP -->|"Cannot continue"| AB["aborted"]
+    IP -->|"User cancels"| CA["cancelled"]
+    PE -->|"User cancels"| CA
+    PE -->|"Device deactivated"| AB
+    PE -.-> RETRY["Automatic retries<br/>with increasing delays"]
+    classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
     classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
     classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
     classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
     classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
     classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
+    class START entry
     class IP active
-    class PE waiting
+    class PE,RETRY waiting
     class OK success
     class FA failure
     class AB stopped
@@ -167,21 +160,21 @@ forgotten device does not sit pending forever. The reminders in the
 screenshot below are closer together because the demo uses a shortened
 interval.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/notifications.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/notifications.webp
     :alt: Notification for a persistent upgrade that needs attention
     :align: center
 
 **Pull Requests:**
 
-- `Persistent Mass Upgrades #436
+- `[feature] Persistent Mass Upgrades #436
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/436>`_
-- `Documentation and screenshots #448
+- `[docs] Add persistent mass upgrades screenshots (1.4) #379 #448
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/448>`_
 
 Scheduled Mass Upgrades
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-mass-upgrade.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-mass-upgrade.gif
     :alt: Scheduling a mass firmware upgrade for a future time
     :align: center
 
@@ -189,7 +182,7 @@ Scheduling adds one optional field to the confirmation page: a date and
 time. Leave it blank and nothing changes, the upgrade runs immediately.
 Set it and the rollout waits until then.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-mass-upgrade-confirm.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-mass-upgrade-confirm.webp
     :alt: Choosing a scheduled time on the mass upgrade confirmation page
     :align: center
 
@@ -200,7 +193,7 @@ at least ten minutes out and no more than six months away, both bounds
 configurable — so a slipped finger on the date field cannot quietly queue
 a rollout for next year.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-mass-upgrade-detail.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-mass-upgrade-detail.webp
     :alt: A scheduled batch showing its status, scheduled time and edit/cancel actions
     :align: center
 
@@ -217,39 +210,43 @@ pipeline looks like this:
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <pre class="mermaid gsoc26-upgrades-diagram">
     %%{init: {"theme": "base", "themeVariables": {
       "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
       "edgeLabelBackground": "#f1f3f5"
-    }}}%%
+    }, "flowchart": {"wrappingWidth": 260, "nodeSpacing": 30, "rankSpacing": 25}}}%%
     graph TD
-    A(["Operator confirms a mass upgrade<br/>(admin or REST API)"]) --> Q{"Scheduled time set?"}
-    Q -->|"no"| NOW["Runs immediately:<br/>batch goes idle to in-progress"]
-    Q -->|"yes"| V{"Time inside the allowed window<br/>and no overlapping upgrade?"}
-    V -->|"no"| REJ(["Rejected with a validation error"])
-    V -->|"yes"| S["Batch saved as scheduled<br/>(time stored in UTC; the schedule can still<br/>be edited or the batch cancelled)"]
-    S -->|"operator cancels"| CAN(["Batch cancelled"])
-    S --> BEAT["Celery Beat runs execute_scheduled_upgrades<br/>every minute"]
-    BEAT -->|"scheduled_at reached"| CHK{"Re-check just before launch:<br/>eligible devices left and no conflicting batch?"}
-    CHK -->|"nothing eligible, or conflict"| FAIL(["Batch failed, no device touched<br/>'not started' notification"])
-    CHK -->|"yes"| RUN["Batch goes scheduled to in-progress<br/>'started' notification"]
-    RUN -.->|"launch never completed (worker died):<br/>back to scheduled on the next scan"| S
-    RUN --> OPS["One upgrade operation per device;<br/>offline devices go pending and are retried when persistent"]
+    A["Start mass upgrade"] --> Q{"Schedule it?"}
+    Q -->|"No"| NOW["Start now"]
+    Q -->|"Yes"| V{"Valid schedule?"}
+    V -->|"No"| REJ["Rejected"]
+    V -->|"Yes"| S["Scheduled"]
+    S -->|"User cancels"| CAN["Cancelled"]
+    S --> BEAT["Check schedule"]
+    BEAT -->|"Time reached"| CHK{"Ready to start?"}
+    CHK -->|"No eligible devices or conflict"| FAIL["Not started"]
+    CHK -->|"Yes"| RUN["Start upgrade"]
+    RUN -.->|"Retry on next scan"| S
+    RUN --> OPS["Upgrade devices"]
     NOW --> OPS
-    OPS --> DONE(["Batch ends success or failed<br/>'completed' notification"])
-    classDef default fill:#f6f7f9,stroke:#8b949e,color:#1f2933
+    OPS --> DONE["Complete"]
+    classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
     classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
     classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
     classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
     classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
-    class NOW,RUN active
+    classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+    class A,BEAT entry
+    class Q,V,CHK waiting
+    class NOW,RUN,OPS active
     class S waiting
     class FAIL,REJ failure
     class CAN stopped
+    class DONE success
     linkStyle default stroke:#8b949e,stroke-width:1.5px
     </pre>
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-to-in-progress.gif
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-to-in-progress.gif
     :alt: A scheduled batch launching on its own, flipping to in-progress with the "has started" notification
     :align: center
 
@@ -262,29 +259,30 @@ The long horizon also means two rollouts can end up aimed at the same
 devices, so a new mass upgrade that overlaps an existing one is rejected
 rather than letting the two collide.
 
-.. image:: {static}/images/blog/gsoc26/firmware-upgrader/scheduled-upgrade-conflict.png
+.. image:: {static}/images/blog/gsoc26/persistent-scheduled-firmware-upgrades/scheduled-upgrade-conflict.webp
     :alt: OpenWISP preventing a conflicting mass upgrade
     :align: center
 
 **Pull Requests:**
 
-- `Scheduled Mass Upgrades #460
+- `[feature] Scheduled Mass Upgrades #460
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/460>`_
-- `Documentation and screenshots #481
+- `[docs] Add scheduled mass upgrades screenshots (1.4) #481
   <https://github.com/openwisp/openwisp-firmware-upgrader/pull/481>`_
 
 Current state
 -------------
 
 Both features are complete and in final review, with the same capabilities
-in the Django admin and the REST API, `browser tests for the scheduling
-flow
-<https://github.com/openwisp/openwisp-firmware-upgrader/blob/gsoc26-final-mass-upgrades/openwisp_firmware_upgrader/tests/test_selenium.py>`_,
-and documentation with screenshots. The work is tracked in `issue #379
+in the `Django <https://www.djangoproject.com/>`_ admin and the REST API,
+``openwisp_firmware_upgrader/tests/test_selenium.py`` browser tests for
+the scheduling flow, and documentation with screenshots. The work is
+tracked in `issue #379
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/379>`_ for
 the persistent retries and `issue #380
 <https://github.com/openwisp/openwisp-firmware-upgrader/issues/380>`_ for
-the scheduled execution, and is going in through `PR #492
+the scheduled execution, and is going in through `[feature] Add persistent
+and scheduled mass upgrades #492
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/492>`_ for
 the next release.
 
@@ -353,5 +351,8 @@ scheduled upgrade targets is deleted before it runs, that should fail
 loudly rather than silently widening to the whole category.
 
 The upgrader still has plenty I want to get to, so I do not plan to
-disappear once this merges. Thanks to Federico, Gagan and Oliver for the
-mentorship, and to the OpenWISP community for a genuinely good summer.
+disappear once this merges. Thanks to `Federico Capoano (nemesifier)
+<https://github.com/nemesifier>`_, `Gagan Deep (pandafy)
+<https://github.com/pandafy>`_, and `Oliver Kraitschy (okraits)
+<https://github.com/okraits>`_ for the mentorship, and to the OpenWISP
+community for a genuinely good summer.

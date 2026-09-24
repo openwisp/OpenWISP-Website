@@ -7,13 +7,14 @@ GSoC 2026: Automatic Extraction of OpenWrt Firmware Image Metadata
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/automatic-metadata-extraction.png
+:image_url: https://openwisp.org/images/blog/gsoc26/automatic-metadata-extraction/automatic-metadata-extraction.webp
 :image_width: 733
 :image_height: 738
 
-.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/automatic-metadata-extraction.webp
     :alt: Google Summer of Code, Automatic Metadata Extraction of OpenWrt Firmware Image Metadata in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-automatic-extraction-of-openwrt-firmware-image-metadata/
 
 Still feels unreal sometimes that I got to work with OpenWISP during
 Google Summer of Code. These past 5 months have taught me a lot about how
@@ -23,7 +24,8 @@ comment can teach you. I am grateful to my mentors, `Federico Capoano
 (asmodehn) <https://github.com/asmodehn>`_, and `Sankalp (codesankalp)
 <https://github.com/codesankalp>`_, for their insightful feedback and,
 most importantly, their patience in helping me through the learning curve
-of understanding firmware images and OpenWrt's internals.
+of understanding firmware images and `OpenWrt <https://openwrt.org/>`_'s
+internals.
 
 I had an amazing time working on the `OpenWISP Firmware Upgrader
 <https://github.com/openwisp/openwisp-firmware-upgrader>`_ module, where I
@@ -34,25 +36,23 @@ more deeply than I expected going in.
 About the Project
 -----------------
 
-..
-    TODO: embed the final demo video of the project
-    .. raw:: html
+.. raw:: html
 
-        <iframe width="560" height="315"
-                style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
-                title="OpenWISP Automatic Metadata Extraction Demo"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-        </iframe>
+    <iframe width="560" height="315" loading="lazy"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/2Lny3pJwB1Y?vq=hd1080"
+            title="OpenWISP Automatic Metadata Extraction demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
 Previously, when a firmware image was uploaded to
 openwisp-firmware-upgrader, the admin had to manually enter important
 metadata. This was obviously a tedious task in a lot of cases and error
 prone, and the module also relied on a manually maintained lookup table,
-hardware.py, mapping image filenames to a static list of compatible
+``hardware.py``, mapping image filenames to a static list of compatible
 boards. This worked while the number of supported OpenWrt targets was
 small, but it does not scale: every new device or firmware naming
 convention meant a manual code change, and the map could go stale as
@@ -65,10 +65,11 @@ at upload time.
 The Old Approach and Its Limits
 -------------------------------
 
-hardware.py worked as a static map, where each entry mapped an OpenWrt
-image type string to the list of device boards it supported. When an admin
-uploaded a firmware image, the module looked up its filename pattern in
-this map as the sole source of truth for which devices it could pair with.
+The data structure in ``hardware.py`` worked as a static map, where each
+entry mapped an OpenWrt image type string to the list of device boards it
+supported. When an admin uploaded a firmware image, the module looked up
+its filename pattern in this map as the sole source of truth for which
+devices it could pair with.
 
 Some limits of this approach became clearer as the project progressed:
 
@@ -103,29 +104,39 @@ The Automatic Metadata Extraction Pipeline
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
-         A["Try fwtool extraction"] -- Unsupported type or too large --> B["Stop no metadata"]
-         A -- Fails, no trailer --> C["Use DTB result only"]
-         A -- Succeeds --> D["Check DTB for a better model name"]
-         D -- DTB has model --> E["Override model"]
-         D -- DTB fails or no model --> F["Keep fwtool result"]
-         E --> F
-         F --> G["Return final result"]
+    <style>
+    pre.gsoc26-metadata-diagram { text-align: center; }
+    pre.gsoc26-metadata-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
+    flowchart TB
+         A["Read fwtool metadata"] -->|"Unsupported input"| B["Stop without metadata"]
+         A -->|"No trailer"| C["Use DTB result"]
+         A -->|"Trailer too large"| C
+         A -->|"Success"| D["Check DTB model"]
+         D -->|"Better model found"| E["Use DTB model"]
+         D -->|"No model found"| F["Use fwtool result"]
+         E --> G["Return result"]
+         F --> G["Return result"]
          C --> G
 
-         B:::hardstop
-         C:::replace
-         D:::enrich
-         E:::enrich
-         F:::enrich
-         G:::enrich
-        classDef hardstop fill:#f8d7da,stroke:#b02a37,color:#58151c
-        classDef replace fill:#fff3cd,stroke:#997404,color:#664d03
-        classDef enrich fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+         classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+         classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+         classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+         classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+         classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+         class A entry
+         class B failure
+         class C,D waiting
+         class E,F active
+         class G success
     </pre>
 
-.. image:: {static}/images/blog/gsoc26/automatic-extraction.gif
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/automatic-extraction.gif
     :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
     :align: center
 
@@ -136,7 +147,7 @@ image supports. Extraction looks for this trailer first, since it's the
 most direct and reliable source when it's present, no guessing or
 pattern-matching required, the image describes itself.
 
-.. image:: {static}/images/blog/gsoc26/extraction-log-dtb-fallback.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/extraction-log-dtb-fallback.webp
     :alt: Extraction log showing a DTB fallback after the fwtool trailer was missing or unusable
     :align: center
 
@@ -155,10 +166,14 @@ The Extraction State Machine
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
         subgraph Statuses["extraction_status"]
-            direction LR
+            direction TB
             s1["unconfirmed"]
             s2["in_progress"]
             s3["failed"]
@@ -169,7 +184,7 @@ The Extraction State Machine
         end
 
         subgraph Capabilities["What it unlocks"]
-            direction LR
+            direction TB
             c0["No functionality yet"]
             c3["Can be manually confirmed"]
             c1["Eligible for device pairing"]
@@ -187,54 +202,69 @@ The Extraction State Machine
         s7 --> c1
         s7 --> c2
 
-        c0:::neutral
-        c1:::unlock
-        c2:::unlock
-        c3:::unlock
-        classDef unlock fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-        classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
+        class s1 entry
+        class s2 active
+        class s3,s5 failure
+        class s4 waiting
+        class s6,s7 success
+        class c0,c2 stopped
+        class c1 success
+        class c3 waiting
     </pre>
 
 Several new fields on ``FirmwareImage`` carry the result of extraction:
 
-- board, the identifier used to pair the image with a device, replacing
-  the old hardware-map lookup
-- compatible, the fuller list of DTB-style identifiers an image supports
-- target, the OpenWrt target platform the image was built for
-- fw_version, the firmware version extracted from the image, shown
+- ``board``, the identifier used to pair the image with a device,
+  replacing the old hardware-map lookup
+- ``compatible``, the fuller list of DTB-style identifiers an image
+  supports
+- ``target``, the OpenWrt target platform the image was built for
+- ``fw_version``, the firmware version extracted from the image, shown
   whenever it differs from the build's own version
-- compat_version, an internal compatibility marker that blocks device
-  pairing outright when it exceeds 1.0, independent of extraction_status
-- source, recording which method produced the metadata, fwtool, dtb,
-  manual, or (for images migrated from before this feature existed) the
-  legacy hardware map, built-in or custom, so an admin can tell at a
-  glance how much to trust a given value
-- extraction_status, tracking the image through the pipeline shown below,
-  backed by a failure_reason and a full extraction_log for the details
+- ``compat_version``, an internal compatibility marker that blocks device
+  pairing outright when it exceeds ``1.0``, independent of
+  ``extraction_status``
+- ``source``, recording which method produced the metadata, ``fwtool``,
+  ``dtb``, ``manual``, or (for images migrated from before this feature
+  existed) the legacy hardware map, built-in or custom, so an admin can
+  tell at a glance how much to trust a given value
+- ``extraction_status``, tracking the image through the pipeline shown
+  below, backed by a ``failure_reason`` and a full ``extraction_log`` for
+  the details
 
-Only success, manually confirmed, and incomplete images are eligible for
-device pairing. success and manually confirmed additionally lock the
-metadata fields from further edits, while failed, incomplete, and invalid
-images can be corrected by hand at any time. Rather than an image silently
-failing to pair with any device and leaving the admin to guess why, the
-status, reason, and log make the cause visible directly in the admin
-interface.
+Only ``success``, ``manually_confirmed``, and ``incomplete`` images are
+eligible for device pairing. ``success`` and ``manually_confirmed``
+additionally lock the metadata fields from further edits, while
+``failed``, ``incomplete``, and ``invalid`` images can be corrected by
+hand at any time. Rather than an image silently failing to pair with any
+device and leaving the admin to guess why, the status, reason, and log
+make the cause visible directly in the admin interface.
 
 Safety Guards in the Extraction Pipeline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
         subgraph Reject["Reject"]
-            direction LR
+            direction TB
             A["Upload received"] --> B{"Bad file type?"}
             B -- Yes --> X["failed: unsupported type"]
         end
 
         subgraph SizeGuard["Size Limits"]
-            direction LR
+            direction TB
             C{"Raw file too large?"}
             C -- Yes --> Y["failed: decompression limit"]
             C -- No --> D["Decompress"]
@@ -242,7 +272,7 @@ Safety Guards in the Extraction Pipeline
         end
 
         subgraph Scan["Scanning"]
-            direction LR
+            direction TB
             E["Scan fwtool trailer"] --> F["Fallback: DTB scan"]
             F --> G["Return result"]
             E -- Too large --> Y
@@ -251,14 +281,19 @@ Safety Guards in the Extraction Pipeline
         B -- No --> C
         D -- OK --> E
 
-        X:::fail
-        Y:::fail
-        G:::ok
-        classDef fail fill:#f8d7da,stroke:#b02a37,color:#58151c
-        classDef ok fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        class A entry
+        class B,C waiting
+        class D,E,F active
+        class X,Y failure
+        class G success
     </pre>
 
-.. image:: {static}/images/blog/gsoc26/extraction-failed-incomplete.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/extraction-failed-incomplete.webp
     :alt: Extraction log showing a failed status with the reason, e.g. decompression limit exceeded
     :align: center
 
@@ -289,10 +324,14 @@ Recovering from Extraction Failures
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 40, "rankSpacing": 60}}}%%
     flowchart TB
         subgraph Q["queue_unconfirmed_extractions"]
-            direction LR
+            direction TB
             Q1["Celery Beat (periodic)"]
             Q2["Worker startup (deduped)"]
             Q3["Find all unconfirmed images"]
@@ -303,7 +342,7 @@ Recovering from Extraction Failures
         end
 
         subgraph R["reclaim_stale_extractions"]
-            direction LR
+            direction TB
             R1["Celery Beat (periodic)"]
             R2["Find in_progress images past timeout"]
             R3["Mark failed: timeout"]
@@ -315,20 +354,23 @@ Recovering from Extraction Failures
         Q4 --> Q5["Back into the pipeline:<br/>in_progress"]
         R3 --> R4["Just another failed image:<br/>can be confirmed manually"]
 
-        Q4:::queued
-        R3:::failed
-        RC:::warn
-        classDef queued fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-        classDef failed fill:#f8d7da,stroke:#b02a37,color:#58151c
-        classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef failure fill:#c53030,stroke:#9b2c2c,color:#ffffff,font-weight:bold
+        class Q1,Q2,R1 entry
+        class Q3,Q4,Q5,R2 active
+        class R3 failure
+        class R4,RC waiting
     </pre>
 
-Extraction runs in the background via Celery, and the background workers
-can fail in ways ordinary exception handling can't catch: a worker killed
-by an out-of-memory condition, or one that hits a hard time limit
-configured at the deployment level (beyond this package's own soft limit),
-both leave affected images stuck in progress indefinitely, with nothing
-coming back to retry it.
+Extraction runs in the background via `Celery
+<https://docs.celeryq.dev/>`_, and the background workers can fail in ways
+ordinary exception handling can't catch: a worker killed by an
+out-of-memory condition, or one that hits a hard time limit configured at
+the deployment level (beyond this package's own soft limit), both leave
+affected images stuck in progress indefinitely, with nothing coming back
+to retry it.
 
 Two tasks handle recovery: ``reclaim_stale_extractions`` finds images
 stuck in progress past a configurable timeout and marks them failed so
@@ -341,16 +383,16 @@ short-lived cache lock so multiple workers restarting together don't all
 queue the same backlog at once.
 
 An admin doesn't have to wait for the periodic reaper either: selecting a
-stuck in_progress image and running the bulk re-extract action forces an
-immediate reset and retry, safely, since a stray old task's result is
+stuck ``in_progress`` image and running the bulk re-extract action forces
+an immediate reset and retry, safely, since a stray old task's result is
 silently discarded once a fresh claim has replaced it.
 
 Both tasks are idempotent and safe to run concurrently with themselves, so
 the recommended setup schedules them periodically via Celery Beat.
-reclaim_stale_extractions specifically is checked by a Django system
+``reclaim_stale_extractions`` specifically is checked by a Django system
 check, since it has no other trigger, if it's missing from your
-CELERY_BEAT_SCHEDULE, you'll see a warning in your deployment logs.
-queue_unconfirmed_extractions isn't checked the same way, since the
+``CELERY_BEAT_SCHEDULE``, you'll see a warning in your deployment logs.
+``queue_unconfirmed_extractions`` isn't checked the same way, since the
 worker-startup trigger already covers it as a fallback. One more thing
 worth getting right: the stale-claim timeout must be set to at least the
 task's own time limit, otherwise the reaper can mark a still-running
@@ -361,7 +403,7 @@ even one of its images is still unconfirmed, in progress, failed, or
 invalid, so a single stuck extraction can hold up an entire rollout until
 it's recovered.
 
-.. image:: {static}/images/blog/gsoc26/build-status-badge.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/build-status-badge.webp
     :alt: Build changelist showing the aggregate extraction status badge for each build
     :align: center
 
@@ -378,21 +420,22 @@ if every other image succeeded outright.
 Admin Workflow: Manual Confirmation and Bulk Re-extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/admin-manual-metadata-workflow.gif
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/admin-manual-metadata-workflow.gif
     :alt: Admin filling in board and metadata fields by hand, which automatically confirms the image
     :align: center
 
 When an extraction fails, or comes back incomplete, an admin can fill in
 the missing metadata by hand directly in the change form. If DTB was the
-only source (fwtool found nothing), board and compatible are already
-locked, only target and fw_version need filling in; if fwtool found a
-board that DTB never confirmed, board and compatible stay editable too.
-Saving confirms the image automatically, as long as board isn't empty,
-extraction status moves to 'Manually Confirmed' and the build's status
-updates to reflect it, without a separate confirm step. Leaving board
-empty shows a warning instead, and the image keeps its current status.
+only source (``fwtool`` found nothing), ``board`` and ``compatible`` are
+already locked, only ``target`` and ``fw_version`` need filling in; if
+``fwtool`` found a board that DTB never confirmed, ``board`` and
+``compatible`` stay editable too. Saving confirms the image automatically,
+as long as board isn't empty, extraction status moves to 'Manually
+Confirmed' and the build's status updates to reflect it, without a
+separate confirm step. Leaving board empty shows a warning instead, and
+the image keeps its current status.
 
-.. image:: {static}/images/blog/gsoc26/re-extract-metadata-action.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/re-extract-metadata-action.webp
     :alt: Re-extract metadata bulk action in the FirmwareImage changelist, with a failed image selected
     :align: center
 
@@ -410,14 +453,14 @@ working state:
 Device Pairing via board
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-An image only becomes eligible for pairing once its extraction_status
-reaches success, manually confirmed or incomplete, images still
-unconfirmed, mid-extraction, or failed are excluded, so a device can never
-be paired to metadata that hasn't been verified. Pairing itself is an
-exact match: ``device.model == image.board``. Once an image reaches
-success or manually confirmed, its metadata fields are locked and can no
-longer be edited, protecting a working pairing from being silently
-invalidated.
+An image only becomes eligible for pairing once its ``extraction_status``
+reaches ``success``, ``manually_confirmed`` or ``incomplete``, images
+still ``unconfirmed``, mid-extraction, or ``failed`` are excluded, so a
+device can never be paired to metadata that hasn't been verified. Pairing
+itself is an exact match: ``device.model == image.board``. Once an image
+reaches ``success`` or ``manually_confirmed``, its metadata fields are
+locked and can no longer be edited, protecting a working pairing from
+being silently invalidated.
 
 **How it works:**
 
@@ -430,31 +473,36 @@ invalidated.
 - Go to the Firmware tab on the Device page and you will see the drop down
   populated with the firmware image
 
-.. image:: {static}/images/blog/gsoc26/device-pairing-dropdown.png
+.. image:: {static}/images/blog/gsoc26/automatic-metadata-extraction/device-pairing-dropdown.png
     :alt: Firmware tab in the Device page showing the paired firmware image
     :align: center
 
 REST API Support
 ~~~~~~~~~~~~~~~~
 
-Extraction-derived fields (extraction_status, failure_reason, source, and
-similar) are always read-only through the API. board, compatible, target,
-and fw_version are read-only too, but only while the image's status keeps
-them locked in the admin, on creation, or while success/manually
-confirmed/unconfirmed/in progress. PATCH-ing those fields on a failed,
-invalid, or incomplete image writes them and confirms the image
-automatically, as long as the resulting board isn't empty, otherwise the
-whole request fails validation and nothing is saved, the same workflow
-available in the admin, so automation scripts and integrations can do it
-too, not just the browser.
+Extraction-derived fields (``extraction_status``, ``failure_reason``,
+``source``, and similar) are always read-only through the API. ``board``,
+``compatible``, ``target``, and ``fw_version`` are read-only too, but only
+while the image's status keeps them locked in the admin, on creation, or
+while ``success``, ``manually_confirmed``, ``unconfirmed``, or
+``in_progress``. ``PATCH``-ing those fields on a ``failed``, ``invalid``,
+or ``incomplete`` image writes them and confirms the image automatically,
+as long as the resulting board isn't empty, otherwise the whole request
+fails validation and nothing is saved, the same workflow available in the
+admin, so automation scripts and integrations can do it too, not just the
+browser.
 
 Migrating Away from the Static Hardware Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
+    <pre class="mermaid gsoc26-metadata-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
+    flowchart TB
         A["Built-in hardware map entries"] --> C{"Image: board empty & unconfirmed?"}
         B["Custom OPENWISP_CUSTOM_OPENWRT_IMAGES entries"] --> C
         C -- No --> Z["Left untouched"]
@@ -464,12 +512,17 @@ Migrating Away from the Static Hardware Map
         E --> F
         E --> G["Notify admin after migration completes"]
 
-        D:::success
-        E:::warn
-        Z:::neutral
-        classDef success fill:#d1e7dd,stroke:#0f5132,color:#0f5132
-        classDef warn fill:#fff3cd,stroke:#997404,color:#664d03
-        classDef neutral fill:#e2e3e5,stroke:#41464b,color:#41464b
+        classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef waiting fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef success fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        classDef stopped fill:#4a5568,stroke:#2d3748,color:#ffffff,font-weight:bold
+        class A,B entry
+        class C,E waiting
+        class D success
+        class F active
+        class G entry
+        class Z stopped
     </pre>
 
 A migration backfills board on every pre-existing firmware image it
@@ -488,17 +541,20 @@ resolve it.
 Current State
 -------------
 
-The work is complete and merged into the `gsoc26-metadata-extraction
-<https://github.com/openwisp/openwisp-firmware-upgrader/tree/gsoc26-metadata-extraction>`_
+The work is complete and merged into the ``gsoc26-metadata-extraction``
 feature branch of `openwisp-firmware-upgrader
 <https://github.com/openwisp/openwisp-firmware-upgrader>`_ across two pull
-requests: `#421
+requests: `[feature] Add extractor ABC, OpenWrt fwtool/DTB pipeline, OOM
+protection and pre-upload validation #421
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/421>`_, which
-laid the extractor pipeline and the safety limits, and `#437
+laid the extractor pipeline and the safety limits, and `[feature]
+Automatic metadata extraction: model layer, async task, notifications,
+admin UI #437
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/437>`_, which
 added the model fields, the migration, and the admin and REST API workflow
 described above. The feature branch is now proposed for merging into
-**master** in `#494
+**master** in `[feature] Automated Extraction of OpenWrt Firmware Image
+Metadata #494
 <https://github.com/openwisp/openwisp-firmware-upgrader/pull/494>`_.
 
 My Experience

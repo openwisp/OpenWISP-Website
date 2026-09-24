@@ -7,13 +7,14 @@ GSoC 2026: Mass Commands
 :category: gsoc
 :lang: en
 :mermaid: true
-:image_url: https://openwisp.org/images/blog/gsoc26/mass-commands/gsoc-26-mass-commands.png
+:image_url: https://openwisp.org/images/blog/gsoc26/mass-commands/gsoc-26-mass-commands.webp
 :image_width: 1920
 :image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/gsoc-26-mass-commands.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/gsoc-26-mass-commands.webp
     :alt: Google Summer of Code, Mass Commands in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-mass-commands/
 
 Coming back to Google Summer of Code for a second time has been an
 extremely rewarding experience. Over the past three months I worked with
@@ -31,19 +32,17 @@ helping me grow as a developer and a contributor to open-source projects.
 About the Project
 -----------------
 
-..
-    TODO: embed the final demo video of the project
-    .. raw:: html
+.. raw:: html
 
-        <iframe width="560" height="315"
-                style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
-                title="OpenWISP Mass Commands demo"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-        </iframe>
+    <iframe width="560" height="315" loading="lazy"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/skECcEAW9Rk?vq=hd1080"
+            title="OpenWISP Mass Commands demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
 Running the same command on many devices used to be a manual task in
 OpenWISP: an operator had to open each device page and trigger the command
@@ -58,8 +57,9 @@ while following the progress of every single device in real time.
 
 The work adds a set of enhancements to `openwisp-controller
 <https://github.com/openwisp/openwisp-controller>`_: a new model with an
-asynchronous execution pipeline, REST API endpoints, a multi step Django
-admin workflow, a WebSocket endpoint for real-time updates, and the
+asynchronous execution pipeline, REST API endpoints, a multi step `Django
+<https://www.djangoproject.com/>`_ admin workflow, a WebSocket endpoint
+for admin workflow, a WebSocket endpoint for real-time updates, and the
 documentation which ties everything together.
 
 Features Implemented
@@ -106,15 +106,23 @@ from.
     C --> X[launch_command runs<br/>each command over SSH]
     X --> D[Command saved as<br/>success or failed]
     D --> A[Status of the BatchCommand<br/>recalculated]
-    K --> A
-    A --> E[WebSocket event sent<br/>to the page of the batch]
-    E --> P[Results page updated<br/>in real time]
+     K --> A
+     A --> E[WebSocket event sent<br/>to the page of the batch]
+     E --> P[Results page updated<br/>in real time]
+     classDef entry fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+     classDef processing fill:#fff3cd,stroke:#997404,color:#664d03
+     classDef skipped fill:#f8d7da,stroke:#b02a37,color:#58151c
+     classDef result fill:#d1e7dd,stroke:#0f5132,color:#0f5132
+     class W,S,R entry
+     class B,T,C,X,D,A processing
+     class K skipped
+     class E,P result
     </pre>
 
 Admin Workflow
 ~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-execute-page.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-execute-page.webp
     :alt: First step of the mass command workflow in OpenWISP
 
 Mass commands can be sent from the browser through *Network Operations* >
@@ -129,7 +137,7 @@ at that location. Superusers can leave every target empty to reach all the
 devices of the system, while other users must choose at least one target
 and only see the command types enabled for their organizations.
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-review-page.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-review-page.webp
     :alt: Review step of the mass command workflow in OpenWISP
 
 The second step shows a summary of the command together with the list of
@@ -145,7 +153,7 @@ well.
 Real-Time Monitoring
 ~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-real-time.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-real-time.webp
     :alt: Mass command results updating in real time in OpenWISP
 
 The table above was taken while a mass command was running on fifty
@@ -159,7 +167,7 @@ skipped devices and one row per device with its status, output and last
 modification time.
 
 The page is updated in real time through a new WebSocket endpoint,
-**ws/controller/batch-command/<uuid:pk>**, so there is no need to reload
+``ws/controller/batch-command/<uuid:pk>``, so there is no need to reload
 it to follow a rollout which affects many devices. The consumer only
 accepts authorized superusers and staff users who manage the organization
 of the mass command, and pushes two kinds of messages: one for the status
@@ -177,7 +185,7 @@ organization: they are counted in the batch and shown with the *skipped*
 status and the reason as their output, so it is always clear why a device
 was not reached.
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-list.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-list.webp
     :alt: List of the mass commands which were sent in OpenWISP
 
 Every mass command which was sent is kept, so the list of them doubles as
@@ -190,7 +198,7 @@ opening a row leads back to the page described above.
 Execution from the Device List
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-device-list-action.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-device-list-action.webp
     :alt: Execute mass command action on the device list in OpenWISP
 
 Targeting by organization, group and location covers most of the common
@@ -207,22 +215,22 @@ unless the command is a system wide one.
 Mass Command Model and REST API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A new **BatchCommand** model keeps track of every mass command: its
-organization, status (*idle*, *in-progress*, *success*, *failed*), command
-type and input, the targets which were used, a label and optional notes,
-the devices it affects and the devices which had to be skipped. Each
-individual **Command** is linked back to the batch it belongs to, so the
-existing command execution machinery is reused as is.
+A new ``BatchCommand`` model keeps track of every mass command: its
+organization, status (``idle``, ``in-progress``, ``success``, ``failed``),
+command type and input, the targets which were used, a label and optional
+notes, the devices it affects and the devices which had to be skipped.
+Each individual ``Command`` is linked back to the batch it belongs to, so
+the existing command execution machinery is reused as is.
 
 The execution is fully asynchronous: the request creates the
-**BatchCommand**, a Celery task resolves the targets, creates one
-**Command** per eligible device, keeps the aggregated status of the batch
+``BatchCommand``, a Celery task resolves the targets, creates one
+``Command`` per eligible device, keeps the aggregated status of the batch
 updated and enqueues the individual commands, which are then executed over
 SSH. The devices for which a command cannot be created are not executed:
 they are recorded separately on the batch as skipped devices, together
 with the reason.
 
-.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-rest-api.png
+.. image:: {static}/images/blog/gsoc26/mass-commands/mass-command-rest-api.webp
     :alt: Browsable REST API of the mass commands in OpenWISP
 
 Mass commands can also be managed over the REST API, which is browsable:
@@ -232,25 +240,22 @@ type, its input, the label, the notes and the targets are filled in.
 Running a dry run, starting a mass command, listing the mass commands
 which were sent and reading the detail of one of them are all available
 over REST, while following a rollout as it happens is done through the
-WebSocket API. They are described in the `REST API documentation
-<https://github.com/openwisp/openwisp-controller/blob/gsoc26-mass-commands/docs/user/rest-api.rst>`_
-of the branch, together with the `WebSocket API
-<https://github.com/openwisp/openwisp-controller/blob/gsoc26-mass-commands/docs/user/websocket-api.rst>`_
-used by the page which follows a rollout.
+WebSocket API. They are described in the ``docs/user/rest-api.rst`` and
+``docs/user/websocket-api.rst`` documentation of the
+``gsoc26-mass-commands`` branch used by the page which follows a rollout.
 
 Current State
 -------------
 
-We are maintaining the `gsoc26-mass-commands
-<https://github.com/openwisp/openwisp-controller/tree/gsoc26-mass-commands>`_
-branch of `openwisp-controller
-<https://github.com/openwisp/openwisp-controller>`_ as the parent branch
-of all the mass command work. The model, the REST API, the admin workflow
-and the execution from the device list have all been merged into it. The
-feature is documented in the branch documentation, both for the admin
-workflow and for the REST and WebSocket APIs.
+We are maintaining the ``gsoc26-mass-commands`` branch of
+`openwisp-controller <https://github.com/openwisp/openwisp-controller>`_
+as the parent branch of all the mass command work. The model, the REST
+API, the admin workflow and the execution from the device list have all
+been merged into it. The feature is documented in the branch
+documentation, both for the admin workflow and for the REST and WebSocket
+APIs.
 
-Mass commands are therefore not available in **master** yet: the feature
+Mass commands are therefore not available in ``master`` yet: the feature
 branch is proposed for it in a single pull request, and once that is
 reviewed, tested and validated, mass commands will be released with the
 next version of OpenWISP.
@@ -261,21 +266,22 @@ details in the following pull requests.
 Merged into the feature branch:
 
 - `[feature] Mass Command model and REST APIs for async command execution
-  <https://github.com/openwisp/openwisp-controller/pull/1395>`_
+  #1395 <https://github.com/openwisp/openwisp-controller/pull/1395>`_
 - `[feature] Django admin workflow for mass commands with real-time
-  monitoring <https://github.com/openwisp/openwisp-controller/pull/1420>`_
+  monitoring #1420
+  <https://github.com/openwisp/openwisp-controller/pull/1420>`_
 - `[feature] Mass command execution from the device changelist selection
-  <https://github.com/openwisp/openwisp-controller/pull/1462>`_
-- `[chores:ui] Added the icons of the mass command menu entries
+  #1462 <https://github.com/openwisp/openwisp-controller/pull/1462>`_
+- `[chores:ui] Added the icons of the mass command menu entries #767
   <https://github.com/openwisp/openwisp-utils/pull/767>`_
-- `[ci] Enabled CI on gsoc26-mass-commands branch
+- `[ci] Enabled CI on gsoc26-mass-commands branch #1366
   <https://github.com/openwisp/openwisp-controller/pull/1366>`_
 
 Still open:
 
-- `[feature:gsoc26] Mass Commands
+- `[feature:gsoc26] Mass Commands #1490
   <https://github.com/openwisp/openwisp-controller/pull/1490>`_, which
-  brings the whole feature branch into **master**
+  brings the whole feature branch into ``master``
 
 My Experience
 -------------

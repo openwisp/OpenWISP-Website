@@ -6,13 +6,14 @@ GSoC 2026: X.509 Certificate Generator Templates
 :tags: gsoc, openwisp-controller, x509, certificates, new-features
 :category: gsoc
 :lang: en
-:image_url: https://openwisp.org/images/blog/gsoc26/x509-certificate-generator-templates/cover.png
+:image_url: https://openwisp.org/images/blog/gsoc26/x509-certificate-generator-templates/cover.webp
 :image_width: 1920
 :image_height: 1080
 
-.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cover.png
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cover.webp
     :alt: Google Summer of Code, X.509 Certificate Generator Templates in OpenWISP
     :align: center
+    :target: /blog/gsoc-2026-x509-certificate-generator-templates/
 
 Google Summer of Code with OpenWISP has easily been one of the highlights
 of my journey as a developer. Over the last three months I worked on
@@ -30,27 +31,25 @@ developer and as an open-source contributor.
 About the Project
 -----------------
 
-..
-    TODO: embed the final demo video of the project
-    .. raw:: html
+.. raw:: html
 
-        <iframe width="560" height="315"
-                style="width:100%; height:700px;"
-                src="https://www.youtube.com/embed/VIDEO_ID?vq=hd1080"
-                title="OpenWISP X.509 Certificate Generator Templates Demo"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-        </iframe>
+    <iframe width="560" height="315" loading="lazy"
+            style="width:100%; height:auto; aspect-ratio:16 / 9;"
+            src="https://www.youtube.com/embed/fO0Wg_9Q6P4?vq=hd1080"
+            title="OpenWISP X.509 Certificate Generator Templates demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+    </iframe>
 
-Until now, OpenWISP could generate X.509 certificates only for OpenVPN
-clients, where each VPN client template produces a certificate signed by
-the CA linked to the corresponding VPN server. Anyone who needed a
-certificate for a different purpose, such as securing a web service,
-authenticating devices against an internal API, or using device identities
-with 802.1x or captive portals, was forced to attach an unnecessary VPN
-configuration just to obtain one.
+Until now, OpenWISP could generate X.509 certificates only for `OpenVPN
+<https://openvpn.net/>`_ clients, where each VPN client template produces
+a certificate signed by the CA linked to the corresponding VPN server.
+Anyone who needed a certificate for a different purpose, such as securing
+a web service, authenticating devices against an internal API, or using
+device identities with 802.1x or captive portals, was forced to attach an
+unnecessary VPN configuration just to obtain one.
 
 The project makes certificate generation a **first-class, general-purpose
 feature**. Administrators can now create a *Certificate generator*
@@ -69,7 +68,8 @@ The work adds a set of enhancements to `openwisp-controller
 - custom device identification OIDs;
 - context variables for configuration templates;
 - automatic regeneration on hardware changes;
-- Django admin and REST API integration;
+- `Django <https://www.djangoproject.com/>`_ admin and REST API
+  integration;
 - documentation that ties everything together.
 
 Building X.509 Certificate Generator Templates
@@ -104,7 +104,7 @@ relational fields:
   whose non-unique properties are copied to every newly generated
   certificate.
 
-.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/template-type.png
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/template-type.webp
     :alt: Adding a Certificate generator template in the Django admin, showing the Certificate Authority and Blueprint Certificate fields
     :align: center
 
@@ -158,8 +158,9 @@ existing OpenVPN client certificates, but for standalone certificates:
   device pulls the renewed certificate on its next check-in.
 
 Because the private keys and certificates are stored and protected using
-the existing ``django-x509`` mechanisms, no new encryption scheme, private
-key download endpoint or permission model was introduced.
+the existing `django-x509 <https://github.com/openwisp/django-x509>`_
+mechanisms, no new encryption scheme, private key download endpoint or
+permission model was introduced.
 
 Custom Device Identification OIDs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -176,7 +177,7 @@ either reserved OpenWISP hardware OID, the inherited value is replaced
 with the value of the device using the template, so the certificate always
 reflects the actual hardware.
 
-.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cert-gen.png
+.. image:: {static}/images/blog/gsoc26/x509-certificate-generator-templates/cert-gen.webp
     :alt: Generated X.509 certificate showing the custom OpenWISP device OIDs
     :align: center
 
@@ -282,9 +283,9 @@ and consolidated into the final pull request:
   <https://github.com/openwisp/openwisp-controller/issues/1362>`_
 - `Show automatically generated x509 certificates in device admin
   <https://github.com/openwisp/openwisp-controller/issues/1410>`_
-- `Added X.509 Certificate Generator Templates (implementation)
+- `[feature] Added X.509 Certificate Generator Templates #1378
   <https://github.com/openwisp/openwisp-controller/pull/1378>`_
-- `Added X.509 Certificate Generator Templates (final)
+- `[feature] Added X.509 Certificate Generator Templates #1486
   <https://github.com/openwisp/openwisp-controller/pull/1486>`_
 
 The dedicated documentation page is `X.509 Certificate Generator Templates
