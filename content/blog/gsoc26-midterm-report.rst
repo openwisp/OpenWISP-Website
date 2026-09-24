@@ -273,3 +273,18 @@ to.
 
 In the coming weeks, we will polish this work and make the same
 certificate template system usable by ``VpnClient`` too.
+
+Update (September 24, 2026)
+---------------------------
+
+The GSoC 2026 projects have concluded. Read the final submission posts:
+
+- `Mass Commands <{filename}./gsoc26-mass-command.rst>`_
+- `Persistent and Scheduled Mass Firmware Upgrades
+  <{filename}./gsoc26-persistent-scheduled-firmware-upgrades.rst>`_
+- `Automatic Extraction of OpenWrt Firmware Image Metadata
+  <{filename}./gsoc26-automatic-metadata-extraction.rst>`_
+- `Adding More Time-Series Database Backends to OpenWISP Monitoring
+  <{filename}./gsoc26-add-more-tsdb-openwisp-monitoring.rst>`_
+- `X.509 Certificate Generator Templates
+  <{filename}./gsoc26-x509-certificate-generator-templates.rst>`_

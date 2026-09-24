@@ -36,22 +36,36 @@ maintenance using the platform.
 The Map
 -------
 
-We began our journey with an Ansible-based deployment of the original
-OpenWISP. From the outset, we did not utilize the Wi-Fi-related modules,
-as they were not relevant to our use case. It can be argued that our goals
-differ slightly from OpenWISP's original aim (managing Wi-Fi hotspots).
-However, most of the required features are similar enough that
-collaboration remains beneficial.
+We began our journey with an `Ansible <https://www.ansible.com/>`_-based
+deployment of the original OpenWISP. From the outset, we did not utilize
+the Wi-Fi-related modules, as they were not relevant to our use case. It
+can be argued that our goals differ slightly from OpenWISP's original aim
+(managing Wi-Fi hotspots). However, most of the required features are
+similar enough that collaboration remains beneficial.
 
 .. raw:: html
 
-    <pre class="mermaid">
-    graph TD
-    OpenWISP_Users
-    OpenWISP_Notifications
-    OpenWISP_Controller
-    OpenWISP_Monitoring
-    OpenWISP_FirmwareUpgrader
+    <style>
+    pre.stellar-diagram { margin: 1.5rem 0; text-align: center; }
+    pre.stellar-diagram svg { display: inline-block; max-width: 100%; height: auto; }
+    </style>
+    <pre class="mermaid stellar-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart LR
+        subgraph MODULES["OpenWISP modules used by Stellar"]
+            direction LR
+            USERS["OpenWISP Users"]
+            NOTIFICATIONS["OpenWISP Notifications"]
+            CONTROLLER["OpenWISP Controller"]
+            MONITORING["OpenWISP Monitoring"]
+            FIRMWARE["OpenWISP Firmware Upgrader"]
+        end
+
+        classDef upstream fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        class USERS,NOTIFICATIONS,CONTROLLER,MONITORING,FIRMWARE upstream
     </pre>
 
 After a couple of years using a limited subset of OpenWISP features, we
@@ -80,13 +94,37 @@ reliable reference.
 
 .. raw:: html
 
-    <pre class="mermaid">
-    graph TD
-    OpenWISP_Users -- extended --> STEER_Users
-    OpenWISP_Notifications -- extended --> STEER_Notifications
-    OpenWISP_Controller -- extended --> STEER_Controller
-    OpenWISP_Monitoring -- extended --> STEER_Monitoring
-    OpenWISP_FirmwareUpgrader -- extended --> STEER_FirmwareUpgrader
+    <pre class="mermaid stellar-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart LR
+        subgraph USERS["User management"]
+            direction LR
+            OPENWISP_USERS["OpenWISP Users"] -->|extended as| STEER_USERS["STEER Users"]
+        end
+        subgraph NOTIFICATIONS["Notifications"]
+            direction LR
+            OPENWISP_NOTIFICATIONS["OpenWISP Notifications"] -->|extended as| STEER_NOTIFICATIONS["STEER Notifications"]
+        end
+        subgraph CONTROLLER["Device control"]
+            direction LR
+            OPENWISP_CONTROLLER["OpenWISP Controller"] -->|extended as| STEER_CONTROLLER["STEER Controller"]
+        end
+        subgraph MONITORING["Monitoring"]
+            direction LR
+            OPENWISP_MONITORING["OpenWISP Monitoring"] -->|extended as| STEER_MONITORING["STEER Monitoring"]
+        end
+        subgraph FIRMWARE["Firmware upgrades"]
+            direction LR
+            OPENWISP_FIRMWARE["OpenWISP Firmware Upgrader"] -->|extended as| STEER_FIRMWARE["STEER Firmware Upgrader"]
+        end
+
+        classDef upstream fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef extension fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        class OPENWISP_USERS,OPENWISP_NOTIFICATIONS,OPENWISP_CONTROLLER,OPENWISP_MONITORING,OPENWISP_FIRMWARE upstream
+        class STEER_USERS,STEER_NOTIFICATIONS,STEER_CONTROLLER,STEER_MONITORING,STEER_FIRMWARE extension
     </pre>
 
 For the full technical details, see the next section: *The Territory*.
@@ -103,8 +141,9 @@ Our technical approach was guided by the following constraints:
 
 - Preserve all existing data
 - Keep database migrations simple and safe
-- Maintain our technology stack: OpenWISP 24.11, Django 4.2, Python 3.11,
-  Debian 12
+- Maintain our technology stack: OpenWISP 24.11, `Django 4.2
+  <https://www.djangoproject.com/>`_, `Python 3.11
+  <https://www.python.org/>`_, `Debian 12 <https://www.debian.org/>`_
 - Enable thorough testing and facilitate upstream contributions
 
 We have since upgraded to Django 5.2 and Python 3.13 on Debian 13.
@@ -112,10 +151,11 @@ We have since upgraded to Django 5.2 and Python 3.13 on Debian 13.
 Our Python development environment for each module is intentionally
 simpler than OpenWISP's:
 
-- Initially based on ``direnv`` and ``asdf`` for environment management;
-  recently migrated to ``mise``
-- Use of ``pip-tools`` to pin exact dependency versions per Python and
-  codebase version
+- Initially based on `direnv <https://direnv.net/>`_ and `asdf
+  <https://asdf-vm.com/>`_ for environment management; recently migrated
+  to `mise <https://mise.jdx.dev/>`_
+- Use of `pip-tools <https://pip-tools.readthedocs.io/>`_ to pin exact
+  dependency versions per Python and codebase version
 - A long-term goal to run tests from any OpenWISP dependency module across
   repositories
 
@@ -131,14 +171,23 @@ Python code.
 
 .. raw:: html
 
-    <pre class="mermaid">
+    <pre class="mermaid stellar-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 50, "rankSpacing": 70}}}%%
     classDiagram
+    direction TB
     class OpenWISP_App
     class STEER_App
     class OpenWISP_App_TestCase
     class STEER_App_TestCase
-    OpenWISP_App <|-- STEER_App
-    OpenWISP_App_TestCase <|-- STEER_App_TestCase
+    OpenWISP_App <|-- STEER_App : extends
+    OpenWISP_App_TestCase <|-- STEER_App_TestCase : extends
+    classDef upstream fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+    classDef extension fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+    cssClass "OpenWISP_App,OpenWISP_App_TestCase" upstream
+    cssClass "STEER_App,STEER_App_TestCase" extension
     </pre>
 
 But several challenges emerged:
@@ -153,8 +202,9 @@ But several challenges emerged:
   to override views and routes
 - Import order can affect Django initialization, leading to subtle and
   difficult issues
-- Celery tasks are widely imported transitively, making overrides complex
-  (though we have not needed this yet)
+- `Celery <https://docs.celeryq.dev/>`_ tasks are widely imported
+  transitively, making overrides complex (though we have not needed this
+  yet)
 
 Having default settings makes juggling multiple Django apps much more
 manageable. It is a small and simple piece of code, but it makes extending
@@ -233,15 +283,29 @@ existing OpenWISP migrations, we adopted a different strategy:
 
 .. raw:: html
 
-    <pre class="mermaid">
-    stateDiagram-v2
-    direction LR
-    OW: OpenWISP DB (vN)
-    STEER: STEER DB (vN)
-    STEER_UP: STEER DB (vN+1)
-    OW --> STEER: Migrate OW to STEER (fake-apply duplicated migrations, remap ContentTypes)
-    STEER --> STEER_UP: Apply upstream OpenWISP migrations (via custom command for inconsistent states)
-    STEER --> STEER_UP: Apply custom STEER migrations
+    <pre class="mermaid stellar-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TB
+        OW["OpenWISP database<br/>version N"]
+        STEER["STEER database<br/>version N"]
+        UPSTREAM["Apply upstream OpenWISP<br/>migrations"]
+        CUSTOM["Apply custom STEER<br/>migrations"]
+        STEER_UP["STEER database<br/>version N+1"]
+
+        OW -->|adopt extension| STEER
+        STEER --> UPSTREAM --> CUSTOM --> STEER_UP
+
+        classDef upstream fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef extension fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef processing fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef result fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        class OW upstream
+        class STEER extension
+        class UPSTREAM,CUSTOM processing
+        class STEER_UP result
     </pre>
 
 - Duplicate migrations from original OpenWISP modules, adjusting
@@ -456,23 +520,36 @@ where necessary.
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
-    UP[upstream OpenWISP]
-    subgraph StellarGit["Stellar Git"]
-    direction LR
-    OWDEV[master branch<br/>vanilla OpenWISP extension]
-    STELLARDEV[dev branch<br/>STEER customizations]
-    OWDEV -- periodic merges --> STELLARDEV
-    STELLARDEV -- cherrypicks --> OWDEV
-    end
-    CI[CI pipelines<br/>OpenWISP-like QA]
-    ANS[Custom Ansible<br/>based on ansible-openwisp2]
-    QA[STEER deployment environment for QA<br/>GLOBBLE routers fleet]
-    UP -- release upgrade --> OWDEV
-    OWDEV -- upstream contributions --> UP
-    STELLARDEV --> CI
-    CI --> ANS --> QA
+    <pre class="mermaid stellar-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TB
+        UP["Upstream OpenWISP"]
+        subgraph STELLAR_GIT["Stellar Git"]
+            direction TB
+            OWDEV["master branch<br/>vanilla OpenWISP extension"]
+            STELLARDEV["dev branch<br/>STEER customizations"]
+            OWDEV -->|periodic merges| STELLARDEV
+            STELLARDEV -->|cherry-picks| OWDEV
+        end
+        CI["CI pipelines<br/>OpenWISP-like QA"]
+        ANS["Custom Ansible<br/>based on ansible-openwisp2"]
+        QA["STEER QA deployment<br/>GLOBBLE router fleet"]
+
+        UP -->|release upgrades| OWDEV
+        OWDEV -->|upstream contributions| UP
+        STELLARDEV --> CI --> ANS --> QA
+
+        classDef upstream fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef extension fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef processing fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef result fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        class UP,OWDEV upstream
+        class STELLARDEV extension
+        class CI,ANS processing
+        class QA result
     </pre>
 
 This approach allows us to:
@@ -498,23 +575,36 @@ Given our limited resources and need for controlled customization:
 
 .. raw:: html
 
-    <pre class="mermaid">
-    flowchart LR
-    subgraph Development["1-Dev Flow"]
-    Develop[Develop<br/>local LAN<br/>NO_MANAGEMENT_IP]
-    UnitTests[Unit Tests]
-    LANTests[LAN Tests<br/>manually per-package]
-    Develop --> UnitTests
-    UnitTests -- problems ? --> Develop
-    UnitTests --> LANTests
-    LANTests -- Issues found --> Develop
-    LANTests -- all good ? --> Release
-    end
-    Release[Release<br/>tag &amp; publish package<br/>as frequently as needed]
-    InternalDeploy[Deploy<br/>bump version in Django project<br/>single pipeline, env vars / feature flags]
-    Maintain[Maintain<br/>Goal: minimize maintenance overhead]
-    Release --> InternalDeploy --> Maintain
-    Maintain -- Issue ? --> Develop
+    <pre class="mermaid stellar-diagram">
+    %%{init: {"theme": "base", "themeVariables": {
+      "lineColor": "#8b949e", "textColor": "#1f2933", "nodeTextColor": "#1f2933",
+      "edgeLabelBackground": "#f1f3f5"
+    }, "flowchart": {"subGraphTitleMargin": {"top": 16, "bottom": 16}, "nodeSpacing": 50, "rankSpacing": 70}}}%%
+    flowchart TB
+        subgraph DEVELOPMENT["Single-developer flow"]
+            direction TB
+            DEVELOP["Develop<br/>local LAN<br/>NO_MANAGEMENT_IP"]
+            UNIT_TESTS["Unit tests"]
+            LAN_TESTS["LAN tests<br/>manual, per package"]
+            DEVELOP --> UNIT_TESTS --> LAN_TESTS
+            UNIT_TESTS -->|problems found| DEVELOP
+            LAN_TESTS -->|issues found| DEVELOP
+        end
+        RELEASE["Release<br/>tag and publish package"]
+        DEPLOY["Deploy<br/>bump Django project version"]
+        MAINTAIN["Maintain<br/>minimize overhead"]
+
+        LAN_TESTS -->|ready to release| RELEASE --> DEPLOY --> MAINTAIN
+        MAINTAIN -->|issue found| DEVELOP
+
+        classDef active fill:#ed7800,stroke:#b35b00,color:#ffffff,font-weight:bold
+        classDef processing fill:#fff1e0,stroke:#ed7800,color:#1f2933,font-weight:bold
+        classDef release fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,font-weight:bold
+        classDef result fill:#2f855a,stroke:#276749,color:#ffffff,font-weight:bold
+        class DEVELOP active
+        class UNIT_TESTS,LAN_TESTS processing
+        class RELEASE release
+        class DEPLOY,MAINTAIN result
     </pre>
 
 - Each repository can run independently in a local LAN (using
@@ -567,8 +657,8 @@ If you are working on similar extensions or facing related challenges, we
 encourage you to engage with the OpenWISP community and share your
 experience.
 
-We would like to thank the OpenWISP team, and in particular Federico
-Capoano (OpenWISP Lead Maintainer), for their work and continued support
-of the community.
+We would like to thank the OpenWISP team, and in particular `Federico
+Capoano <https://github.com/nemesifier>`_ (OpenWISP Lead Maintainer), for
+their work and continued support of the community.
 
 Stay safe and connected.
