@@ -9,20 +9,29 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
+    name: Build website
     runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: true
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
 
       - name: Set up Python 3.13
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: 3.13
           cache: "pip"
@@ -30,7 +39,7 @@ jobs:
             **/requirements*.txt
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: "22"
 
@@ -47,12 +56,13 @@ jobs:
         run: make publish
 
       - name: Upload build output
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: site-output
           path: output/
 
   deploy:
+    name: Deploy website
     if: >
       github.repository == 'openwisp/OpenWISP-Website' &&
       github.event_name == 'push'
@@ -60,28 +70,29 @@ jobs:
     needs: build
     steps:
       - name: Download build output
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: site-output
           path: output/
 
       - name: Setup Google Cloud
-        uses: "google-github-actions/auth@v3"
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
           credentials_json: ${{ secrets.GCS_DOWNLOADS_SERVICE_ACCOUNT_JSON }}
           project_id: ${{ secrets.GCS_PROJECT_ID }}
           export_environment_variables: true
 
       - name: Set up Cloud SDK
-        uses: "google-github-actions/setup-gcloud@v3"
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3
 
       - name: Deploy pages to openwisp.org
-        run: gcloud storage rsync --recursive ${{ env.SRC_URL }} ${{ env.DST_URL }}
+        run: gcloud storage rsync --recursive "$SRC_URL" "$DST_URL"
         env:
           SRC_URL: /home/runner/work/OpenWISP-Website/OpenWISP-Website/output
           DST_URL: gs://${{ secrets.GCS_WEBSITE_BUCKET_NAME }}
 
   invalidate-cache:
+    name: Invalidate CDN cache
     runs-on: ubuntu-latest
     if: >
       github.repository == 'openwisp/OpenWISP-Website' &&
@@ -90,14 +101,14 @@ jobs:
 
     steps:
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
           credentials_json: ${{ secrets.GCS_DOWNLOADS_SERVICE_ACCOUNT_JSON }}
           project_id: ${{ secrets.GCS_PROJECT_ID }}
           export_environment_variables: true
 
       - name: Invalid CDN cache on GCP
-        uses: stefanodotit/github-actions-invalidate-gcp-cdn@v1
+        uses: stefanodotit/github-actions-invalidate-gcp-cdn@3c397edee5224cac3626b36b876b7a0a9464b9b4 # v1
         with:
           load_balancer_name: ${{ secrets.GCS_MAIN_LOAD_BALANCER_NAME }}
           host: openwisp.org
