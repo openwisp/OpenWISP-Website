@@ -4,4 +4,4 @@ pelican-minify>=2.0.2,<3.0.0
 pelican-sitemap>=1.2.2,<2.0.0
 typogrify>=2.1.0,<3.0.0
 pylinkvalidator
-openwisp-utils[qa]>=1.3.0,<1.4.0
+openwisp-utils[qa]>=1.3.1,<1.4.0
