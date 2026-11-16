@@ -87,7 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
   var pageName = window.location.pathname.split("/").filter(Boolean).pop() || "modal";
-  document.querySelectorAll("a.open-modal").forEach(function (link) {
+  // Keep the original event for links that replaced a modal with direct navigation.
+  document.querySelectorAll("a.open-modal, a.track-modal").forEach(function (link) {
     link.addEventListener("click", function () {
       var linkText = link.textContent.trim();
       _paq.push(["trackEvent", pageName, "open-modal", linkText]);
