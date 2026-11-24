@@ -10,8 +10,10 @@ Install Node and Python dependencies required for QA checks:
 
 ::
 
-    yarn install
-    pip install -r requirements.txt
+    ./install-ci-deps.sh
+
+Run CI infrastructure tests with ``./runtests``. It accepts ``-v``,
+``-q``, and test files under ``tests/``; test code remains untrusted.
 
 Now, run quality assurance checks with:
 

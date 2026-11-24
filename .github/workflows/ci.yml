@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
+  test:
     name: Build website
     runs-on: ubuntu-24.04
 
@@ -31,23 +31,55 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python 3.13
+        id: python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: 3.13
-          cache: "pip"
-          cache-dependency-path: |
-            **/requirements*.txt
 
       - name: Set up Node.js
+        id: node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "22"
 
+      - name: Identify runner image
+        id: platform
+        run: echo "image_os=$ImageOS" >> "$GITHUB_OUTPUT"
+
+      - name: Locate Yarn cache
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Yarn dependencies
+        id: cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            node_modules/*
+            !node_modules/.cache
+            !node_modules/.cache/**
+          key: >-
+            ${{ format('{0}-{1}-{2}-yarn-{3}-{4}', runner.os, runner.arch,
+                steps.platform.outputs.image_os, steps.node.outputs.node-version,
+                hashFiles('yarn.lock', 'package.json', '.nvmrc', 'install-ci-deps.sh')) }}
+
+      - name: Cache pip downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: >-
+            ${{ format('{0}-{1}-{2}-pip-{3}-{4}', runner.os, runner.arch,
+                steps.platform.outputs.image_os, steps.python.outputs.python-version,
+                hashFiles('requirements-test.txt', 'requirements.txt', 'setup.py',
+                'install-ci-deps.sh', 'install-dev.sh')) }}
+
       - name: Install test dependencies
-        run: |
-          yarn install
-          pip install -U pip setuptools wheel
-          pip install -r requirements.txt
+        id: deps
+        run: ./install-ci-deps.sh
+
+      - name: CI entry point tests
+        run: ./runtests
 
       - name: QA checks
         run: ./run-qa-checks
@@ -67,7 +99,7 @@ jobs:
       github.repository == 'openwisp/OpenWISP-Website' &&
       github.event_name == 'push'
     runs-on: ubuntu-24.04
-    needs: build
+    needs: test
     steps:
       - name: Download build output
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
