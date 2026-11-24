@@ -12,8 +12,7 @@ Install Node and Python dependencies required for QA checks:
 
     ./install-ci-deps.sh
 
-Run CI infrastructure tests with ``./runtests``. It accepts ``-v``,
-``-q``, and test files under ``tests/``; test code remains untrusted.
+Run CI infrastructure tests with ``./runtests``.
 
 Now, run quality assurance checks with:
 
