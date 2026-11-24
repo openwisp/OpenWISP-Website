@@ -70,6 +70,7 @@ class CiEntrypointTests(unittest.TestCase):
             tests = root / "tests"
             tests.mkdir()
             (tests / "test_real.py").touch()
+            (root / "other.py").touch()
             (tests / "test_link.py").symlink_to(root / "other.py")
             for arguments in (
                 ("tests/test_missing.py",),
